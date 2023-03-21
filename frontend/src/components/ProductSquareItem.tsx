@@ -1,3 +1,6 @@
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store";
+import { updateCurrentProductAction } from "../store/current-product/current-product.slice";
 import { IProduct } from "../store/products/products.types";
 
 export type ProductSquareItemProps = {
@@ -5,6 +8,10 @@ export type ProductSquareItemProps = {
 };
 
 export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+  const selectProduct = () => {
+    dispatch(updateCurrentProductAction(product));
+  };
   const {
     category,
     description,
@@ -17,7 +24,10 @@ export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
   } = product;
   return (
     <li>
-      <div className="list-group-item bg-primary rounded my-2 mx-2 p-2">
+      <div
+        className="list-group-item bg-primary rounded my-2 mx-2 p-2"
+        onClick={selectProduct}
+      >
         <img
           src={images[0]}
           alt={name}

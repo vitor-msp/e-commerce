@@ -11,4 +11,5 @@ export interface ICurrentProduct {
 
 export interface ICurrentProductState {
   data: ICurrentProduct;
+  showProduct: boolean;
 }
