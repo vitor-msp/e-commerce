@@ -1,3 +1,10 @@
+import { Navbar } from "../components/Navbar";
+
 export const MyAccount = () => {
-  return <>MyAccount</>;
+  return (
+    <>
+      <Navbar />
+      MyAccount
+    </>
+  );
 };

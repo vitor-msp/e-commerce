@@ -13,7 +13,7 @@ import {
 import { AppDispatch, RootState } from "./store";
 import { getProducts } from "./store/products/products.middleware";
 
-export const App = () => {
+const App = () => {
   const products = useSelector(
     (state: RootState) => state.products.data.products
   );
@@ -29,7 +29,6 @@ export const App = () => {
 
   return (
     <div className="container-fluid">
-      <h1>E-Commerce</h1>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Products />} />
@@ -45,3 +44,5 @@ export const App = () => {
     </div>
   );
 };
+
+export default App;

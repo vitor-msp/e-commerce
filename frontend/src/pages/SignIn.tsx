@@ -1,3 +1,10 @@
+import { Navbar } from "../components/Navbar";
+
 export const SignIn = () => {
-  return <>SignIn</>;
+  return (
+    <>
+      <Navbar />
+      SignIn
+    </>
+  );
 };

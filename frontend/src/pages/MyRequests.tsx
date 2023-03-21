@@ -1,3 +1,10 @@
+import { Navbar } from "../components/Navbar";
+
 export const MyRequests = () => {
-  return <>MyRequests</>;
+  return (
+    <>
+      <Navbar />
+      MyRequests
+    </>
+  );
 };
