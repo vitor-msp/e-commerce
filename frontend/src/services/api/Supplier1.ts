@@ -27,8 +27,8 @@ export class Supplier1 implements IProductsApi {
         material: "string",
       },
       {
-        id: "1",
-        name: "string",
+        id: "2",
+        name: "string2",
         description: "string",
         images: [
           "http://placeimg.com/640/480/business",
