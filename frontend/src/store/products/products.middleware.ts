@@ -6,8 +6,8 @@ import { IProduct } from "./products.types";
 export const getProducts = (): AppThunk => async (dispatch) => {
   try {
     const products: IProduct[] = [];
-    suppliers.forEach((supplier) => {
-      products.push(...supplier.getAllProducts());
+    suppliers.forEach(async (supplier) => {
+      products.push(...(await supplier.getAllProducts()));
     });
     dispatch(getProductsAction(products));
   } catch (error) {
