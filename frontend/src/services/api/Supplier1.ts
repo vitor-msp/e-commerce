@@ -15,31 +15,35 @@ export class Supplier1 implements IProductsApi {
     return [
       {
         id: "1",
-        description: "v2wv",
-        category: "weqre",
-        discountValue: 0.2,
-        name: "wcqe",
-        price: 15.67,
-        material: "eçwkjcn",
+        name: "string",
+        description: "string",
         images: [
           "http://placeimg.com/640/480/business",
           "http://placeimg.com/640/480/business",
         ],
+        price: 20,
+        discountValue: 0.3,
+        category: "string",
+        material: "string",
       },
       {
         id: "1",
-        description: "v2wv",
-        category: "weqre",
-        discountValue: 0.2,
-        name: "wcqe",
-        price: 15.67,
-        material: "eçwkjcn",
+        name: "string",
+        description: "string",
         images: [
           "http://placeimg.com/640/480/business",
           "http://placeimg.com/640/480/business",
         ],
+        price: 20,
+        discountValue: 0.3,
+        category: "string",
+        material: "string",
       },
     ];
+    // return new Promise(() => {
+    //   setTimeout(() => {
+    //   }, 1000);
+    // });
   }
 
   getProductById(id: string): Promise<IProduct> {
