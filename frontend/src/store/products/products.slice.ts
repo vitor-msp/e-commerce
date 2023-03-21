@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { IProductsState } from "./products.types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { IProduct, IProductsState } from "./products.types";
 
 const initialState: IProductsState = {
   data: { products: [] },
@@ -8,8 +8,12 @@ const initialState: IProductsState = {
 const productsSlice = createSlice({
   name: "products",
   initialState,
-  reducers: {},
+  reducers: {
+    getProductsAction: (state, { payload }: PayloadAction<IProduct[]>) => {
+      state.data.products = payload;
+    },
+  },
 });
 
-export const {} = productsSlice.actions;
+export const { getProductsAction } = productsSlice.actions;
 export const productsReducer = productsSlice.reducer;
