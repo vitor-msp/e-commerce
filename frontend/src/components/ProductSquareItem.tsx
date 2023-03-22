@@ -38,9 +38,9 @@ export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
           className="rounded"
         />
         <div className="d-flex flex-column">
-          <span className="fw-bold">{name}</span>
-          <span>{description}</span>
-          <span className="fst-italic">{price}</span>
+          <span className="fw-bold">Nome: {name}</span>
+          <span>Descrição: {description}</span>
+          <span className="fst-italic">Preço: {price}</span>
         </div>
       </div>
     </li>

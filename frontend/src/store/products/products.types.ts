@@ -8,10 +8,12 @@ export interface IProduct {
   category: string;
   material: string;
 }
-export interface IProducts {
-  products: IProduct[];
+export interface IFilters {
+  categories: string[];
+  materials: string[];
 }
 
 export interface IProductsState {
-  data: IProducts;
+  products: IProduct[];
+  filters: IFilters;
 }

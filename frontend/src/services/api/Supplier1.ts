@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { IProduct } from "../../store/products/products.types";
-import { isHttpStatusSuccess } from "../../utils/api";
+import { isHttpStatusSuccess } from "../../utils/api-utils";
 import { IProductsApi } from "./IProductsApi";
 
 type ProductSupplier1 = {
