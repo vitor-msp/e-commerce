@@ -10,15 +10,11 @@ export const Products = () => {
   return (
     <>
       <Navbar />
-      <div className="row">
-        <div className="col-12">
-          <ul className="d-flex flex-row list-group">
-            {products.map((product) => {
-              return <ProductSquareItem key={product.id} product={product} />;
-            })}
-          </ul>
-        </div>
-      </div>
+      <ul className="d-flex flex-row flex-wrap list-group justify-content-center">
+        {products.map((product) => {
+          return <ProductSquareItem key={product.id} product={product} />;
+        })}
+      </ul>
     </>
   );
 };
