@@ -8,6 +8,7 @@ import { IProduct } from "../store/products/products.types";
 export const Products = () => {
   const [currentCategories, setCurrentCategories] = useState<string[]>([]);
   const [currentMaterials, setCurrentMaterials] = useState<string[]>([]);
+  const [currentName, setCurrentName] = useState<string>("");
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
 
   const products = useSelector((state: RootState) => state.products.products);
@@ -20,7 +21,7 @@ export const Products = () => {
 
   useEffect(() => {
     setFilteredProducts(filterProducts(products));
-  }, [products, currentCategories, currentMaterials]);
+  }, [products, currentCategories, currentMaterials, currentName]);
 
   const toggleCategory = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -55,17 +56,38 @@ export const Products = () => {
   };
 
   const filterProducts = (products: IProduct[]): IProduct[] => {
-    if (currentCategories.length === 0 && currentMaterials.length === 0)
-      return products;
-    return products.filter(
-      (product) =>
-        currentCategories.some(
-          (category) => category.localeCompare(product.category) === 0
-        ) ||
-        currentMaterials.some(
-          (material) => material.localeCompare(product.material) === 0
-        )
+    return filterMaterials(filterCategories(filterName(products)));
+  };
+
+  const filterName = (products: IProduct[]): IProduct[] => {
+    return products.filter((product) =>
+      product.name.toLowerCase().includes(currentName.toLowerCase())
     );
+  };
+
+  const filterCategories = (products: IProduct[]): IProduct[] => {
+    if (currentCategories.length === 0) return products;
+    return products.filter((product) =>
+      currentCategories.some(
+        (category) => category.localeCompare(product.category) === 0
+      )
+    );
+  };
+
+  const filterMaterials = (products: IProduct[]): IProduct[] => {
+    if (currentMaterials.length === 0) return products;
+    return products.filter((product) =>
+      currentMaterials.some(
+        (material) => material.localeCompare(product.material) === 0
+      )
+    );
+  };
+
+  const changeName = (
+    event: React.InputHTMLAttributes<HTMLInputElement>
+  ): void => {
+    // @ts-ignore
+    setCurrentName(event.target.value);
   };
 
   return (
@@ -102,11 +124,16 @@ export const Products = () => {
             ))}
           </ul>
         </div>
-        <ul className="d-flex flex-row flex-wrap list-group justify-content-center">
-          {filteredProducts.map((product) => (
-            <ProductSquareItem key={product.id} product={product} />
-          ))}
-        </ul>
+        <div className="d-flex flex-column">
+          <div>
+            <input type="text" value={currentName} onChange={changeName} />
+          </div>
+          <ul className="d-flex flex-row flex-wrap list-group justify-content-center">
+            {filteredProducts.map((product) => (
+              <ProductSquareItem key={product.id} product={product} />
+            ))}
+          </ul>
+        </div>
       </div>
     </>
   );
