@@ -7,8 +7,9 @@ import { IProduct } from "../store/products/products.types";
 
 export const Products = () => {
   const [currentCategories, setCurrentCategories] = useState<string[]>([]);
-  // const [currentMaterials, setCurrentMaterials] = useState<string>("");
+  const [currentMaterials, setCurrentMaterials] = useState<string[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
+
   const products = useSelector((state: RootState) => state.products.products);
   const categories = useSelector(
     (state: RootState) => state.products.filters.categories
@@ -16,9 +17,11 @@ export const Products = () => {
   const materials = useSelector(
     (state: RootState) => state.products.filters.materials
   );
+
   useEffect(() => {
     setFilteredProducts(filterProducts(products));
-  }, [products, currentCategories]);
+  }, [products, currentCategories, currentMaterials]);
+
   const toggleCategory = (
     event: React.ChangeEvent<HTMLInputElement>,
     category: string,
@@ -33,16 +36,38 @@ export const Products = () => {
       );
     }
     setCurrentCategories(newCategories);
-    console.log(newCategories);
   };
+
+  const toggleMaterial = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    material: string,
+    index: number
+  ): void => {
+    let newMaterials = [...currentMaterials];
+    if (event.target.checked) {
+      newMaterials.push(materials[index]);
+    } else {
+      newMaterials = newMaterials.filter(
+        (m) => m.localeCompare(material) !== 0
+      );
+    }
+    setCurrentMaterials(newMaterials);
+  };
+
   const filterProducts = (products: IProduct[]): IProduct[] => {
-    if (currentCategories.length === 0) return products;
-    return products.filter((product) =>
-      currentCategories.some(
-        (category) => category.localeCompare(product.category) === 0
-      )
+    if (currentCategories.length === 0 && currentMaterials.length === 0)
+      return products;
+    return products.filter(
+      (product) =>
+        currentCategories.some(
+          (category) => category.localeCompare(product.category) === 0
+        ) ||
+        currentMaterials.some(
+          (material) => material.localeCompare(product.material) === 0
+        )
     );
   };
+
   return (
     <>
       <Navbar />
@@ -67,7 +92,11 @@ export const Products = () => {
           <ul>
             {materials.map((material, index) => (
               <li key={index}>
-                <input type="checkbox" value={index} />
+                <input
+                  type="checkbox"
+                  value={index}
+                  onChange={(event) => toggleMaterial(event, material, index)}
+                />
                 <span>{material}</span>
               </li>
             ))}
