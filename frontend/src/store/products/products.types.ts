@@ -1,4 +1,5 @@
 export interface IProduct {
+  supplier: string;
   id: string;
   name: string;
   description: string;

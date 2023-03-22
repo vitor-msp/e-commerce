@@ -99,17 +99,11 @@ export const Products = () => {
     );
   };
 
-  const changeName = (
-    event: React.InputHTMLAttributes<HTMLInputElement>
-  ): void => {
-    // @ts-ignore
+  const changeName = (event: any): void => {
     setCurrentName(event.target.value);
   };
 
-  const changePrice = (
-    event: React.InputHTMLAttributes<HTMLInputElement>
-  ): void => {
-    // @ts-ignore
+  const changePrice = (event: any): void => {
     setCurrentMaxPrice(+event.target.value);
   };
 

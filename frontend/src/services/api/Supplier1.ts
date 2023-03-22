@@ -10,9 +10,7 @@ type ProductSupplier1 = {
   imagem: string;
   preco: number;
   material: string;
-  departamento: string;
   id: string;
-  name: string;
 };
 
 export class Supplier1 implements IProductsApi {
@@ -35,12 +33,13 @@ export class Supplier1 implements IProductsApi {
       const { categoria, descricao, id, imagem, material, nome, preco } =
         product;
       return {
-        id,
+        supplier: "1",
+        id: "1:" + id,
         name: nome,
         description: descricao,
         category: categoria,
         material,
-        price: preco,
+        price: +preco,
         discountValue: 0,
         images: [imagem],
       };
