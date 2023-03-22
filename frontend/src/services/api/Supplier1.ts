@@ -1,49 +1,50 @@
-// import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { IProduct } from "../../store/products/products.types";
+import { isHttpStatusSuccess } from "../../utils/api";
 import { IProductsApi } from "./IProductsApi";
 
+type ProductSupplier1 = {
+  nome: string;
+  descricao: string;
+  categoria: string;
+  imagem: string;
+  preco: number;
+  material: string;
+  departamento: string;
+  id: string;
+  name: string;
+};
+
 export class Supplier1 implements IProductsApi {
-  //   private readonly api: AxiosInstance;
+  private readonly api: AxiosInstance;
 
   constructor() {
-    // this.api = axios.create({
-    //   baseURL: process.env.REACT_APP_SUPPLIER1_URL,
-    // });
+    this.api = axios.create({
+      baseURL: process.env.REACT_APP_SUPPLIER1_URL,
+    });
   }
 
   async getAllProducts(): Promise<IProduct[]> {
-    return [
-      {
-        id: "1",
-        name: "string",
-        description: "string",
-        images: [
-          "http://placeimg.com/640/480/business",
-          "http://placeimg.com/640/480/business",
-        ],
-        price: 20,
-        discountValue: 0.3,
-        category: "string",
-        material: "string",
-      },
-      {
-        id: "2",
-        name: "string2",
-        description: "string",
-        images: [
-          "http://placeimg.com/640/480/business",
-          "http://placeimg.com/640/480/business",
-        ],
-        price: 20,
-        discountValue: 0.3,
-        category: "string",
-        material: "string",
-      },
-    ];
-    // return new Promise(() => {
-    //   setTimeout(() => {
-    //   }, 1000);
-    // });
+    const res: AxiosResponse<ProductSupplier1[]> = await this.api
+      .get("/")
+      .then((res) => res)
+      .catch((error) => error.response);
+    //@ts-ignore
+    if (!isHttpStatusSuccess(res.status)) throw new Error(res.data);
+    return res.data.map((product) => {
+      const { categoria, descricao, id, imagem, material, nome, preco } =
+        product;
+      return {
+        id,
+        name: nome,
+        description: descricao,
+        category: categoria,
+        material,
+        price: preco,
+        discountValue: 0,
+        images: [imagem],
+      };
+    });
   }
 
   getProductById(id: string): Promise<IProduct> {
