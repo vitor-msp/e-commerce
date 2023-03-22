@@ -6,9 +6,10 @@ import { RootState } from "../store";
 import { IProduct } from "../store/products/products.types";
 
 export const Products = () => {
+  const [currentName, setCurrentName] = useState<string>("");
+  const [currentMaxPrice, setCurrentMaxPrice] = useState<number>(1000);
   const [currentCategories, setCurrentCategories] = useState<string[]>([]);
   const [currentMaterials, setCurrentMaterials] = useState<string[]>([]);
-  const [currentName, setCurrentName] = useState<string>("");
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
 
   const products = useSelector((state: RootState) => state.products.products);
@@ -21,7 +22,13 @@ export const Products = () => {
 
   useEffect(() => {
     setFilteredProducts(filterProducts(products));
-  }, [products, currentCategories, currentMaterials, currentName]);
+  }, [
+    products,
+    currentName,
+    currentMaxPrice,
+    currentCategories,
+    currentMaterials,
+  ]);
 
   const toggleCategory = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -56,12 +63,21 @@ export const Products = () => {
   };
 
   const filterProducts = (products: IProduct[]): IProduct[] => {
-    return filterMaterials(filterCategories(filterName(products)));
+    return filterMaterials(
+      filterCategories(filterMaxPrice(filterName(products)))
+    );
   };
 
   const filterName = (products: IProduct[]): IProduct[] => {
     return products.filter((product) =>
       product.name.toLowerCase().includes(currentName.toLowerCase())
+    );
+  };
+
+  const filterMaxPrice = (products: IProduct[]): IProduct[] => {
+    return products.filter(
+      ({ price, discountValue }) =>
+        price * (1 - discountValue) <= currentMaxPrice
     );
   };
 
@@ -90,42 +106,70 @@ export const Products = () => {
     setCurrentName(event.target.value);
   };
 
+  const changePrice = (
+    event: React.InputHTMLAttributes<HTMLInputElement>
+  ): void => {
+    // @ts-ignore
+    setCurrentMaxPrice(+event.target.value);
+  };
+
   return (
     <>
       <Navbar />
       <div className="d-flex flex-row">
-        <div>
-          <h6>Categorias</h6>
-          <ul>
-            {categories.map((category, index) => (
-              <li key={index}>
-                <input
-                  type="checkbox"
-                  value={index}
-                  onChange={(event) => toggleCategory(event, category, index)}
-                />
-                <span>{category}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h6>Materiais</h6>
-          <ul>
-            {materials.map((material, index) => (
-              <li key={index}>
-                <input
-                  type="checkbox"
-                  value={index}
-                  onChange={(event) => toggleMaterial(event, material, index)}
-                />
-                <span>{material}</span>
-              </li>
-            ))}
-          </ul>
+        <div className="d-flex flex-column">
+          <div>
+            <label htmlFor="">Preço máximo:</label>
+            <span>R$ {currentMaxPrice}</span>
+            <input
+              type="range"
+              min={50}
+              max={1000}
+              step={50}
+              value={currentMaxPrice}
+              onChange={changePrice}
+            />
+          </div>
+          <div className="d-flex flex-row">
+            <div>
+              <h6>Categorias</h6>
+              <ul>
+                {categories.map((category, index) => (
+                  <li key={index}>
+                    <input
+                      type="checkbox"
+                      value={index}
+                      onChange={(event) =>
+                        toggleCategory(event, category, index)
+                      }
+                    />
+                    <span>{category}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h6>Materiais</h6>
+              <ul>
+                {materials.map((material, index) => (
+                  <li key={index}>
+                    <input
+                      type="checkbox"
+                      value={index}
+                      onChange={(event) =>
+                        toggleMaterial(event, material, index)
+                      }
+                    />
+                    <span>{material}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
         <div className="d-flex flex-column">
           <div>
+            <label htmlFor="">Nome</label>
             <input type="text" value={currentName} onChange={changeName} />
           </div>
           <ul className="d-flex flex-row flex-wrap list-group justify-content-center">
