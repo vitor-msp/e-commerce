@@ -28,7 +28,7 @@ export const addProductToCart =
       if (savedCartString) {
         savedCart = JSON.parse(savedCartString);
       }
-      savedCart.push(product);
+      savedCart.push({ id: product.id, supplier: product.supplier });
       localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(savedCart));
       dispatch(addProductToCartAction(product));
     } catch (error) {
