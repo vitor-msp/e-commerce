@@ -70,7 +70,7 @@ export const CurrentProduct = () => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-primary" disabled={cart} onClick={addToCart}>
+        <button type="button" className="btn btn-primary" disabled={cart} onClick={addToCart}>
           {cart ? "Já está no carrinho" : "Adicione ao carrinho"}
         </button>
       </Modal.Footer>

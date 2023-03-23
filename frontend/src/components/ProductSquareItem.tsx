@@ -48,7 +48,7 @@ export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
           <span className="fw-bold">Nome: {name}</span>
           <span>Descrição: {description}</span>
           <span className="fst-italic">Preço: {price}</span>
-          <button className="btn btn-light" disabled={cart} onClick={addToCart}>
+          <button type="button" className="btn btn-light" disabled={cart} onClick={addToCart}>
             {cart ? "Já está no carrinho" : "Adicione ao carrinho"}
           </button>
         </div>

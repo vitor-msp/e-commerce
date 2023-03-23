@@ -75,6 +75,7 @@ export const ProductCartItem = ({ product }: ProductCartItemProps) => {
         </div>
         <div>
           <button
+            type="button"
             className="btn btn-large btn-outline-danger"
             onClick={removeFromCart}
           >

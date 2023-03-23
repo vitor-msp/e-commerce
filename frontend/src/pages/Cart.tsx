@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { ProductCartItem } from "../components/ProductCartItem";
 import { RootState } from "../store";
@@ -24,6 +25,9 @@ export const Cart = () => {
             currency: "BRL",
           })}
         </span>
+        <NavLink to={"/checkout"} className={"nav-link btn bg-primary"}>
+          Revise sua Compra
+        </NavLink>
       </div>
     </>
   );
