@@ -3,6 +3,7 @@ import { Modal, Carousel } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { cleanCurrentProductAction } from "../store/current-product/current-product.slice";
+import { addProductToCart } from "../store/products/products.middleware";
 
 export const CurrentProduct = () => {
   const [showModal, setShowModal] = useState(false);
@@ -20,6 +21,11 @@ export const CurrentProduct = () => {
     setShowModal(false);
   };
 
+  const addToCart = (): void => {
+    dispatch(addProductToCart(currentProduct));
+    closeModal();
+  };
+
   const {
     category,
     description,
@@ -29,6 +35,7 @@ export const CurrentProduct = () => {
     material,
     name,
     price,
+    cart,
   } = currentProduct;
 
   return (
@@ -63,7 +70,9 @@ export const CurrentProduct = () => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <button className="btn btn-primary">Adicione ao carrinho</button>
+        <button className="btn btn-primary" disabled={cart} onClick={addToCart}>
+          {cart ? "Já está no carrinho" : "Adicione ao carrinho"}
+        </button>
       </Modal.Footer>
     </Modal>
   );

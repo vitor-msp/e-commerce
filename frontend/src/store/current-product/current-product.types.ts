@@ -1,15 +1,6 @@
-export interface ICurrentProduct {
-  id: string;
-  name: string;
-  description: string;
-  images: string[];
-  price: number;
-  discountValue: number;
-  category: string;
-  material: string;
-}
+import { IProduct } from "../products/products.types";
 
 export interface ICurrentProductState {
-  data: ICurrentProduct;
+  data: IProduct;
   showProduct: boolean;
 }

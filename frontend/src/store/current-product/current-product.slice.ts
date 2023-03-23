@@ -1,16 +1,18 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IProduct } from "../products/products.types";
-import { ICurrentProduct, ICurrentProductState } from "./current-product.types";
+import { ICurrentProductState } from "./current-product.types";
 
-const EMPTY_PRODUCT: ICurrentProduct = {
-  id: "string",
-  name: "string",
-  description: "string",
+const EMPTY_PRODUCT: IProduct = {
+  supplier: "",
+  id: "",
+  name: "",
+  description: "",
   images: [],
   price: 0,
   discountValue: 0,
   category: "",
   material: "",
+  cart: false,
 };
 
 const initialState: ICurrentProductState = {
