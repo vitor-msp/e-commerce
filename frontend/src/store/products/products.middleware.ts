@@ -1,6 +1,6 @@
 import { AppThunk } from "..";
 import { suppliers } from "../../factory-suppliers";
-import { addProductsAction, addProductToCartAction } from "./products.slice";
+import { addProductsAction, addProductToCartAction, removeProductFromCartAction } from "./products.slice";
 import {
   IProduct,
   IProductLocalStorage,
@@ -31,6 +31,23 @@ export const addProductToCart =
       savedCart.push({ id: product.id, supplier: product.supplier });
       localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(savedCart));
       dispatch(addProductToCartAction(product));
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+export const removeProductFromCart =
+  (product: IProduct): AppThunk =>
+  async (dispatch) => {
+    try {
+      const savedCartString = localStorage.getItem(LOCAL_STORAGE_KEY_NAME);
+      let savedCart: IProductLocalStorage[] = [];
+      if (savedCartString) {
+        savedCart = JSON.parse(savedCartString);
+      }
+      savedCart = savedCart.filter((item) => item.id !== product.id);
+      localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(savedCart));
+      dispatch(removeProductFromCartAction(product));
     } catch (error) {
       alert(error);
     }

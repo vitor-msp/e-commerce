@@ -47,9 +47,20 @@ const productsSlice = createSlice({
       //@ts-ignore
       state.products.at(index).cart = true;
     },
+    removeProductFromCartAction: (
+      state,
+      { payload }: PayloadAction<IProduct>
+    ) => {
+      state.products = state.products.filter(
+        (product) => product.id !== payload.id
+      );
+    },
   },
 });
 
-export const { addProductsAction, addProductToCartAction } =
-  productsSlice.actions;
+export const {
+  addProductsAction,
+  addProductToCartAction,
+  removeProductFromCartAction,
+} = productsSlice.actions;
 export const productsReducer = productsSlice.reducer;

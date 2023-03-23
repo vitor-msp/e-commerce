@@ -3,7 +3,7 @@ import { AppDispatch } from "../store";
 import { updateCurrentProductAction } from "../store/current-product/current-product.slice";
 import { IProduct } from "../store/products/products.types";
 import "../design/index.css";
-import { addProductToCart } from "../store/products/products.middleware";
+import { addProductToCart, removeProductFromCart } from "../store/products/products.middleware";
 import { useState } from "react";
 
 export type ProductCartItemProps = {
@@ -33,6 +33,9 @@ export const ProductCartItem = ({ product }: ProductCartItemProps) => {
   ): void => {
     //@ts-ignore
     setQuantity(+event.target.value);
+  };
+  const removeFromCart = (): void => {
+    dispatch(removeProductFromCart(product));
   };
   return (
     <li className="list-group-item bg-primary rounded my-2 mx-2 p-2 opacity-product">
@@ -67,7 +70,7 @@ export const ProductCartItem = ({ product }: ProductCartItemProps) => {
         <div>
           <button
             className="btn btn-large btn-outline-danger"
-            onClick={() => {}}
+            onClick={removeFromCart}
           >
             {" x "}
           </button>
