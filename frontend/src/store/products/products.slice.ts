@@ -14,8 +14,13 @@ const productsSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    getProductsAction: (state, { payload }: PayloadAction<IProduct[]>) => {
-      state.products = payload;
+    addProductsAction: (state, { payload }: PayloadAction<IProduct[]>) => {
+      state.products = payload.map((product) => {
+        return {
+          ...product,
+          id: product.supplier + product.id,
+        };
+      });
       state.filters.categories = getCategoriesFromProducts(payload);
       state.filters.materials = getMaterialsFromProducts(payload);
     },
@@ -29,5 +34,6 @@ const productsSlice = createSlice({
   },
 });
 
-export const { getProductsAction, addProductToCartAction } = productsSlice.actions;
+export const { addProductsAction, addProductToCartAction } =
+  productsSlice.actions;
 export const productsReducer = productsSlice.reducer;

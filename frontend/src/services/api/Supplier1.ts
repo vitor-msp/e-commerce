@@ -34,7 +34,7 @@ export class Supplier1 implements IProductsApi {
         product;
       return {
         supplier: "1",
-        id: "1:" + id,
+        id,
         name: nome,
         description: descricao,
         category: categoria,
