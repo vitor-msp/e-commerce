@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useRoutes } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { ProductCheckoutItem } from "../components/ProductCheckoutItem";
 import { billingApi } from "../factory";
@@ -13,6 +14,7 @@ export const Checkout = () => {
   );
 
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
   const buy = async (): Promise<void> => {
     const orderItems: OrderItem[] = productsInCart.map(
@@ -34,6 +36,7 @@ export const Checkout = () => {
     try {
       const orderReturn = await billingApi.postOrder(order);
       dispatch(cleanCart());
+      navigate("/products");
       alert(`Id do pedido: ${orderReturn.orderId} - ${orderReturn.status}`);
     } catch (error) {
       alert(error);
