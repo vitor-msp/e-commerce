@@ -3,7 +3,12 @@ import {
   getCategoriesFromProducts,
   getMaterialsFromProducts,
 } from "../../utils/products-utils";
-import { IProduct, IProductsState } from "./products.types";
+import {
+  IProduct,
+  IProductLocalStorage,
+  IProductsState,
+  LOCAL_STORAGE_KEY_NAME,
+} from "./products.types";
 
 const initialState: IProductsState = {
   products: [],
@@ -15,12 +20,23 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     addProductsAction: (state, { payload }: PayloadAction<IProduct[]>) => {
-      state.products = payload.map((product) => {
+      let products = payload.map((product) => {
         return {
           ...product,
           id: product.supplier + product.id,
         };
       });
+      const savedCartString = localStorage.getItem(LOCAL_STORAGE_KEY_NAME);
+      if (savedCartString) {
+        const savedCart: IProductLocalStorage[] = JSON.parse(savedCartString);
+        products = products.map((product) => {
+          return {
+            ...product,
+            cart: savedCart.some((item) => item.id === product.id),
+          };
+        });
+      }
+      state.products = products;
       state.filters.categories = getCategoriesFromProducts(payload);
       state.filters.materials = getMaterialsFromProducts(payload);
     },
