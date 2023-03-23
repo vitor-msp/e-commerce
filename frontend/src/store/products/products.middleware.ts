@@ -1,5 +1,5 @@
 import { AppThunk } from "..";
-import { suppliers } from "../../factory-suppliers";
+import { suppliers } from "../../factory";
 import {
   addProductsAction,
   addProductToCartAction,
