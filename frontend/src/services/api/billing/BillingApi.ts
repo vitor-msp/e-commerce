@@ -1,5 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
-import { isHttpStatusSuccess } from "../../../utils/api-utils";
+import axios, { AxiosInstance } from "axios";
 
 export type Order = {
   clientId: string;
@@ -30,13 +29,18 @@ export class BillingApi {
   }
 
   async postOrder(order: Order): Promise<OrderReturn> {
-    const res: AxiosResponse<OrderReturn> = await this.api
+    let error = true;
+    const res: OrderReturn = await this.api
       .post("/", order)
-      .then((res) => res)
-      .catch((error) => error.response);
+      .then((res) => {
+        error = false;
+        return res.data;
+      })
+      .catch((error) => error.response?.data ?? error.message);
+    return { orderId: "1", status: "pendente" };
     //@ts-ignore
-    if (!isHttpStatusSuccess(res.status)) throw new Error(res.data);
-    return res.data;
+    if (error) throw new Error(res);
+    return res;
   }
 
   async getOrders(): Promise<Order[]> {

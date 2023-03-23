@@ -1,15 +1,18 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Navbar } from "../components/Navbar";
 import { ProductCheckoutItem } from "../components/ProductCheckoutItem";
 import { billingApi } from "../factory";
 import { Order, OrderItem } from "../services/api/billing/BillingApi";
-import { RootState } from "../store";
+import { AppDispatch, RootState } from "../store";
+import { cleanCart } from "../store/products/products.middleware";
 import { getTotalValueOfProducts } from "../utils/products-utils";
 
 export const Checkout = () => {
   const productsInCart = useSelector((state: RootState) =>
     state.products.products.filter((p) => p.cart)
   );
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const buy = async (): Promise<void> => {
     const orderItems: OrderItem[] = productsInCart.map(
@@ -30,6 +33,7 @@ export const Checkout = () => {
     };
     try {
       const orderReturn = await billingApi.postOrder(order);
+      dispatch(cleanCart());
       alert(`Id do pedido: ${orderReturn.orderId} - ${orderReturn.status}`);
     } catch (error) {
       alert(error);

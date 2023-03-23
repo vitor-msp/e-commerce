@@ -63,6 +63,15 @@ const productsSlice = createSlice({
       if (index !== -1)
         state.products.at(index)!.cartQuantity = payload.cartQuantity;
     },
+    cleanCartAction: (state) => {
+      state.products = state.products.map((product) => {
+        return {
+          ...product,
+          cart: false,
+          cartQuantity: 1,
+        };
+      });
+    },
   },
 });
 
@@ -71,5 +80,6 @@ export const {
   addProductToCartAction,
   removeProductFromCartAction,
   updateQuantityAction,
+  cleanCartAction,
 } = productsSlice.actions;
 export const productsReducer = productsSlice.reducer;

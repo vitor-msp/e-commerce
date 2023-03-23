@@ -3,6 +3,7 @@ import { suppliers } from "../../factory";
 import {
   addProductsAction,
   addProductToCartAction,
+  cleanCartAction,
   removeProductFromCartAction,
   updateQuantityAction,
 } from "./products.slice";
@@ -71,3 +72,12 @@ export const updateQuantity =
       alert(error);
     }
   };
+
+export const cleanCart = (): AppThunk => async (dispatch) => {
+  try {
+    localStorage.removeItem(LOCAL_STORAGE_KEY_NAME);
+    dispatch(cleanCartAction());
+  } catch (error) {
+    alert(error);
+  }
+};
