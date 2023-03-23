@@ -46,8 +46,7 @@ const productsSlice = createSlice({
       const index = state.products.findIndex(
         (product) => product.id === payload.id
       );
-      //@ts-ignore
-      state.products.at(index).cart = true;
+      if (index !== -1) state.products.at(index)!.cart = true;
     },
     removeProductFromCartAction: (
       state,
@@ -57,6 +56,13 @@ const productsSlice = createSlice({
         (product) => product.id !== payload.id
       );
     },
+    updateQuantityAction: (state, { payload }: PayloadAction<IProduct>) => {
+      const index = state.products.findIndex(
+        (product) => product.id === payload.id
+      );
+      if (index !== -1)
+        state.products.at(index)!.cartQuantity = payload.cartQuantity;
+    },
   },
 });
 
@@ -64,5 +70,6 @@ export const {
   addProductsAction,
   addProductToCartAction,
   removeProductFromCartAction,
+  updateQuantityAction,
 } = productsSlice.actions;
 export const productsReducer = productsSlice.reducer;

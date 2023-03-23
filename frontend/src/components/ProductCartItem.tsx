@@ -3,7 +3,11 @@ import { AppDispatch } from "../store";
 import { updateCurrentProductAction } from "../store/current-product/current-product.slice";
 import { IProduct } from "../store/products/products.types";
 import "../design/index.css";
-import { addProductToCart, removeProductFromCart } from "../store/products/products.middleware";
+import {
+  addProductToCart,
+  removeProductFromCart,
+  updateQuantity,
+} from "../store/products/products.middleware";
 import { useState } from "react";
 
 export type ProductCartItemProps = {
@@ -32,7 +36,9 @@ export const ProductCartItem = ({ product }: ProductCartItemProps) => {
     event: React.InputHTMLAttributes<HTMLInputElement>
   ): void => {
     //@ts-ignore
-    setQuantity(+event.target.value);
+    const cartQuantity: number = +event.target.value;
+    setQuantity(cartQuantity);
+    dispatch(updateQuantity({ ...product, cartQuantity }));
   };
   const removeFromCart = (): void => {
     dispatch(removeProductFromCart(product));
