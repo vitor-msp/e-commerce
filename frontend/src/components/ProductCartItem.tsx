@@ -15,7 +15,7 @@ export type ProductCartItemProps = {
 };
 
 export const ProductCartItem = ({ product }: ProductCartItemProps) => {
-  const [quantity, setQuantity] = useState<number>(1);
+  const [quantity, setQuantity] = useState<number>(product.cartQuantity);
   const dispatch = useDispatch<AppDispatch>();
   const selectProduct = () => {
     dispatch(updateCurrentProductAction(product));
