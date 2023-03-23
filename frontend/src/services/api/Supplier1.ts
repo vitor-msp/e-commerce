@@ -43,6 +43,7 @@ export class Supplier1 implements IProductsApi {
         discountValue: 0,
         images: [imagem],
         cart: false,
+        cartQuantity: 1,
       };
     });
   }

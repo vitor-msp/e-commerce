@@ -1,6 +1,10 @@
 import { AppThunk } from "..";
 import { suppliers } from "../../factory-suppliers";
-import { addProductsAction, addProductToCartAction, removeProductFromCartAction } from "./products.slice";
+import {
+  addProductsAction,
+  addProductToCartAction,
+  removeProductFromCartAction,
+} from "./products.slice";
 import {
   IProduct,
   IProductLocalStorage,
@@ -28,7 +32,8 @@ export const addProductToCart =
       if (savedCartString) {
         savedCart = JSON.parse(savedCartString);
       }
-      savedCart.push({ id: product.id, supplier: product.supplier });
+      const { id, supplier, cartQuantity } = product;
+      savedCart.push({ id, supplier, cartQuantity });
       localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(savedCart));
       dispatch(addProductToCartAction(product));
     } catch (error) {

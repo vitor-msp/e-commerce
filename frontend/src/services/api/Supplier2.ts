@@ -55,6 +55,7 @@ export class Supplier2 implements IProductsApi {
         discountValue: hasDiscount ? +discountValue : 0,
         images: [...gallery],
         cart: false,
+        cartQuantity: 1,
       };
     });
   }

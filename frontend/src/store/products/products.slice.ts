@@ -30,9 +30,11 @@ const productsSlice = createSlice({
       if (savedCartString) {
         const savedCart: IProductLocalStorage[] = JSON.parse(savedCartString);
         products = products.map((product) => {
+          const savedProduct = savedCart.find((item) => item.id === product.id);
           return {
             ...product,
-            cart: savedCart.some((item) => item.id === product.id),
+            cart: savedProduct ? true : false,
+            cartQuantity: savedProduct?.cartQuantity ?? 1,
           };
         });
       }

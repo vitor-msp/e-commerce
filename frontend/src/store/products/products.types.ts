@@ -9,6 +9,7 @@ export interface IProduct {
   category: string;
   material: string;
   cart: boolean;
+  cartQuantity: number;
 }
 export interface IFilters {
   categories: string[];
@@ -17,6 +18,7 @@ export interface IFilters {
 export interface IProductLocalStorage {
   supplier: string;
   id: string;
+  cartQuantity: number;
 }
 export const LOCAL_STORAGE_KEY_NAME: string = "e-commerce:cart";
 export interface IProductsState {

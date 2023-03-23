@@ -13,6 +13,7 @@ const EMPTY_PRODUCT: IProduct = {
   category: "",
   material: "",
   cart: false,
+  cartQuantity: 1,
 };
 
 const initialState: ICurrentProductState = {
