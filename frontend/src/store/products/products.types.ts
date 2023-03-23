@@ -8,6 +8,7 @@ export interface IProduct {
   discountValue: number;
   category: string;
   material: string;
+  cart: boolean;
 }
 export interface IFilters {
   categories: string[];

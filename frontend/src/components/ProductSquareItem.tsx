@@ -3,6 +3,7 @@ import { AppDispatch } from "../store";
 import { updateCurrentProductAction } from "../store/current-product/current-product.slice";
 import { IProduct } from "../store/products/products.types";
 import "../design/index.css";
+import { addProductToCartAction } from "../store/products/products.slice";
 
 export type ProductSquareItemProps = {
   product: IProduct;
@@ -22,12 +23,16 @@ export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
     material,
     name,
     price,
+    cart,
+    supplier,
   } = product;
+  const addToCart = (): void => {
+    dispatch(addProductToCartAction(product));
+  };
   return (
     <li
       className="list-group-item bg-primary rounded my-2 mx-2 p-2 opacity-product"
-      style={{ width: "370px", height: "490px", cursor: "pointer" }}
-      onClick={selectProduct}
+      style={{ width: "370px", height: "490px" }}
     >
       <div className="d-flex flex-column align-items-center">
         <img
@@ -36,11 +41,16 @@ export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
           width={320}
           height={240}
           className="rounded"
+          style={{ cursor: "pointer" }}
+          onClick={selectProduct}
         />
         <div className="d-flex flex-column">
           <span className="fw-bold">Nome: {name}</span>
           <span>Descrição: {description}</span>
           <span className="fst-italic">Preço: {price}</span>
+          <button className="btn btn-light" disabled={cart} onClick={addToCart}>
+            {cart ? "Já está no carrinho" : "Adicione ao carrinho"}
+          </button>
         </div>
       </div>
     </li>
