@@ -3,7 +3,7 @@ import { AppDispatch } from "../store";
 import { updateCurrentProductAction } from "../store/current-product/current-product.slice";
 import { IProduct } from "../store/products/products.types";
 import "../design/index.css";
-import { addProductToCartAction } from "../store/products/products.slice";
+import { addProductToCart } from "../store/products/products.middleware";
 
 export type ProductSquareItemProps = {
   product: IProduct;
@@ -27,7 +27,7 @@ export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
     supplier,
   } = product;
   const addToCart = (): void => {
-    dispatch(addProductToCartAction(product));
+    dispatch(addProductToCart(product));
   };
   return (
     <li

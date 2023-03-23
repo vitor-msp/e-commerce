@@ -14,7 +14,11 @@ export interface IFilters {
   categories: string[];
   materials: string[];
 }
-
+export interface IProductLocalStorage {
+  supplier: string;
+  id: string;
+}
+export const LOCAL_STORAGE_KEY_NAME: string = "e-commerce:cart";
 export interface IProductsState {
   products: IProduct[];
   filters: IFilters;
