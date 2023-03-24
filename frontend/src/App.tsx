@@ -11,6 +11,7 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { AppDispatch, RootState } from "./store";
 import { getProducts } from "./store/products/products.middleware";
+import { testSignIn } from "./store/user/user.middleware";
 
 const App = () => {
   const products = useSelector((state: RootState) => state.products.products);
@@ -24,8 +25,11 @@ const App = () => {
       dispatch(getProducts());
       return;
     }
-    // if (products.length > 0) console.log(products);
   }, [products, dispatch]);
+
+  useEffect(() => {
+    dispatch(testSignIn());
+  }, []);
 
   return (
     <div className="container-fluid">

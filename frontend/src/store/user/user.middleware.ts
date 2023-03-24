@@ -1,6 +1,9 @@
 import { AppThunk } from "..";
 import { userApi } from "../../factory";
-import { IUserSignIn } from "../../services/api/user/UserApi";
+import {
+  IUserSignIn,
+  IUserSignInReturn,
+} from "../../services/api/user/UserApi";
 import { signInAction, signOutAction } from "./user.slice";
 import { LOCAL_STORAGE_JWT_KEY_NAME } from "./user.types";
 
@@ -15,6 +18,15 @@ export const signIn =
       alert(error);
     }
   };
+
+export const testSignIn = (): AppThunk => async (dispatch) => {
+  try {
+    const JwtString = localStorage.getItem(LOCAL_STORAGE_JWT_KEY_NAME);
+    if (JwtString) dispatch(signInAction());
+  } catch (error) {
+    alert(error);
+  }
+};
 
 export const signOut = (): AppThunk => async (dispatch) => {
   try {
