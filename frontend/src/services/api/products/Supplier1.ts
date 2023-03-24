@@ -14,6 +14,7 @@ type ProductSupplier1 = {
 };
 
 export class Supplier1 implements IProductsApi {
+  readonly supplierId: string = "1";
   private readonly api: AxiosInstance;
 
   constructor() {
@@ -48,7 +49,30 @@ export class Supplier1 implements IProductsApi {
     });
   }
 
-  getProductById(id: string): Promise<IProduct> {
-    throw new Error("Method not implemented.");
+  async getProductById(id: string): Promise<IProduct> {
+    let error = true;
+    const res: ProductSupplier1 = await this.api
+      .get(`/${id}`)
+      .then((res) => {
+        error = false;
+        return res.data;
+      })
+      .catch((error) => error.response?.data ?? error.message);
+    //@ts-ignore
+    if (error) throw new Error(res);
+    const { categoria, descricao, imagem, material, nome, preco } = res;
+    return {
+      supplier: this.supplierId,
+      id: res.id,
+      name: nome,
+      description: descricao,
+      category: categoria,
+      material,
+      price: +preco,
+      discountValue: 0,
+      images: [imagem],
+      cart: false,
+      cartQuantity: 1,
+    };
   }
 }
