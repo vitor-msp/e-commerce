@@ -4,7 +4,6 @@ export const SignIn = () => {
   return (
     <>
       <Navbar />
-      SignIn
     </>
   );
 };
