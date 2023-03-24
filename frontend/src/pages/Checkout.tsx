@@ -3,7 +3,7 @@ import { useNavigate, useRoutes } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { ProductCheckoutItem } from "../components/ProductCheckoutItem";
 import { billingApi } from "../factory";
-import { Order, OrderItem } from "../services/api/billing/BillingApi";
+import { IOrder, IOrderItem } from "../services/api/billing/BillingApi";
 import { AppDispatch, RootState } from "../store";
 import { cleanCart } from "../store/products/products.middleware";
 import { getTotalValueOfProducts } from "../utils/products-utils";
@@ -17,7 +17,7 @@ export const Checkout = () => {
   const navigate = useNavigate();
 
   const buy = async (): Promise<void> => {
-    const orderItems: OrderItem[] = productsInCart.map(
+    const orderItems: IOrderItem[] = productsInCart.map(
       ({ name, supplier, id, cartQuantity, discountValue, price }) => {
         return {
           supplier,
@@ -28,7 +28,7 @@ export const Checkout = () => {
         };
       }
     );
-    const order: Order = {
+    const order: IOrder = {
       clientId: "1",
       date: new Date().toISOString(),
       items: [...orderItems],

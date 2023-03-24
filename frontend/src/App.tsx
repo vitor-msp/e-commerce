@@ -5,7 +5,7 @@ import { CurrentProduct } from "./components/CurrentProduct";
 import { Cart } from "./pages/Cart";
 import { Checkout } from "./pages/Checkout";
 import { MyAccount } from "./pages/MyAccount";
-import { MyRequests } from "./pages/MyRequests";
+import { MyOrders } from "./pages/MyOrders";
 import { Products } from "./pages/Products";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
@@ -36,7 +36,7 @@ const App = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-          <Route path="/myrequests" element={<MyRequests />} />
+          <Route path="/myorders" element={<MyOrders />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/myaccount" element={<MyAccount />} />

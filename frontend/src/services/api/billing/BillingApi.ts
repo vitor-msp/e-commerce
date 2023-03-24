@@ -1,18 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-
-export type Order = {
-  clientId: string;
-  date: string;
-  items: OrderItem[];
-};
-
-export type OrderItem = {
-  supplier: string;
-  productId: string;
-  name: string;
-  unitPrice: number;
-  quantity: number;
-};
+import { IOrder } from "../../../store/orders/orders.types";
 
 type OrderReturn = {
   orderId: string;
@@ -28,7 +15,7 @@ export class BillingApi {
     });
   }
 
-  async postOrder(order: Order): Promise<OrderReturn> {
+  async postOrder(order: IOrder): Promise<OrderReturn> {
     let error = true;
     const res: OrderReturn = await this.api
       .post("/", order)
@@ -43,7 +30,17 @@ export class BillingApi {
     return res;
   }
 
-  async getOrders(): Promise<Order[]> {
-    throw new Error("Method not implemented.");
+  async getOrders(): Promise<IOrder[]> {
+    let error = true;
+    const res: IOrder[] = await this.api
+      .get("/")
+      .then((res) => {
+        error = false;
+        return res.data;
+      })
+      .catch((error) => error.response?.data ?? error.message);
+    //@ts-ignore
+    if (error) throw new Error(res);
+    return res;
   }
 }
