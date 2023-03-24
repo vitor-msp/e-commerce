@@ -28,24 +28,24 @@ export const Navbar = () => {
             <div className="collapse navbar-collapse">
               <ul className="navbar-nav">
                 <li className="nav-item active">
-                  <NavLink to={"/products"} className={"nav-link "}>
+                  <NavLink to={"/products"} className={"nav-link"}>
                     Products
                   </NavLink>
                 </li>
                 <li className="nav-item">
-                  <NavLink to={"/cart"} className={"nav-link "}>
+                  <NavLink to={"/cart"} className={"nav-link"}>
                     Cart
                   </NavLink>
                 </li>
                 {userIsLogged ? (
                   <>
                     <li className="nav-item">
-                      <NavLink to={"/myorders"} className={"nav-link "}>
+                      <NavLink to={"/myorders"} className={"nav-link"}>
                         Meus pedidos
                       </NavLink>
                     </li>
                     <li className="nav-item">
-                      <NavLink to={"/myorders"} className={"nav-link "}>
+                      <NavLink to={"/signout"} className={"nav-link"}>
                         Sair
                       </NavLink>
                     </li>
@@ -53,12 +53,12 @@ export const Navbar = () => {
                 ) : (
                   <>
                     <li className="nav-item">
-                      <NavLink to={"/myorders"} className={"nav-link "}>
+                      <NavLink to={"/signup"} className={"nav-link"}>
                         Cadastre-se
                       </NavLink>
                     </li>
                     <li className="nav-item">
-                      <NavLink to={"/myorders"} className={"nav-link "}>
+                      <NavLink to={"/signin"} className={"nav-link"}>
                         Entrar
                       </NavLink>
                     </li>
