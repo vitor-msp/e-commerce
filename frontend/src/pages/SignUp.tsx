@@ -27,7 +27,9 @@ export const SignUp = () => {
     setUser(DEFAULT_USER);
   };
 
-  const signUp = async (): Promise<void> => {
+  const signUp = async (event: any): Promise<void> => {
+    event.preventDefault();
+    event.stopPropagation();
     if (!passwordIsValid()) {
       alert("As senhas não são iguais.");
       return;
@@ -48,7 +50,11 @@ export const SignUp = () => {
   return (
     <>
       <Navbar />
-      <form action="" className="d-flex flex-column jusify-content-center">
+      <form
+        action=""
+        onSubmit={signUp}
+        className="d-flex flex-column jusify-content-center"
+      >
         <div className="mx-auto">
           <label htmlFor="">E-mail:</label>
           <input
@@ -88,13 +94,11 @@ export const SignUp = () => {
             onClick={resetUser}
             className="btn btn-outline-primary mx-2"
           />
-          <button
-            type="button"
-            onClick={signUp}
+          <input
+            type="submit"
             className="btn btn-primary mx-2"
-          >
-            Cadastrar
-          </button>
+            value={"Cadastrar"}
+          />
         </div>
       </form>
     </>
