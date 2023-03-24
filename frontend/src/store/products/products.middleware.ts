@@ -10,7 +10,7 @@ import {
 import {
   IProduct,
   IProductLocalStorage,
-  LOCAL_STORAGE_KEY_NAME,
+  LOCAL_STORAGE_CART_KEY_NAME,
 } from "./products.types";
 
 export const getProducts = (): AppThunk => async (dispatch) => {
@@ -29,12 +29,15 @@ export const addProductToCart =
   (product: IProduct): AppThunk =>
   async (dispatch) => {
     try {
-      const savedCartString = localStorage.getItem(LOCAL_STORAGE_KEY_NAME);
+      const savedCartString = localStorage.getItem(LOCAL_STORAGE_CART_KEY_NAME);
       let savedCart: IProductLocalStorage[] = [];
       if (savedCartString) savedCart = JSON.parse(savedCartString);
       const { id, supplier, cartQuantity } = product;
       savedCart.push({ id, supplier, cartQuantity });
-      localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(savedCart));
+      localStorage.setItem(
+        LOCAL_STORAGE_CART_KEY_NAME,
+        JSON.stringify(savedCart)
+      );
       dispatch(addProductToCartAction(product));
     } catch (error) {
       alert(error);
@@ -45,11 +48,14 @@ export const removeProductFromCart =
   (product: IProduct): AppThunk =>
   async (dispatch) => {
     try {
-      const savedCartString = localStorage.getItem(LOCAL_STORAGE_KEY_NAME);
+      const savedCartString = localStorage.getItem(LOCAL_STORAGE_CART_KEY_NAME);
       let savedCart: IProductLocalStorage[] = [];
       if (savedCartString) savedCart = JSON.parse(savedCartString);
       savedCart = savedCart.filter((item) => item.id !== product.id);
-      localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(savedCart));
+      localStorage.setItem(
+        LOCAL_STORAGE_CART_KEY_NAME,
+        JSON.stringify(savedCart)
+      );
       dispatch(removeProductFromCartAction(product));
     } catch (error) {
       alert(error);
@@ -60,13 +66,16 @@ export const updateQuantity =
   (product: IProduct): AppThunk =>
   async (dispatch) => {
     try {
-      const savedCartString = localStorage.getItem(LOCAL_STORAGE_KEY_NAME);
+      const savedCartString = localStorage.getItem(LOCAL_STORAGE_CART_KEY_NAME);
       let savedCart: IProductLocalStorage[] = [];
       if (savedCartString) savedCart = JSON.parse(savedCartString);
       const index = savedCart.findIndex((item) => item.id === product.id);
       if (index !== -1)
         savedCart.at(index)!.cartQuantity = product.cartQuantity;
-      localStorage.setItem(LOCAL_STORAGE_KEY_NAME, JSON.stringify(savedCart));
+      localStorage.setItem(
+        LOCAL_STORAGE_CART_KEY_NAME,
+        JSON.stringify(savedCart)
+      );
       dispatch(updateQuantityAction(product));
     } catch (error) {
       alert(error);
@@ -75,7 +84,7 @@ export const updateQuantity =
 
 export const cleanCart = (): AppThunk => async (dispatch) => {
   try {
-    localStorage.removeItem(LOCAL_STORAGE_KEY_NAME);
+    localStorage.removeItem(LOCAL_STORAGE_CART_KEY_NAME);
     dispatch(cleanCartAction());
   } catch (error) {
     alert(error);

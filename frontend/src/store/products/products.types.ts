@@ -20,7 +20,7 @@ export interface IProductLocalStorage {
   id: string;
   cartQuantity: number;
 }
-export const LOCAL_STORAGE_KEY_NAME: string = "e-commerce:cart";
+export const LOCAL_STORAGE_CART_KEY_NAME: string = "e-commerce:cart";
 export interface IProductsState {
   products: IProduct[];
   filters: IFilters;

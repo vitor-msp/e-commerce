@@ -7,7 +7,7 @@ import {
   IProduct,
   IProductLocalStorage,
   IProductsState,
-  LOCAL_STORAGE_KEY_NAME,
+  LOCAL_STORAGE_CART_KEY_NAME,
 } from "./products.types";
 
 const initialState: IProductsState = {
@@ -26,7 +26,7 @@ const productsSlice = createSlice({
           id: product.supplier + product.id,
         };
       });
-      const savedCartString = localStorage.getItem(LOCAL_STORAGE_KEY_NAME);
+      const savedCartString = localStorage.getItem(LOCAL_STORAGE_CART_KEY_NAME);
       if (savedCartString) {
         const savedCart: IProductLocalStorage[] = JSON.parse(savedCartString);
         products = products.map((product) => {

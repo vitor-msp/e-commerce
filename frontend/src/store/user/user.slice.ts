@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { IUserState } from "./user.types";
 
 const initialState: IUserState = {
@@ -11,10 +11,11 @@ const userSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    // addProductsAction: (state, { payload }: PayloadAction<IProduct[]>) => {
-    // },
+    signInAction: (state) => {
+      state.user.isLogged = true;
+    },
   },
 });
 
-export const {} = userSlice.actions;
+export const { signInAction } = userSlice.actions;
 export const userReducer = userSlice.reducer;

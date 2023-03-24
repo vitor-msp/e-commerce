@@ -6,6 +6,15 @@ export interface IUserSignUp {
   passwordConfirmation: string;
 }
 
+export interface IUserSignIn {
+  email: string;
+  password: string;
+}
+
+export interface IUserSignInReturn {
+  jwt: string;
+}
+
 export class UserApi {
   private readonly api: AxiosInstance;
 
@@ -25,5 +34,19 @@ export class UserApi {
       })
       .catch((error) => error.response?.data ?? error.message);
     // if (error) throw new Error(res);
+  }
+
+  async signIn(user: IUserSignIn): Promise<IUserSignInReturn> {
+    let error = true;
+    const res: IUserSignInReturn = await this.api
+      .post("/signin", user)
+      .then((res) => {
+        error = false;
+        return res.data;
+      })
+      .catch((error) => error.response?.data ?? error.message);
+    //@ts-ignore
+    if (error) throw new Error(res);
+    return res;
   }
 }
