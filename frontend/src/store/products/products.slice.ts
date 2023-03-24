@@ -52,9 +52,10 @@ const productsSlice = createSlice({
       state,
       { payload }: PayloadAction<IProduct>
     ) => {
-      state.products = state.products.filter(
-        (product) => product.id !== payload.id
+      const index = state.products.findIndex(
+        (product) => product.id === payload.id
       );
+      if (index !== -1) state.products.at(index)!.cart = false;
     },
     updateQuantityAction: (state, { payload }: PayloadAction<IProduct>) => {
       const index = state.products.findIndex(

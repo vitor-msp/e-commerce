@@ -1,9 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../store";
 import { updateCurrentProductAction } from "../store/current-product/current-product.slice";
-import {
-  IShowOrderItem,
-} from "../store/orders/orders.middleware";
+import { IShowOrderItem } from "../store/orders/orders.middleware";
 import { IOrder } from "../store/orders/orders.types";
 
 type IOrderProps = {
