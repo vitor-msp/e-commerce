@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navbar } from "../components/Navbar";
+import { Order } from "../components/Order";
 import { AppDispatch, RootState } from "../store";
 import { getOrders } from "../store/orders/orders.middleware";
 
@@ -17,28 +18,8 @@ export const MyOrders = () => {
     <>
       <Navbar />
       <ul className="list-group">
-        {orders.map(({ date, items }) => (
-          <li
-            className="list-group-item mx-2 my-2 rounded bg-primary"
-            key={date}
-          >
-            <span>Data: {date}</span>
-            <div className="d-flex flex-row">
-              {items.map(({ name, quantity, unitPrice }) => (
-                <div className="mx-2 my-2 bg-light rounded p-2 d-flex flex-column">
-                  <span>Nome: {name}</span>
-                  <span>Quantidade: {quantity}</span>
-                  <span>
-                    Preço unitário:{" "}
-                    {unitPrice.toLocaleString("pt-br", {
-                      style: "currency",
-                      currency: "BRL",
-                    })}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </li>
+        {orders.map((order) => (
+          <Order key={order.date} order={order} />
         ))}
       </ul>
     </>
