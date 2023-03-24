@@ -6,6 +6,7 @@ import { billingApi } from "../factory";
 import { AppDispatch, RootState } from "../store";
 import { IOrder, IOrderItem } from "../store/orders/orders.types";
 import { cleanCart } from "../store/products/products.middleware";
+import { userBoughtAction } from "../store/user/user.slice";
 import { getTotalValueOfProducts } from "../utils/products-utils";
 
 export const Checkout = () => {
@@ -36,6 +37,7 @@ export const Checkout = () => {
     try {
       const orderReturn = await billingApi.postOrder(order);
       dispatch(cleanCart());
+      dispatch(userBoughtAction());
       navigate("/products");
       alert(`Id do pedido: ${orderReturn.orderId} - ${orderReturn.status}`);
     } catch (error) {

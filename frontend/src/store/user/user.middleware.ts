@@ -1,9 +1,6 @@
 import { AppThunk } from "..";
 import { userApi } from "../../factory";
-import {
-  IUserSignIn,
-  IUserSignInReturn,
-} from "../../services/api/user/UserApi";
+import { IUserSignIn } from "../../services/api/user/UserApi";
 import { signInAction, signOutAction } from "./user.slice";
 import { LOCAL_STORAGE_JWT_KEY_NAME } from "./user.types";
 

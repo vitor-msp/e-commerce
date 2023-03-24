@@ -13,14 +13,20 @@ const DEFAULT_USER: IUserSignIn = {
 
 export const SignIn = () => {
   const [user, setUser] = useState<IUserSignIn>(DEFAULT_USER);
-  const isLogged = useSelector((state: RootState) => state.user.user.isLogged);
+  const userStatus = useSelector((state: RootState) => state.user.user);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLogged) navigate("/products");
-  }, [isLogged, navigate]);
+    if (userStatus.isLogged) {
+      if (userStatus.wantsBuy) {
+        navigate("/checkout");
+        return;
+      }
+      navigate("/products");
+    }
+  }, [userStatus, navigate]);
 
   const updateUser = (event: any): void => {
     const field = event.target.name;
