@@ -1,6 +1,5 @@
-import axios, { AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosInstance } from "axios";
 import { IProduct } from "../../../store/products/products.types";
-import { isHttpStatusSuccess } from "../../../utils/api-utils";
 import { IProductsApi } from "./IProductsApi";
 
 type ProductSupplier2 = {
@@ -50,7 +49,7 @@ export class Supplier2 implements IProductsApi {
         hasDiscount,
       } = product;
       return {
-        supplier: "2",
+        supplier: this.supplierId,
         id,
         name,
         description,
