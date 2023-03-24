@@ -8,13 +8,13 @@ import { addProductToCart } from "../store/products/products.middleware";
 export const CurrentProduct = () => {
   const [showModal, setShowModal] = useState(false);
   const currentProduct = useSelector(
-    (state: RootState) => state.currentProduct.data
+    (state: RootState) => state.currentProduct
   );
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setShowModal(true);
-  }, []);
+  }, [currentProduct.showProduct]);
 
   const closeModal = () => {
     dispatch(cleanCurrentProductAction());
@@ -22,7 +22,7 @@ export const CurrentProduct = () => {
   };
 
   const addToCart = (): void => {
-    dispatch(addProductToCart(currentProduct));
+    dispatch(addProductToCart(currentProduct.data));
     closeModal();
   };
 
@@ -36,7 +36,7 @@ export const CurrentProduct = () => {
     name,
     price,
     cart,
-  } = currentProduct;
+  } = currentProduct.data;
 
   return (
     <Modal show={showModal} onHide={closeModal}>
@@ -70,7 +70,12 @@ export const CurrentProduct = () => {
         </div>
       </Modal.Body>
       <Modal.Footer>
-        <button type="button" className="btn btn-primary" disabled={cart} onClick={addToCart}>
+        <button
+          type="button"
+          className="btn btn-primary"
+          disabled={cart}
+          onClick={addToCart}
+        >
           {cart ? "Já está no carrinho" : "Adicione ao carrinho"}
         </button>
       </Modal.Footer>

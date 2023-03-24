@@ -1,8 +1,8 @@
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store";
+import { updateCurrentProductAction } from "../store/current-product/current-product.slice";
 import {
   IShowOrderItem,
-  showOrderItem,
 } from "../store/orders/orders.middleware";
 import { IOrder } from "../store/orders/orders.types";
 
@@ -12,9 +12,17 @@ type IOrderProps = {
 
 export const Order = ({ order }: IOrderProps) => {
   const { date, items } = order;
+  const products = useSelector((state: RootState) => state.products.products);
   const dispatch = useDispatch<AppDispatch>();
   const selectItem = (orderItem: IShowOrderItem): void => {
-    dispatch(showOrderItem(orderItem));
+    const product = products.find(
+      (product) => product.id === orderItem.supplier + orderItem.productId
+    );
+    if (!product) {
+      alert("Item não encontrrado.");
+      return;
+    }
+    dispatch(updateCurrentProductAction(product));
   };
   return (
     <li className="list-group-item mx-2 my-2 rounded bg-primary" key={date}>

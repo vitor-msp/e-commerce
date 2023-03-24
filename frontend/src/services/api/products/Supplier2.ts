@@ -64,38 +64,4 @@ export class Supplier2 implements IProductsApi {
     });
   }
 
-  async getProductById(id: string): Promise<IProduct> {
-    let error = true;
-    const res: ProductSupplier2 = await this.api
-      .get(`/${id}`)
-      .then((res) => {
-        error = false;
-        return res.data;
-      })
-      .catch((error) => error.response?.data ?? error.message);
-    //@ts-ignore
-    if (error) throw new Error(res);
-    const {
-      description,
-      details,
-      discountValue,
-      gallery,
-      hasDiscount,
-      name,
-      price,
-    } = res;
-    return {
-      supplier: this.supplierId,
-      id: res.id,
-      name,
-      description,
-      category: details.adjective,
-      material: details.material,
-      price: +price,
-      discountValue: hasDiscount ? +discountValue : 0,
-      images: [...gallery],
-      cart: false,
-      cartQuantity: 1,
-    };
-  }
 }
