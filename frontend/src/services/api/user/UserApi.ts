@@ -45,6 +45,9 @@ export class UserApi {
         return res.data;
       })
       .catch((error) => error.response?.data ?? error.message);
+    return {
+      jwt: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.dk8cVwBMdjmCEn_Q6s2qveecaoGEGIOkcQAwXkGBeK4",
+    };
     //@ts-ignore
     if (error) throw new Error(res);
     return res;

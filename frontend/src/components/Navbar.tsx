@@ -1,11 +1,18 @@
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { RootState } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { AppDispatch, RootState } from "../store";
+import { signOut } from "../store/user/user.middleware";
 
 export const Navbar = () => {
   const userIsLogged = useSelector(
     (state: RootState) => state.user.user.isLogged
   );
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const executeSignOut = (): void => {
+    dispatch(signOut());
+    navigate("/products");
+  };
   return (
     <div className="row">
       <div className="col-12">
@@ -45,9 +52,9 @@ export const Navbar = () => {
                       </NavLink>
                     </li>
                     <li className="nav-item">
-                      <NavLink to={"/signout"} className={"nav-link"}>
+                      <button onClick={executeSignOut} className={"btn"}>
                         Sair
-                      </NavLink>
+                      </button>
                     </li>
                   </>
                 ) : (

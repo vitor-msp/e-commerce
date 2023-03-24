@@ -14,8 +14,11 @@ const userSlice = createSlice({
     signInAction: (state) => {
       state.user.isLogged = true;
     },
+    signOutAction: (state) => {
+      state.user.isLogged = false;
+    },
   },
 });
 
-export const { signInAction } = userSlice.actions;
+export const { signInAction, signOutAction } = userSlice.actions;
 export const userReducer = userSlice.reducer;
