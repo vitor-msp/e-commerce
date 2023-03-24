@@ -24,13 +24,17 @@ export class Supplier1 implements IProductsApi {
   }
 
   async getAllProducts(): Promise<IProduct[]> {
-    const res: AxiosResponse<ProductSupplier1[]> = await this.api
+    let error = true;
+    const res: ProductSupplier1[] = await this.api
       .get("/")
-      .then((res) => res)
-      .catch((error) => error.response);
+      .then((res) => {
+        error = false;
+        return res.data;
+      })
+      .catch((error) => error.response?.data ?? error.message);
     //@ts-ignore
-    if (!isHttpStatusSuccess(res.status)) throw new Error(res.data);
-    return res.data.map((product) => {
+    if (error) throw new Error(res);
+    return res.map((product) => {
       const { categoria, descricao, id, imagem, material, nome, preco } =
         product;
       return {
