@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useRoutes } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { ProductCheckoutItem } from "../components/ProductCheckoutItem";
 import { billingApi } from "../factory";
-import { IOrder, IOrderItem } from "../services/api/billing/BillingApi";
 import { AppDispatch, RootState } from "../store";
+import { IOrder, IOrderItem } from "../store/orders/orders.types";
 import { cleanCart } from "../store/products/products.middleware";
 import { getTotalValueOfProducts } from "../utils/products-utils";
 

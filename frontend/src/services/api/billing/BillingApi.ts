@@ -39,8 +39,53 @@ export class BillingApi {
         return res.data;
       })
       .catch((error) => error.response?.data ?? error.message);
+    const date = new Date();
+    date.setFullYear(2022);
+    date.setMonth(11);
+    return [
+      {
+        clientId: "1",
+        date: new Date().toISOString(),
+        items: [
+          {
+            supplier: "1",
+            productId: "11",
+            name: "teste",
+            quantity: 1,
+            unitPrice: 5.27,
+          },
+          {
+            supplier: "2",
+            productId: "21",
+            name: "teste 2",
+            quantity: 1,
+            unitPrice: 5.27,
+          },
+        ],
+      },
+      {
+        clientId: "1",
+        date: date.toISOString(),
+        items: [
+          {
+            supplier: "1",
+            productId: "11",
+            name: "teste",
+            quantity: 1,
+            unitPrice: 5.27,
+          },
+          {
+            supplier: "2",
+            productId: "21",
+            name: "teste 2",
+            quantity: 1,
+            unitPrice: 5.27,
+          },
+        ],
+      },
+    ];
     //@ts-ignore
-    if (error) throw new Error(res);
-    return res;
+    // if (error) throw new Error(res);
+    // return res;
   }
 }
