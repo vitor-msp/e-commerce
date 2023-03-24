@@ -1,11 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
-
-type IUserSignUp = {
-  email: string;
-  password: string;
-  passwordConfirmation: string;
-};
+import { userApi } from "../factory";
+import { IUserSignUp } from "../services/api/user/UserApi";
 
 const DEFAULT_USER: IUserSignUp = {
   email: "",
@@ -15,6 +12,7 @@ const DEFAULT_USER: IUserSignUp = {
 
 export const SignUp = () => {
   const [user, setUser] = useState<IUserSignUp>(DEFAULT_USER);
+  const navigate = useNavigate();
 
   const updateUser = (event: any): void => {
     const field = event.target.name;
@@ -29,10 +27,16 @@ export const SignUp = () => {
     setUser(DEFAULT_USER);
   };
 
-  const signUp = (): void => {
+  const signUp = async (): Promise<void> => {
     if (!passwordIsValid()) {
       alert("As senhas não são iguais.");
       return;
+    }
+    try {
+      await userApi.signUp(user);
+      navigate("/signin");
+    } catch (error) {
+      alert(error);
     }
   };
 
