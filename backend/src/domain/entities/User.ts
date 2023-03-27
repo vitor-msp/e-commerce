@@ -16,8 +16,10 @@ export class User {
 
   constructor(userInput: UserProps) {
     userInput.id = userInput.id?.trim();
-    //@ts-ignore
-    this.id = userInput.id?.localeCompare("") === 0 ? uuid.v4() : userInput.id;
+    this.id =
+      userInput.id && userInput.id.localeCompare("") !== 0
+        ? userInput.id
+        : uuid.v4();
     this.email = this.filterEmail(userInput.email);
     if (userInput.password)
       this.password = this.filterPassword(userInput.password);

@@ -11,6 +11,19 @@ describe("User Tests", () => {
   };
 
   it("should create user without id", () => {
+    const user = new User({
+      email: "  teste@teste.com  ",
+      password: "teste123",
+    });
+    const savedUser = user.getData();
+    //@ts-ignore
+    expect(uuidValidate(savedUser.id)).toBe(true);
+    expect(savedUser.email).toBe("teste@teste.com");
+    expect(user.passwordIsCorrect("teste123")).toBe(true);
+    expect(user.passwordIsCorrect("Teste123")).toBe(false);
+  });
+
+  it("should create user with blank id", () => {
     const userData = getUserExample();
     const user = new User(userData);
     const savedUser = user.getData();
