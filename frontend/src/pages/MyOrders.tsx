@@ -17,11 +17,14 @@ export const MyOrders = () => {
   return (
     <>
       <Navbar />
-      <ul className="list-group">
-        {orders.map((order) => (
-          <Order key={order.date} order={order} />
-        ))}
-      </ul>
+      <div>
+        <h2 className="mx-2">Meus Pedidos</h2>
+        <ul className="list-group">
+          {orders.map((order) => (
+            <Order key={order.date} order={order} />
+          ))}
+        </ul>
+      </div>
     </>
   );
 };

@@ -12,6 +12,7 @@ export const Order = ({ order }: IOrderProps) => {
   const { date, items } = order;
   const products = useSelector((state: RootState) => state.products.products);
   const dispatch = useDispatch<AppDispatch>();
+
   const selectItem = (orderItem: IShowOrderItem): void => {
     const product = products.find(
       (product) => product.id === orderItem.supplier + orderItem.productId
@@ -22,16 +23,23 @@ export const Order = ({ order }: IOrderProps) => {
     }
     dispatch(updateCurrentProductAction(product));
   };
+
+  const formattedDate = `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(
+    0,
+    4
+  )}`;
+
   return (
     <li className="list-group-item mx-2 my-2 rounded bg-primary" key={date}>
-      <span>Data: {date}</span>
+      <span>Realizado em: {formattedDate}</span>
       <div className="d-flex flex-row">
         {items.map(({ name, quantity, unitPrice, supplier, productId }) => (
           <div
             onClick={() => selectItem({ supplier, productId })}
             className="mx-2 my-2 bg-light rounded p-2 d-flex flex-column"
+            style={{ cursor: "pointer" }}
           >
-            <span>Nome: {name}</span>
+            <span className="fw-bold">{name}</span>
             <span>Quantidade: {quantity}</span>
             <span>
               Preço unitário:{" "}
