@@ -24,7 +24,9 @@ export const ProductCheckoutItem = ({ product }: ProductCheckoutItemProps) => {
         <div className="d-flex flex-row align-items-center justify-content-left">
           <div className="d-flex flex-column">
             <span>Quantidade:</span>
-            <span>{cartQuantity} itens</span>
+            <span>
+              {cartQuantity} {cartQuantity === 1 ? "item" : "itens"}
+            </span>
           </div>
           <img
             src={images[0]}
