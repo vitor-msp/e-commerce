@@ -1,7 +1,7 @@
 export default {
   bail: 1,
   clearMocks: true,
-  collectCoverage: false,
+  collectCoverage: true,
   collectCoverageFrom: ["**/*.ts", "!**/*.test.ts"],
   coverageDirectory: "test/coverage",
   coverageProvider: "v8",
