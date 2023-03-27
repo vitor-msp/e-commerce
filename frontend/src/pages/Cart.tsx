@@ -39,7 +39,11 @@ export const Cart = () => {
           ) : (
             <>
               <div className="mx-2">
-                <span>Total: </span>
+                <span className="mx-2 fw-bold">
+                  {productsInCart.length}{" "}
+                  {productsInCart.length === 1 ? "item" : "itens"}
+                </span>
+                <span>- Total: </span>
                 <span className="fw-bold">
                   {getTotalValueOfProducts(productsInCart).toLocaleString(
                     "pt-br",
