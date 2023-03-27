@@ -37,4 +37,13 @@ describe("User Tests", () => {
       new User(userData);
     }).toThrow(Error);
   });
+
+  it("should not create user with blank email", () => {
+    const userData = getUserExample();
+    userData.email = "    ";
+
+    expect(() => {
+      new User(userData);
+    }).toThrow(Error);
+  });
 });
