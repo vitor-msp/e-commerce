@@ -28,6 +28,7 @@ export class User {
   }
 
   private filterPassword(password: string): string {
+    if (password.localeCompare("") === 0) throw new Error("blank password");
     return EncryptData.execute(password);
   }
 

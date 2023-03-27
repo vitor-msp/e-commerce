@@ -32,7 +32,6 @@ describe("User Tests", () => {
   it("should not create user with invalid email", () => {
     const userData = getUserExample();
     userData.email = "  teste.teste.com  ";
-
     expect(() => {
       new User(userData);
     }).toThrow(Error);
@@ -41,9 +40,17 @@ describe("User Tests", () => {
   it("should not create user with blank email", () => {
     const userData = getUserExample();
     userData.email = "    ";
-
     expect(() => {
       new User(userData);
+    }).toThrow(Error);
+  });
+
+  it("should create user with blank password", () => {
+    const userData = getUserExample();
+    userData.password = "";
+    const user = new User(userData);
+    expect(() => {
+      user.passwordIsCorrect("");
     }).toThrow(Error);
   });
 });
