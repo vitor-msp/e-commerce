@@ -1,0 +1,26 @@
+{
+  "name": "e-commerce",
+  "version": "1.0.0",
+  "description": "simple e-commerce",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/vitor-msp/e-commerce.git"
+  },
+  "author": "vitor7jan@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vitor-msp/e-commerce/issues"
+  },
+  "homepage": "https://github.com/vitor-msp/e-commerce#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.10",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.0.2"
+  }
+}
