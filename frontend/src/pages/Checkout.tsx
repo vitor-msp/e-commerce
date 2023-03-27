@@ -48,22 +48,27 @@ export const Checkout = () => {
   return (
     <>
       <Navbar />
-      <ul>
-        {productsInCart.map((product) => (
-          <ProductCheckoutItem key={product.id} product={product} />
-        ))}
-      </ul>
       <div>
-        <span>Total: </span>
-        <span>
-          {getTotalValueOfProducts(productsInCart).toLocaleString("pt-br", {
-            style: "currency",
-            currency: "BRL",
-          })}
-        </span>
-        <button className={"btn btn-large btn-primary"} onClick={buy}>
-          Finalize sua Compra
-        </button>
+        <h2 className="mx-2">Checkout</h2>
+        <ul>
+          {productsInCart.map((product) => (
+            <ProductCheckoutItem key={product.id} product={product} />
+          ))}
+        </ul>
+        <div className="d-flex flex-row justify-content-center align-items-center my-2">
+          <div className="mx-2">
+            <span>Total: </span>
+            <span className="fw-bold">
+              {getTotalValueOfProducts(productsInCart).toLocaleString("pt-br", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </span>
+          </div>
+          <button onClick={buy} className="btn btn-primary mx-2">
+            Finalize sua Compra
+          </button>
+        </div>
       </div>
     </>
   );
