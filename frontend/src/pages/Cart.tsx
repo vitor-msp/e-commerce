@@ -34,18 +34,27 @@ export const Cart = () => {
           ))}
         </ul>
         <div className="d-flex flex-row justify-content-center align-items-center my-2">
-          <div className="mx-2">
-            <span>Total: </span>
-            <span className="fw-bold">
-              {getTotalValueOfProducts(productsInCart).toLocaleString("pt-br", {
-                style: "currency",
-                currency: "BRL",
-              })}
-            </span>
-          </div>
-          <button onClick={goToCheckout} className="btn btn-primary mx-2">
-            Revise sua Compra
-          </button>
+          {productsInCart.length === 0 ? (
+            <p>Seu carrinho está vazinho.</p>
+          ) : (
+            <>
+              <div className="mx-2">
+                <span>Total: </span>
+                <span className="fw-bold">
+                  {getTotalValueOfProducts(productsInCart).toLocaleString(
+                    "pt-br",
+                    {
+                      style: "currency",
+                      currency: "BRL",
+                    }
+                  )}
+                </span>
+              </div>
+              <button onClick={goToCheckout} className="btn btn-primary mx-2">
+                Revise sua Compra
+              </button>
+            </>
+          )}
         </div>
       </div>
     </>

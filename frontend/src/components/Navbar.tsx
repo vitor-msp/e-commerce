@@ -29,7 +29,7 @@ export const Navbar = () => {
               </li>
               <li className="nav-item">
                 <NavLink to={"/cart"} className={"nav-link"}>
-                  Cart
+                  Carrinho
                 </NavLink>
               </li>
               {userIsLogged ? (
