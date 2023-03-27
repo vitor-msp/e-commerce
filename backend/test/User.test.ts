@@ -1,4 +1,5 @@
 import { User } from "../src/domain/entities/User";
+import uuidValidate from "uuid-validate";
 
 describe("User Tests", () => {
   const getUserExample = (id?: string) => {
@@ -13,7 +14,8 @@ describe("User Tests", () => {
     const userData = getUserExample();
     const user = new User(userData);
     const savedUser = user.getData();
-    expect(savedUser).toHaveProperty("id");
+    //@ts-ignore
+    expect(uuidValidate(savedUser.id)).toBe(true);
     expect(savedUser.email).toBe("teste@teste.com");
     expect(user.passwordIsCorrect("teste123")).toBe(true);
     expect(user.passwordIsCorrect("Teste123")).toBe(false);

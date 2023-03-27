@@ -15,7 +15,9 @@ export class User {
   private password?: string;
 
   constructor(userInput: UserProps) {
-    this.id = userInput.id?.trim() ?? uuid.v4();
+    userInput.id = userInput.id?.trim();
+    //@ts-ignore
+    this.id = userInput.id?.localeCompare("") === 0 ? uuid.v4() : userInput.id;
     this.email = this.filterEmail(userInput.email);
     if (userInput.password)
       this.password = this.filterPassword(userInput.password);
@@ -28,7 +30,6 @@ export class User {
   }
 
   private filterPassword(password: string): string {
-    if (password.localeCompare("") === 0) throw new Error("blank password");
     return EncryptData.execute(password);
   }
 
