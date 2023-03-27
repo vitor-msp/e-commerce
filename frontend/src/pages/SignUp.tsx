@@ -50,57 +50,60 @@ export const SignUp = () => {
   return (
     <>
       <Navbar />
-      <form
-        action=""
-        onSubmit={signUp}
-        className="d-flex flex-column jusify-content-center"
-      >
-        <div className="mx-auto">
-          <label htmlFor="">E-mail:</label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={updateUser}
-            className="form-control w-auto"
-            required={true}
-          />
-        </div>
-        <div className="mx-auto">
-          <label htmlFor="">Senha:</label>
-          <input
-            type="password"
-            name="password"
-            value={user.password}
-            onChange={updateUser}
-            className="form-control w-auto"
-            required={true}
-          />
-        </div>
-        <div className="mx-auto">
-          <label htmlFor="">Confirmação da Senha:</label>
-          <input
-            type="password"
-            name="passwordConfirmation"
-            value={user.passwordConfirmation}
-            onChange={updateUser}
-            className="form-control w-auto"
-            required={true}
-          />
-        </div>
-        <div className="mx-auto my-2">
-          <input
-            type="reset"
-            onClick={resetUser}
-            className="btn btn-outline-primary mx-2"
-          />
-          <input
-            type="submit"
-            className="btn btn-primary mx-2"
-            value={"Cadastrar"}
-          />
-        </div>
-      </form>
+      <div>
+        <h2 className="mx-2">Cadastre-se:</h2>
+        <form
+          action=""
+          onSubmit={signUp}
+          className="d-flex flex-column jusify-content-center"
+        >
+          <div className="mx-auto">
+            <label htmlFor="">E-mail:</label>
+            <input
+              type="email"
+              name="email"
+              value={user.email}
+              onChange={updateUser}
+              className="form-control w-auto"
+              required={true}
+            />
+          </div>
+          <div className="mx-auto">
+            <label htmlFor="">Senha:</label>
+            <input
+              type="password"
+              name="password"
+              value={user.password}
+              onChange={updateUser}
+              className="form-control w-auto"
+              required={true}
+            />
+          </div>
+          <div className="mx-auto">
+            <label htmlFor="">Confirmação da Senha:</label>
+            <input
+              type="password"
+              name="passwordConfirmation"
+              value={user.passwordConfirmation}
+              onChange={updateUser}
+              className="form-control w-auto"
+              required={true}
+            />
+          </div>
+          <div className="mx-auto my-2">
+            <input
+              type="reset"
+              onClick={resetUser}
+              className="btn btn-outline-primary mx-2"
+            />
+            <input
+              type="submit"
+              className="btn btn-primary mx-2"
+              value={"Cadastrar"}
+            />
+          </div>
+        </form>
+      </div>
     </>
   );
 };

@@ -50,46 +50,49 @@ export const SignIn = () => {
   return (
     <>
       <Navbar />
-      <form
-        action=""
-        className="d-flex flex-column jusify-content-center"
-        onSubmit={executeSignIn}
-      >
-        <div className="mx-auto">
-          <label htmlFor="">E-mail:</label>
-          <input
-            type="email"
-            name="email"
-            value={user.email}
-            onChange={updateUser}
-            className="form-control w-auto"
-            required={true}
-          />
-        </div>
-        <div className="mx-auto">
-          <label htmlFor="">Senha:</label>
-          <input
-            type="password"
-            name="password"
-            value={user.password}
-            onChange={updateUser}
-            className="form-control w-auto"
-            required={true}
-          />
-        </div>
-        <div className="mx-auto my-2">
-          <input
-            type="reset"
-            onClick={resetUser}
-            className="btn btn-outline-primary mx-2"
-          />
-          <input
-            type="submit"
-            className="btn btn-primary mx-2"
-            value={"Entrar"}
-          />
-        </div>
-      </form>
+      <div>
+        <h2 className="mx-2">Acesse sua conta:</h2>
+        <form
+          action=""
+          className="d-flex flex-column jusify-content-center"
+          onSubmit={executeSignIn}
+        >
+          <div className="mx-auto">
+            <label htmlFor="">E-mail:</label>
+            <input
+              type="email"
+              name="email"
+              value={user.email}
+              onChange={updateUser}
+              className="form-control w-auto"
+              required={true}
+            />
+          </div>
+          <div className="mx-auto">
+            <label htmlFor="">Senha:</label>
+            <input
+              type="password"
+              name="password"
+              value={user.password}
+              onChange={updateUser}
+              className="form-control w-auto"
+              required={true}
+            />
+          </div>
+          <div className="mx-auto my-2">
+            <input
+              type="reset"
+              onClick={resetUser}
+              className="btn btn-outline-primary mx-2"
+            />
+            <input
+              type="submit"
+              className="btn btn-primary mx-2"
+              value={"Entrar"}
+            />
+          </div>
+        </form>
+      </div>
     </>
   );
 };
