@@ -20,9 +20,11 @@ export const MyOrders = () => {
       <div>
         <h2 className="mx-2">Meus Pedidos</h2>
         <ul className="list-group">
-          {orders.map((order) => (
-            <Order key={order.date} order={order} />
-          ))}
+          {orders.length === 0 ? (
+            <p className="p-5">Você ainda não possui pedidos.</p>
+          ) : (
+            orders.map((order) => <Order key={order.date} order={order} />)
+          )}
         </ul>
       </div>
     </>
