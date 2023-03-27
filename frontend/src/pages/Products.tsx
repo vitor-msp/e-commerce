@@ -111,25 +111,29 @@ export const Products = () => {
     <>
       <Navbar />
       <div className="d-flex flex-row px-4">
-        <div className="d-flex flex-column">
-          <div>
-            <label htmlFor="">Preço máximo:</label>
-            <span>R$ {currentMaxPrice}</span>
+        <div className="d-flex flex-column px-2">
+          <div className="d-flex flex-column align-items-center">
+            <div>
+              <label htmlFor="max-price">Preço máximo:</label>
+              <span className="mx-2 fw-bold">R$ {currentMaxPrice}</span>
+            </div>
             <input
               type="range"
+              id="max-price"
               min={50}
               max={1000}
               step={50}
               value={currentMaxPrice}
               onChange={changePrice}
+              className="w-100"
             />
           </div>
-          <div className="d-flex flex-row">
-            <div>
+          <div className="d-flex flex-row my-2">
+            <div className="d-flex flex-column align-items-center">
               <h6>Categorias</h6>
               <ul>
                 {categories.map((category, index) => (
-                  <li key={index}>
+                  <li key={index} className="list-group-item d-flex flex-row">
                     <input
                       type="checkbox"
                       value={index}
@@ -137,16 +141,16 @@ export const Products = () => {
                         toggleCategory(event, category, index)
                       }
                     />
-                    <span>{category}</span>
+                    <span className="mx-1">{category}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div>
+            <div className="d-flex flex-column align-items-center">
               <h6>Materiais</h6>
-              <ul>
+              <ul className="">
                 {materials.map((material, index) => (
-                  <li key={index}>
+                  <li key={index} className="list-group-item d-flex flex-row">
                     <input
                       type="checkbox"
                       value={index}
@@ -154,7 +158,7 @@ export const Products = () => {
                         toggleMaterial(event, material, index)
                       }
                     />
-                    <span>{material}</span>
+                    <span className="mx-1">{material}</span>
                   </li>
                 ))}
               </ul>
@@ -180,6 +184,6 @@ export const Products = () => {
           </ul>
         </div>
       </div>
-    </> 
+    </>
   );
 };
