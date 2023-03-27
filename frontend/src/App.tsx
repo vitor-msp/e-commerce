@@ -32,7 +32,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="container-fluid">
+    <div className="container-fluid px-0">
       {showCurrentProduct && <CurrentProduct />}
       <BrowserRouter>
         <Routes>
