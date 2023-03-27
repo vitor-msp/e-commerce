@@ -95,6 +95,7 @@ export const SignUp = () => {
               type="reset"
               onClick={resetUser}
               className="btn btn-outline-primary mx-2"
+              value={"Limpar"}
             />
             <input
               type="submit"
