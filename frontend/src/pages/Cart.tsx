@@ -26,22 +26,27 @@ export const Cart = () => {
   return (
     <>
       <Navbar />
-      <ul>
-        {productsInCart.map((product) => (
-          <ProductCartItem key={product.id} product={product} />
-        ))}
-      </ul>
       <div>
-        <span>Total: </span>
-        <span>
-          {getTotalValueOfProducts(productsInCart).toLocaleString("pt-br", {
-            style: "currency",
-            currency: "BRL",
-          })}
-        </span>
-        <button onClick={goToCheckout} className="btn btn-primary">
-          Revise sua Compra
-        </button>
+        <h2 className="mx-2">Carrinho</h2>
+        <ul>
+          {productsInCart.map((product) => (
+            <ProductCartItem key={product.id} product={product} />
+          ))}
+        </ul>
+        <div className="d-flex flex-row justify-content-center align-items-center my-2">
+          <div className="mx-2">
+            <span>Total: </span>
+            <span className="fw-bold">
+              {getTotalValueOfProducts(productsInCart).toLocaleString("pt-br", {
+                style: "currency",
+                currency: "BRL",
+              })}
+            </span>
+          </div>
+          <button onClick={goToCheckout} className="btn btn-primary mx-2">
+            Revise sua Compra
+          </button>
+        </div>
       </div>
     </>
   );
