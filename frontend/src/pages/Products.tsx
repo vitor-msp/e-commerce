@@ -110,7 +110,7 @@ export const Products = () => {
   return (
     <>
       <Navbar />
-      <div className="d-flex flex-row">
+      <div className="d-flex flex-row px-4">
         <div className="d-flex flex-column">
           <div>
             <label htmlFor="">Preço máximo:</label>
@@ -162,9 +162,16 @@ export const Products = () => {
           </div>
         </div>
         <div className="d-flex flex-column">
-          <div>
-            <label htmlFor="">Nome</label>
-            <input type="text" value={currentName} onChange={changeName} />
+          <div className="d-flex d-row justify-content-center align-items-center">
+            <label htmlFor="produto">Produto: </label>
+            <input
+              type="text"
+              id="produto"
+              className="form-control mx-2 w-100"
+              value={currentName}
+              onChange={changeName}
+              placeholder="Digite o nome do produto buscado..."
+            />
           </div>
           <ul className="d-flex flex-row flex-wrap list-group justify-content-center">
             {filteredProducts.map((product) => (
@@ -173,6 +180,6 @@ export const Products = () => {
           </ul>
         </div>
       </div>
-    </>
+    </> 
   );
 };

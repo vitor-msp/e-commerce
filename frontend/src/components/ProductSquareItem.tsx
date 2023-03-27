@@ -32,23 +32,62 @@ export const ProductSquareItem = ({ product }: ProductSquareItemProps) => {
   return (
     <li
       className="list-group-item bg-primary rounded my-2 mx-2 p-2 opacity-product"
-      style={{ width: "370px", height: "490px" }}
+      style={{ width: "280px", height: "380px" }}
     >
       <div className="d-flex flex-column align-items-center">
         <img
           src={images[0]}
           alt={name}
-          width={320}
-          height={240}
+          width={256}
+          height={192}
           className="rounded"
           style={{ cursor: "pointer" }}
           onClick={selectProduct}
         />
-        <div className="d-flex flex-column">
-          <span className="fw-bold">Nome: {name}</span>
-          <span>Descrição: {description}</span>
-          <span className="fst-italic">Preço: {price}</span>
-          <button type="button" className="btn btn-light" disabled={cart} onClick={addToCart}>
+        <div className="d-flex flex-column align-content-between">
+          <span className="fw-bold" style={{ fontSize: "1.2em" }}>
+            {name}
+          </span>
+          {discountValue > 0 ? (
+            <>
+              <p className="py-0 my-0">
+                De:{" "}
+                <span className="fw-bold mx-2" style={{ fontSize: "1.2em" }}>
+                  {price.toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </p>
+              <p className="py-0 my-0">
+                Por apenas:{" "}
+                <span className="fw-bold mx-2" style={{ fontSize: "1.8em" }}>
+                  {(price * (1 - discountValue)).toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </p>
+            </>
+          ) : (
+            <p className="py-0 my-0">
+              Por apenas:{" "}
+              <span className="fw-bold mx-2" style={{ fontSize: "1.8em" }}>
+                {price.toLocaleString("pt-br", {
+                  style: "currency",
+                  currency: "BRL",
+                })}
+              </span>
+            </p>
+          )}
+
+          <span className="fst-italic"></span>
+          <button
+            type="button"
+            className="btn btn-light"
+            disabled={cart}
+            onClick={addToCart}
+          >
             {cart ? "Já está no carrinho" : "Adicione ao carrinho"}
           </button>
         </div>
