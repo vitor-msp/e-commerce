@@ -28,4 +28,13 @@ describe("User Tests", () => {
     expect(user.passwordIsCorrect("teste123")).toBe(true);
     expect(user.passwordIsCorrect("Teste123")).toBe(false);
   });
+
+  it("should not create user with invalid email", () => {
+    const userData = getUserExample();
+    userData.email = "  teste.teste.com  ";
+
+    expect(() => {
+      new User(userData);
+    }).toThrow(Error);
+  });
 });
