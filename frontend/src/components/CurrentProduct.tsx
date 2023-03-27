@@ -57,15 +57,54 @@ export const CurrentProduct = () => {
           })}
         </Carousel>
         <div className="d-flex flex-column">
-          <div>
-            <span>Descrição: {description}</span>
+          <div className="my-2">
+            <span>{description}</span>
           </div>
-          <div className="d-flex flex-row">
-            <span>Categoria: {category}</span>
-            <span>Material: {material}</span>
-            <span>Preço: {price}</span>
-            <span>Desconto: {discountValue * 100}</span>
-            <span>Preço com desconto: {price * (1 - discountValue)}</span>
+          <div className="d-flex flex-row flex-wrap">
+            <ul className="list-group m-1">
+              <li className="list-group-item active">Categoria</li>
+              <li className="list-group-item">
+                <span>{category}</span>
+              </li>
+            </ul>
+            <ul className="list-group m-1">
+              <li className="list-group-item active">Material</li>
+              <li className="list-group-item">
+                <span>{material}</span>
+              </li>
+            </ul>
+            <ul className="list-group m-1">
+              <li className="list-group-item active">Preço</li>
+              <li className="list-group-item">
+                <span>
+                  {price.toLocaleString("pt-br", {
+                    style: "currency",
+                    currency: "BRL",
+                  })}
+                </span>
+              </li>
+            </ul>
+            {discountValue > 0 && (
+              <>
+                <ul className="list-group m-1">
+                  <li className="list-group-item active">Desconto</li>
+                  <li className="list-group-item">
+                    <span>{discountValue * 100} %</span>
+                  </li>
+                </ul>
+                <ul className="list-group m-1">
+                  <li className="list-group-item active">Preço com desconto</li>
+                  <li className="list-group-item">
+                    <span>
+                      {(price * (1 - discountValue)).toLocaleString("pt-br", {
+                        style: "currency",
+                        currency: "BRL",
+                      })}
+                    </span>
+                  </li>
+                </ul>
+              </>
+            )}
           </div>
         </div>
       </Modal.Body>
