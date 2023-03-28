@@ -2,6 +2,7 @@ import * as uuid from "uuid";
 import { OrderItem } from "./OrderItem";
 import { IOrder, OrderProps } from "./IOrder";
 import { User } from "../user/User";
+import { OrderError } from "../../../errors/OrderError";
 
 export class Order implements IOrder {
   readonly id: string;
@@ -16,6 +17,7 @@ export class Order implements IOrder {
         ? orderInput.id
         : uuid.v4();
     this.user = orderInput.user;
+    if (!orderInput.date) throw new OrderError("invalid date");
     this.date = orderInput.date;
     this.items = [];
   }

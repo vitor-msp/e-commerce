@@ -41,7 +41,16 @@ describe("Order Tests", () => {
     expect(savedOrder.items.length === 0).toBe(true);
   });
 
-  it("should not create order without date", () => {});
+  it("should not create order with blank date", () => {
+    expect(() => {
+      new Order({
+        id: "order-id",
+        user: getUserExample(),
+        date: "",
+      });
+    }).toThrow(Error);
+  });
+
   it("should not create order with invalid date", () => {});
   it("should not create order without user", () => {});
   it("should not create order with invalid user", () => {});
