@@ -25,7 +25,22 @@ describe("Order Tests", () => {
     expect(savedOrder.items.length === 0).toBe(true);
   });
 
-  it("should create order with id", () => {});
+  it("should create order with id", () => {
+    const id = "order-id";
+    const user = getUserExample();
+    const date = new Date().toISOString();
+    const order = new Order({
+      id,
+      user,
+      date,
+    });
+    const savedOrder = order.getData();
+    expect(savedOrder.id).toBe(id);
+    expect(savedOrder.user).toEqual(user);
+    expect(savedOrder.date).toBe(date);
+    expect(savedOrder.items.length === 0).toBe(true);
+  });
+
   it("should not create order without date", () => {});
   it("should not create order with invalid date", () => {});
   it("should not create order without user", () => {});
