@@ -1,47 +1,49 @@
 import supertest from "supertest";
 import { App } from "../../src/main/app";
 
-describe("Create User Use Case Tests", () => {
+describe("Auth User Use Case Tests", () => {
   let app: any;
   beforeAll(async () => {
     app = new App().express;
   });
 
-  it("should receive created for a valid user", async () => {
+  it("should receive ok when password is correct", async () => {
     const reqBody = {
-      email: "notexist@teste.com",
+      email: "teste@teste.com",
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/user/signin")
       .send(reqBody);
-    expect(res.statusCode).toBe(201);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("jwt");
+    expect(res.body.jwt.length > 0).toBe(true);
   });
 
-  it("should receive bad request when email already in use", async () => {
+  it("should receive unauthorized for email not found", async () => {
     const reqBody = {
-      email: "used@teste.com",
+      email: "not-exist@teste.com",
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/user/signin")
       .send(reqBody);
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("email already in use");
+    expect(res.body.errorMessage).toBe("incorrect email or password");
   });
 
-  it("should receive bad request for invalid email", async () => {
+  it("should receive unauthorized for incorrect password", async () => {
     const reqBody = {
-      email: "used.teste.com",
-      password: "teste123",
+      email: "user@teste.com",
+      password: "incorrect-password",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/user/signin")
       .send(reqBody);
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid email");
+    expect(res.body.errorMessage).toBe("incorrect email or password");
   });
 
   it("should receive bad request cause missing email", async () => {
@@ -49,7 +51,7 @@ describe("Create User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -62,7 +64,7 @@ describe("Create User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -75,7 +77,7 @@ describe("Create User Use Case Tests", () => {
       password: "",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -87,7 +89,7 @@ describe("Create User Use Case Tests", () => {
       email: "teste@teste.com",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");

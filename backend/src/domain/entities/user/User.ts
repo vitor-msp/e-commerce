@@ -1,8 +1,9 @@
 import * as uuid from "uuid";
 import emailValidator from "email-validator";
-import { EncryptData } from "../../helpers/EncryptData";
-import { CompareEncryptedData } from "../../helpers/CompareEncryptedData";
+import { EncryptData } from "../../../utils/EncryptData";
+import { CompareEncryptedData } from "../../../utils/CompareEncryptedData";
 import { IUser, UserProps } from "./IUser";
+import { UserError } from "../../../errors/UserError";
 
 export class User implements IUser {
   readonly id: string;
@@ -22,7 +23,7 @@ export class User implements IUser {
 
   private filterEmail(email: string): string {
     email = email.trim();
-    if (!emailValidator.validate(email)) throw new Error("invalid email");
+    if (!emailValidator.validate(email)) throw new UserError("invalid email");
     return email;
   }
 
@@ -38,7 +39,7 @@ export class User implements IUser {
   }
 
   passwordIsCorrect(password: string): boolean {
-    if (!this.password) throw new Error("none password saved");
+    if (!this.password) throw new UserError("none password saved");
     return CompareEncryptedData.execute(password, this.password);
   }
 
