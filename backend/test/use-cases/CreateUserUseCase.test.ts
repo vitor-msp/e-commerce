@@ -18,7 +18,7 @@ describe("Create User Use Case Tests", () => {
     expect(res.statusCode).toBe(201);
   });
 
-  it("should receive error cause email already in use", async () => {
+  it("should receive bad request when email already in use", async () => {
     const reqBody = {
       email: "used@teste.com",
       password: "teste123",
@@ -29,5 +29,30 @@ describe("Create User Use Case Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("email already in use");
+  });
+
+  it("should receive bad request for invalid email", async () => {
+    const reqBody = {
+      email: "used.teste.com",
+      password: "teste123",
+    };
+    const res: supertest.Response = await supertest(app)
+      .post("/user/signup")
+      .send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("invalid email");
+  });
+
+  it("should receive bad request cause missing email", async () => {
+    const reqBody = {
+      password: "teste123",
+    };
+    const res: supertest.Response = await supertest(app)
+      .post("/user/signup")
+      .send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("missing email");
   });
 });
