@@ -15,8 +15,8 @@ export class CreateUserController implements ICreateUserController {
       const input: CreateUserInputDto = req.body;
       await this.createUserUseCase.execute(input);
       return res.status(201).send();
-    } catch (error) {
-      return res.status(400).json(error);
+    } catch (error: any) {
+      return res.status(400).json({ errorMessage: error.message });
     }
   }
 }
