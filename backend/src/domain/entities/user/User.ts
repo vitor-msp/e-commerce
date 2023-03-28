@@ -1,18 +1,13 @@
 import * as uuid from "uuid";
 import emailValidator from "email-validator";
-import { EncryptData } from "../helpers/EncryptData";
-import { CompareEncryptedData } from "../helpers/CompareEncryptedData";
+import { EncryptData } from "../../helpers/EncryptData";
+import { CompareEncryptedData } from "../../helpers/CompareEncryptedData";
+import { IUser, UserProps } from "./IUser";
 
-export type UserProps = {
-  id?: string;
-  email: string;
-  password?: string;
-};
-
-export class User {
-  private readonly id: string;
-  private readonly email: string;
-  private password?: string;
+export class User implements IUser {
+  readonly id: string;
+  readonly email: string;
+  readonly password?: string;
 
   constructor(userInput: UserProps) {
     userInput.id = userInput.id?.trim();
@@ -45,5 +40,13 @@ export class User {
   passwordIsCorrect(password: string): boolean {
     if (!this.password) throw new Error("none password saved");
     return CompareEncryptedData.execute(password, this.password);
+  }
+
+  getDataAndPassword(): IUser {
+    return {
+      id: this.id,
+      email: this.email,
+      password: this.password ?? "",
+    };
   }
 }

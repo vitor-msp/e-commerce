@@ -1,4 +1,4 @@
-import { User } from "../src/domain/entities/User";
+import { User } from "../../src/domain/entities/user/User";
 import uuidValidate from "uuid-validate";
 
 describe("User Tests", () => {

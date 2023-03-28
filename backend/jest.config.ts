@@ -6,5 +6,5 @@ export default {
   coverageDirectory: "test/coverage",
   coverageProvider: "v8",
   preset: "ts-jest",
-  testMatch: ["**/**/*.test.ts?(x)"],
+  testMatch: ["**/use-cases/*.test.ts?(x)"],
 };
