@@ -55,4 +55,30 @@ describe("Create User Use Case Tests", () => {
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("missing email");
   });
+
+  it("should receive bad request cause email is blank", async () => {
+    const reqBody = {
+      email: "",
+      password: "teste123",
+    };
+    const res: supertest.Response = await supertest(app)
+      .post("/user/signup")
+      .send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("missing email");
+  });
+
+  it("should receive bad request cause password is blank", async () => {
+    const reqBody = {
+      email: "teste@teste.com",
+      password: "",
+    };
+    const res: supertest.Response = await supertest(app)
+      .post("/user/signup")
+      .send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("missing password");
+  });
 });
