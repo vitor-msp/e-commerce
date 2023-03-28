@@ -4,7 +4,10 @@
   "description": "simple e-commerce",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "dev": "ts-node-dev --respawn --transpile-only src/main/server.ts",
+    "test": "jest",
+    "build": "rm -rf ./dist && tsc",
+    "start": "node ./dist/main/server.js"
   },
   "repository": {
     "type": "git",

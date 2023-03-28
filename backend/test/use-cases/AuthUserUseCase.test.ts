@@ -13,7 +13,7 @@ describe("Auth User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signin")
+      .post("/api/v1/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("jwt");
@@ -26,7 +26,7 @@ describe("Auth User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signin")
+      .post("/api/v1/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
@@ -39,7 +39,7 @@ describe("Auth User Use Case Tests", () => {
       password: "incorrect-password",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signin")
+      .post("/api/v1/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
@@ -51,7 +51,7 @@ describe("Auth User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signin")
+      .post("/api/v1/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -64,7 +64,7 @@ describe("Auth User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signin")
+      .post("/api/v1/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -77,7 +77,7 @@ describe("Auth User Use Case Tests", () => {
       password: "",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signin")
+      .post("/api/v1/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -89,7 +89,7 @@ describe("Auth User Use Case Tests", () => {
       email: "teste@teste.com",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signin")
+      .post("/api/v1/user/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");

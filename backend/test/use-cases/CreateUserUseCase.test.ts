@@ -13,7 +13,7 @@ describe("Create User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/api/v1/user/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(201);
   });
@@ -24,7 +24,7 @@ describe("Create User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/api/v1/user/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -37,7 +37,7 @@ describe("Create User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/api/v1/user/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -49,7 +49,7 @@ describe("Create User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/api/v1/user/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -62,7 +62,7 @@ describe("Create User Use Case Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/api/v1/user/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -75,7 +75,7 @@ describe("Create User Use Case Tests", () => {
       password: "",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/api/v1/user/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -87,7 +87,7 @@ describe("Create User Use Case Tests", () => {
       email: "teste@teste.com",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/user/signup")
+      .post("/api/v1/user/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
