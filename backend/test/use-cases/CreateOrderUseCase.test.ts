@@ -218,5 +218,30 @@ describe("Create Order Use Case Tests", () => {
     expect(res.body.errorMessage).toBe("invalid quantity");
   });
 
-  it("should receive bad request if user not found", async () => {});
+  it("should receive bad request if user not found", async () => {
+    //@ts-ignore
+    const reqBody: CreateOrderInputDto = {
+      date: new Date().toISOString(),
+      items: [
+        {
+          supplierId: "supplierId",
+          productId: "productId",
+          productName: "productName",
+          unitPrice: 10.64,
+          quantity: 13,
+        },
+      ],
+    };
+    const jwtPayload: JwtPayload = {
+      userId: "100",
+    };
+    const jwt = GenerateJwt.execute(jwtPayload);
+    const res: supertest.Response = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("user not found");
+  });
 });
