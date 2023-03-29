@@ -24,7 +24,6 @@ export class CreateOrderController implements ICreateOrderController {
       const output = await this.createOrderUseCase.execute(input);
       return res.status(201).json(output);
     } catch (error: any) {
-      console.log(error);
       if (error instanceof OrderError || error instanceof CreateOrderError)
         return res.status(400).json({ errorMessage: error.message });
       return res.status(500).json({ errorMessage: error.message });
