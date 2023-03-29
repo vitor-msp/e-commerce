@@ -17,9 +17,15 @@ export class Order implements IOrder {
         ? orderInput.id
         : uuid.v4();
     this.user = orderInput.user;
-    if (!orderInput.date) throw new OrderError("invalid date");
-    this.date = orderInput.date;
+    this.date = this.filterDate(orderInput.date);
     this.items = [];
+  }
+
+  private filterDate(date: string): string {
+    if (!date) throw new OrderError("empty date");
+    const timeInMiliSeconds = new Date(date).getTime();
+    if (isNaN(timeInMiliSeconds)) throw new OrderError("invalid date");
+    return date;
   }
 
   getData(): IOrder {
