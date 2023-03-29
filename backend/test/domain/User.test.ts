@@ -1,5 +1,6 @@
 import { User } from "../../src/domain/entities/user/User";
 import uuidValidate from "uuid-validate";
+import { UserError } from "../../src/errors/UserError";
 
 describe("User Tests", () => {
   const getUserExample = (id?: string) => {
@@ -49,7 +50,7 @@ describe("User Tests", () => {
     userData.email = "  teste.teste.com  ";
     expect(() => {
       new User(userData);
-    }).toThrow(Error);
+    }).toThrow(UserError);
   });
 
   it("should not create user with blank email", () => {
@@ -57,7 +58,7 @@ describe("User Tests", () => {
     userData.email = "    ";
     expect(() => {
       new User(userData);
-    }).toThrow(Error);
+    }).toThrow(UserError);
   });
 
   it("should create user with blank password", () => {
@@ -66,6 +67,6 @@ describe("User Tests", () => {
     const user = new User(userData);
     expect(() => {
       user.passwordIsCorrect("");
-    }).toThrow(Error);
+    }).toThrow(UserError);
   });
 });
