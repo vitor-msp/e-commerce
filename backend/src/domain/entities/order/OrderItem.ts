@@ -1,3 +1,4 @@
+import { OrderItemError } from "../../../errors/OrderItemError";
 import { IOrderItem } from "./IOrderItem";
 
 export class OrderItem implements IOrderItem {
@@ -8,6 +9,7 @@ export class OrderItem implements IOrderItem {
   readonly quantity: number;
 
   constructor(itemInput: IOrderItem) {
+    if (!itemInput.supplierId) throw new OrderItemError("invalid supplierId");
     this.supplierId = itemInput.supplierId;
     this.productId = itemInput.productId;
     this.productName = itemInput.productName;
