@@ -1,11 +1,18 @@
 import supertest from "supertest";
 import { App } from "../../src/main/app";
+import { JwtPayload } from "../../src/use-cases/auth-user/AuthUserUseCase";
 import { CreateOrderInputDto } from "../../src/use-cases/create-order/ICreateOrderUseCase";
+import { GenerateJwt } from "../../src/utils/GenerateJwt";
 
 describe("Create Order Use Case Tests", () => {
   let app: any;
+  let jwt: string;
   beforeAll(async () => {
     app = new App().express;
+    const jwtPayload: JwtPayload = {
+      userId: "1",
+    };
+    jwt = GenerateJwt.execute(jwtPayload);
   });
 
   it("should receive created for a valid order", async () => {
@@ -23,6 +30,7 @@ describe("Create Order Use Case Tests", () => {
     };
     const res: supertest.Response = await supertest(app)
       .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
       .send(reqBody);
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("orderId");
@@ -34,20 +42,29 @@ describe("Create Order Use Case Tests", () => {
     let reqBody: CreateOrderInputDto = {};
 
     // missing date
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order");
     reqBody.date = new Date().toISOString();
 
     // missing items
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order");
     reqBody.items = [];
     // items are empty
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order");
@@ -55,7 +72,10 @@ describe("Create Order Use Case Tests", () => {
     reqBody.items = [{}];
 
     // missing supplierId
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order item");
@@ -67,7 +87,10 @@ describe("Create Order Use Case Tests", () => {
     ];
 
     // missing productId
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order item");
@@ -80,7 +103,10 @@ describe("Create Order Use Case Tests", () => {
     ];
 
     // missing productName
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order item");
@@ -94,7 +120,10 @@ describe("Create Order Use Case Tests", () => {
     ];
 
     // missing unitPrice
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order item");
@@ -109,7 +138,10 @@ describe("Create Order Use Case Tests", () => {
     ];
 
     // missing quantity
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order item");
@@ -124,7 +156,10 @@ describe("Create Order Use Case Tests", () => {
     ];
 
     // valid request body
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(201);
   });
 
@@ -148,7 +183,10 @@ describe("Create Order Use Case Tests", () => {
     // invalid date
     reqBody = Object.assign({}, validBody);
     reqBody.date = "invalid";
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid date");
@@ -157,7 +195,10 @@ describe("Create Order Use Case Tests", () => {
     reqBody = Object.assign({}, validBody);
     //@ts-ignore
     reqBody.items[0].unitPrice = "invalid";
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid unitPrice");
@@ -168,13 +209,14 @@ describe("Create Order Use Case Tests", () => {
     reqBody.items[0].unitPrice = 10.65;
     //@ts-ignore
     reqBody.items[0].quantity = "invalid";
-    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    res = await supertest(app)
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid quantity");
   });
-
-  it("should receive bad request if missing userId", async () => {});
 
   it("should receive bad request if user not found", async () => {});
 });
