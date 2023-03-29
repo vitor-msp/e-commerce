@@ -40,6 +40,7 @@ export class Order implements IOrder {
   }
 
   addItem(item: OrderItem): void {
+    if (!(item instanceof OrderItem)) throw new OrderError("invalid item");
     this.items.push(item);
   }
 }

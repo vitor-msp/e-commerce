@@ -100,4 +100,22 @@ describe("Order Tests", () => {
     expect(savedOrder.items[0]).toEqual(item0);
     expect(savedOrder.items[1]).toEqual(item1);
   });
+
+  it("should not add invalid item into order", () => {
+    const order = new Order({
+      user: getUserExample(),
+      date: new Date().toISOString(),
+    });
+    const savedOrder = order.getData();
+    expect(() => {
+      //@ts-ignore
+      order.addItem("item0");
+    }).toThrow(OrderError);
+    expect(savedOrder.items.length === 0).toBe(true);
+    expect(() => {
+      //@ts-ignore
+      order.addItem(1);
+    }).toThrow(OrderError);
+    expect(savedOrder.items.length === 0).toBe(true);
+  });
 });
