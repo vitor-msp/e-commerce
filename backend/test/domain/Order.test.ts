@@ -12,45 +12,45 @@ describe("Order Tests", () => {
     });
   };
 
-  // it("should create order without id", () => {
-  //   const user = getUserExample();
-  //   const date = new Date().toISOString();
-  //   const order = new Order({
-  //     user,
-  //     date,
-  //   });
-  //   const savedOrder = order.getData();
-  //   expect(uuidValidate(savedOrder.id)).toBe(true);
-  //   expect(savedOrder.user).toEqual(user);
-  //   expect(savedOrder.date).toBe(date);
-  //   expect(savedOrder.items.length === 0).toBe(true);
-  // });
+  it("should create order without id", () => {
+    const user = getUserExample();
+    const date = new Date().toISOString();
+    const order = new Order({
+      user,
+      date,
+    });
+    const savedOrder = order.getData();
+    expect(uuidValidate(savedOrder.id)).toBe(true);
+    expect(savedOrder.user).toEqual(user);
+    expect(savedOrder.date).toBe(date);
+    expect(savedOrder.items.length === 0).toBe(true);
+  });
 
-  // it("should create order with id", () => {
-  //   const id = "order-id";
-  //   const user = getUserExample();
-  //   const date = new Date().toISOString();
-  //   const order = new Order({
-  //     id,
-  //     user,
-  //     date,
-  //   });
-  //   const savedOrder = order.getData();
-  //   expect(savedOrder.id).toBe(id);
-  //   expect(savedOrder.user).toEqual(user);
-  //   expect(savedOrder.date).toBe(date);
-  //   expect(savedOrder.items.length === 0).toBe(true);
-  // });
+  it("should create order with id", () => {
+    const id = "order-id";
+    const user = getUserExample();
+    const date = new Date().toISOString();
+    const order = new Order({
+      id,
+      user,
+      date,
+    });
+    const savedOrder = order.getData();
+    expect(savedOrder.id).toBe(id);
+    expect(savedOrder.user).toEqual(user);
+    expect(savedOrder.date).toBe(date);
+    expect(savedOrder.items.length === 0).toBe(true);
+  });
 
-  // it("should not create order with blank date", () => {
-  //   expect(() => {
-  //     new Order({
-  //       id: "order-id",
-  //       user: getUserExample(),
-  //       date: "",
-  //     });
-  //   }).toThrow(OrderError);
-  // });
+  it("should not create order with blank date", () => {
+    expect(() => {
+      new Order({
+        id: "order-id",
+        user: getUserExample(),
+        date: "",
+      });
+    }).toThrow(OrderError);
+  });
 
   it("should not create order with invalid date", () => {
     expect(() => {
@@ -62,7 +62,16 @@ describe("Order Tests", () => {
     }).toThrow(OrderError);
   });
 
-  it("should not create order without user", () => {});
-  it("should not create order with invalid user", () => {});
+  it("should not create order with invalid user", () => {
+    expect(() => {
+      new Order({
+        id: "order-id",
+        //@ts-ignore
+        user: {},
+        date: new Date().toISOString(),
+      });
+    }).toThrow(OrderError);
+  });
+
   it("should add item into order", () => {});
 });

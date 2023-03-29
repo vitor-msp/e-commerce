@@ -16,6 +16,8 @@ export class Order implements IOrder {
       orderInput.id && orderInput.id.localeCompare("") !== 0
         ? orderInput.id
         : uuid.v4();
+    if (!(orderInput.user instanceof User))
+      throw new OrderError("invalid user");
     this.user = orderInput.user;
     this.date = this.filterDate(orderInput.date);
     this.items = [];
