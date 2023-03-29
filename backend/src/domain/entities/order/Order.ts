@@ -38,4 +38,8 @@ export class Order implements IOrder {
       items: this.items,
     };
   }
+
+  addItem(item: OrderItem): void {
+    this.items.push(item);
+  }
 }

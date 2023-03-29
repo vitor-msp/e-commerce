@@ -2,6 +2,7 @@ import { User } from "../../src/domain/entities/user/User";
 import { Order } from "../../src/domain/entities/order/Order";
 import uuidValidate from "uuid-validate";
 import { OrderError } from "../../src/errors/OrderError";
+import { OrderItem } from "../../src/domain/entities/order/OrderItem";
 
 describe("Order Tests", () => {
   const getUserExample = () => {
@@ -73,5 +74,30 @@ describe("Order Tests", () => {
     }).toThrow(OrderError);
   });
 
-  it("should add item into order", () => {});
+  it("should add item into order", () => {
+    const order = new Order({
+      user: getUserExample(),
+      date: new Date().toISOString(),
+    });
+    const item0 = new OrderItem({
+      supplierId: "supplierId0",
+      productId: "product-id0",
+      productName: "product-name0",
+      unitPrice: 10.0,
+      quantity: 10,
+    });
+    const item1 = new OrderItem({
+      supplierId: "supplierId1",
+      productId: "product-id1",
+      productName: "product-name1",
+      unitPrice: 11.11,
+      quantity: 11,
+    });
+    order.addItem(item0);
+    order.addItem(item1);
+    const savedOrder = order.getData();
+    expect(savedOrder.items.length === 2).toBe(true);
+    expect(savedOrder.items[0]).toEqual(item0);
+    expect(savedOrder.items[1]).toEqual(item1);
+  });
 });
