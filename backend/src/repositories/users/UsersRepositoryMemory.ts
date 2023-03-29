@@ -27,6 +27,10 @@ export class UsersRepositoryMemory implements IUsersRepository {
     return this.users.some((user) => user.email.localeCompare(email) === 0);
   }
 
+  async selectById(id: string): Promise<IUser | undefined> {
+    return this.users.find((user) => user.id.localeCompare(id) === 0);
+  }
+
   async testEmailAndPassword(
     email: string,
     password: string
