@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CreateOrderError } from "../../errors/CreateOrderError";
 import { OrderError } from "../../errors/OrderError";
+import { OrderItemError } from "../../errors/OrderItemError";
 import {
   CreateOrderInputDto,
   ICreateOrderUseCase,
@@ -24,7 +25,11 @@ export class CreateOrderController implements ICreateOrderController {
       const output = await this.createOrderUseCase.execute(input);
       return res.status(201).json(output);
     } catch (error: any) {
-      if (error instanceof OrderError || error instanceof CreateOrderError)
+      if (
+        error instanceof OrderError ||
+        error instanceof OrderItemError ||
+        error instanceof CreateOrderError
+      )
         return res.status(400).json({ errorMessage: error.message });
       return res.status(500).json({ errorMessage: error.message });
     }

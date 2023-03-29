@@ -128,7 +128,53 @@ describe("Create Order Use Case Tests", () => {
     expect(res.statusCode).toBe(201);
   });
 
+  it("should receive bad request if any invalid field", async () => {
+    let res: supertest.Response;
+    let reqBody: CreateOrderInputDto;
+    //@ts-ignore
+    const validBody: CreateOrderInputDto = {
+      date: new Date().toISOString(),
+      items: [
+        {
+          supplierId: "supplierId",
+          productId: "productId",
+          productName: "productName",
+          unitPrice: 10.64,
+          quantity: 13,
+        },
+      ],
+    };
+
+    // invalid date
+    reqBody = Object.assign({}, validBody);
+    reqBody.date = "invalid";
+    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("invalid date");
+
+    // invalid unitPrice
+    reqBody = Object.assign({}, validBody);
+    //@ts-ignore
+    reqBody.items[0].unitPrice = "invalid";
+    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("invalid unitPrice");
+
+    // invalid quantity
+    reqBody = Object.assign({}, validBody);
+    //@ts-ignore
+    reqBody.items[0].unitPrice = 10.65;
+    //@ts-ignore
+    reqBody.items[0].quantity = "invalid";
+    res = await supertest(app).post("/api/v1/order").send(reqBody);
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty("errorMessage");
+    expect(res.body.errorMessage).toBe("invalid quantity");
+  });
+
   it("should receive bad request if missing userId", async () => {});
+
   it("should receive bad request if user not found", async () => {});
-  it("should receive bad request if any invalid field", async () => {});
 });
