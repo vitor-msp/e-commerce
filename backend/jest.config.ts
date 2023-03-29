@@ -6,5 +6,5 @@ export default {
   coverageDirectory: "test/coverage",
   coverageProvider: "v8",
   preset: "ts-jest",
-  testMatch: ["**/domain/Order.test.ts?(x)"],
+  testMatch: ["**/domain/OrderItem.test.ts?(x)"],
 };
