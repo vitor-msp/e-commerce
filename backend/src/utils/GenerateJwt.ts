@@ -5,7 +5,7 @@ export abstract class GenerateJwt {
   public static execute(payload: any): string {
     dotenv.config();
     if (!process.env.JWT_KEY) throw new Error("jwt key not loaded");
-    const jwtKey = process.env.JWT_KEY ?? (Math.random() * 1000).toString();
+    const jwtKey = process.env.JWT_KEY;
     const fiveHoursInSeconds = 60 * 60 * 5;
     return jwt.sign(payload, jwtKey, { expiresIn: fiveHoursInSeconds });
   }
