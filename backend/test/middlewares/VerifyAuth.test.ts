@@ -33,4 +33,12 @@ describe("Verify Auth Tests", () => {
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toEqual("missing jwt");
   });
+
+  it("should receive unauthorized for an invalid jwt", async () => {
+    const res: supertest.Response = await supertest(app)
+      .post("/api/v1/order")
+      .auth("invalid-jwt", { type: "bearer" })
+      .send();
+    expect(res.statusCode).toBe(401);
+  });
 });
