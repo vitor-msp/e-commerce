@@ -19,9 +19,7 @@ export class CreateOrderController implements ICreateOrderController {
     try {
       const input: CreateOrderInputDto = req.body;
       this.validateOrder.validate(input);
-      const userId = req.query.userId?.toString();
-      if (!userId) throw new CreateOrderError("missing userId");
-      input.userId = userId;
+      input.userId = req.query.userId!.toString();
       const output = await this.createOrderUseCase.execute(input);
       return res.status(201).json(output);
     } catch (error: any) {
