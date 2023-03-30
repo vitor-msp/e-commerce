@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { routes } from "./routes";
+import { UsersDBConfig } from "../infra/db/config/UsersDBConfig";
 
 export class App {
   public express: express.Application;
@@ -10,5 +11,10 @@ export class App {
     this.express.use(cors());
     this.express.use(express.json());
     this.express.use(routes);
+  }
+
+  async run(): Promise<App> {
+    await UsersDBConfig.connect();
+    return this;
   }
 }
