@@ -58,4 +58,17 @@ describe("Get Orders Use Case Tests", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual(resExpected);
   });
+
+  it("should receive ok with empty orders list", async () => {
+    const jwt = GenerateJwt.execute({
+      userId: "101",
+    });
+    const res: supertest.Response = await supertest(app)
+      .get("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send();
+    const resExpected: any = { orders: [] };
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual(resExpected);
+  });
 });
