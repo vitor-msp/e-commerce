@@ -1,10 +1,28 @@
+import express from "express";
 import supertest from "supertest";
+import { Repository } from "typeorm";
+import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/app";
+import { database } from "../../src/main/factory";
+import { EncryptData } from "../../src/utils/EncryptData";
 
 describe("Auth User Use Case Tests", () => {
-  let app: any;
+  let app: express.Application;
+  let usersRepository: Repository<UserDB>;
   beforeAll(async () => {
-    app = new App().express;
+    app = (await new App().run()).express;
+    usersRepository = database.getRepository(UserDB);
+    await usersRepository.clear();
+    await usersRepository.save({
+      id: "1",
+      email: "teste@teste.com",
+      password: EncryptData.execute("teste123"),
+    });
+    await usersRepository.save({
+      id: "2",
+      email: "used@teste.com",
+      password: EncryptData.execute("used"),
+    });
   });
 
   it("should receive ok when password is correct", async () => {
@@ -94,5 +112,9 @@ describe("Auth User Use Case Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("missing password");
+  });
+
+  afterAll(async () => {
+    await database.destroy();
   });
 });

@@ -1,6 +1,7 @@
 import { DataSource, Repository } from "typeorm";
 import { IUser } from "../../domain/entities/user/IUser";
 import { UserDB } from "../../infra/db/schemas/UserDB";
+import { CompareEncryptedData } from "../../utils/CompareEncryptedData";
 import { AuthOutputDto, IUsersRepository } from "./IUsersRepository";
 
 export class UsersRepositoryPG implements IUsersRepository {
@@ -25,10 +26,19 @@ export class UsersRepositoryPG implements IUsersRepository {
     throw new Error("Method not implemented.");
   }
 
-  testEmailAndPassword(
+  async testEmailAndPassword(
     email: string,
     password: string
   ): Promise<AuthOutputDto> {
-    throw new Error("Method not implemented.");
+    const savedUser = await this.database.findOneBy({ email });
+    if (!savedUser) return { authenticated: false, userId: "" };
+    const authenticated = CompareEncryptedData.execute(
+      password,
+      savedUser.password
+    );
+    return {
+      authenticated,
+      userId: authenticated ? savedUser.id : "",
+    };
   }
 }
