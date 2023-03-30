@@ -10,12 +10,15 @@ export class UsersRepositoryPG implements IUsersRepository {
     this.database = database.getRepository(UserDB);
   }
 
-  insert(user: IUser): Promise<void> {
-    throw new Error("Method not implemented.");
+  async insert(user: IUser): Promise<void> {
+    const { id, email, password } = user;
+    await this.database.save({ id, email, password });
   }
 
-  existsByEmail(email: string): Promise<boolean> {
-    throw new Error("Method not implemented.");
+  async existsByEmail(email: string): Promise<boolean> {
+    const user = await this.database.findOneBy({ email });
+    if (!user) return false;
+    return true;
   }
 
   selectById(id: string): Promise<IUser | undefined> {
