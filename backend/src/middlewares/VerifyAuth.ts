@@ -15,6 +15,9 @@ export abstract class VerifyAuth {
     jwt.verify(token, process.env.JWT_KEY!, (err, decoded) => {
       if (err) return res.status(401).send();
       // @ts-ignore
+      if (!decoded.userId)
+        return res.status(400).json({ errorMessage: "missing userId" });
+      // @ts-ignore
       req.query.userId = decoded.userId;
       next();
     });
