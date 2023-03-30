@@ -6,5 +6,5 @@ export default {
   coverageDirectory: "test/coverage",
   coverageProvider: "v8",
   preset: "ts-jest",
-  testMatch: ["**/middlewares/*.test.ts?(x)"],
+  testMatch: ["**/use-cases/GetOrders*.test.ts?(x)"],
 };
