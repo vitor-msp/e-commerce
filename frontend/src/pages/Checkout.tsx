@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { ProductCheckoutItem } from "../components/ProductCheckoutItem";
 import { AppDispatch, RootState } from "../store";
+import { cleanBought } from "../store/order-status/order-status.slice";
 import { postOrder } from "../store/orders/orders.middleware";
 import { IOrder, IOrderItem } from "../store/orders/orders.types";
 import { cleanCart } from "../store/products/products.middleware";
@@ -13,9 +15,22 @@ export const Checkout = () => {
   const productsInCart = useSelector((state: RootState) =>
     state.products.products.filter((p) => p.cart)
   );
+  const orderStatus = useSelector(
+    (state: RootState) => state.orderStatus.orderStatus
+  );
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (orderStatus.bought) {
+      dispatch(cleanCart());
+      dispatch(userBoughtAction());
+      navigate("/products");
+      dispatch(cleanBought());
+      alert(orderStatus.message);
+    }
+  }, [orderStatus]);
 
   const buy = async (): Promise<void> => {
     const orderItems: IOrderItem[] = productsInCart.map(
@@ -34,14 +49,7 @@ export const Checkout = () => {
       date: new Date().toISOString(),
       items: [...orderItems],
     };
-    try {
-      dispatch(postOrder(order));
-      // dispatch(cleanCart());
-      // dispatch(userBoughtAction());
-      // navigate("/products");
-    } catch (error) {
-      alert(error);
-    }
+    dispatch(postOrder(order));
   };
 
   return (
