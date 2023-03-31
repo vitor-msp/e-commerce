@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import { IOrder } from "../../../store/orders/orders.types";
+import { IOrder, IOrderItem } from "../../../store/orders/orders.types";
 import { injectJwt } from "../../../utils/InjectJwt";
 
 type CreateOrderReq = {
@@ -15,6 +15,22 @@ type CreateOrderItemReq = {
 };
 type CreateOrderRes = {
   orderId: string;
+};
+
+type GetOrdersRes = {
+  orders: ThinOrdersRes[];
+};
+type ThinOrdersRes = {
+  id: string;
+  date: string;
+  items: OrderItemRes[];
+};
+type OrderItemRes = {
+  supplierId: string;
+  productId: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
 };
 
 export class BillingApi {
@@ -55,62 +71,35 @@ export class BillingApi {
     return { orderId: res.orderId };
   }
 
-  async getOrders(): Promise<IOrder[]> {
+  async getOrders(jwt: string): Promise<IOrder[]> {
     let error = true;
-    const res: IOrder[] = await this.api
-      .get("/")
+    const res: GetOrdersRes = await this.api
+      .get("/", {
+        headers: injectJwt(jwt),
+      })
       .then((res) => {
         error = false;
         return res.data;
       })
       .catch((error) => error.response?.data ?? error.message);
-    const date = new Date();
-    date.setFullYear(2022);
-    date.setMonth(11);
-    return [
-      {
-        clientId: "1",
-        date: new Date().toISOString(),
-        items: [
-          {
-            supplier: "1",
-            productId: "11",
-            name: "teste",
-            quantity: 1,
-            unitPrice: 5.27,
-          },
-          {
-            supplier: "2",
-            productId: "21",
-            name: "teste 2",
-            quantity: 1,
-            unitPrice: 5.27,
-          },
-        ],
-      },
-      {
-        clientId: "1",
-        date: date.toISOString(),
-        items: [
-          {
-            supplier: "1",
-            productId: "11",
-            name: "teste",
-            quantity: 1,
-            unitPrice: 5.27,
-          },
-          {
-            supplier: "2",
-            productId: "21",
-            name: "teste 2",
-            quantity: 1,
-            unitPrice: 5.27,
-          },
-        ],
-      },
-    ];
     //@ts-ignore
-    // if (error) throw new Error(res);
-    // return res;
+    if (error) throw new Error(res);
+    return res.orders.map(({ date, id, items }) => {
+      return {
+        date,
+        id,
+        items: items.map<IOrderItem>(
+          ({ productId, productName, quantity, supplierId, unitPrice }) => {
+            return {
+              name: productName,
+              productId,
+              quantity,
+              unitPrice,
+              supplier: supplierId,
+            };
+          }
+        ),
+      };
+    });
   }
 }

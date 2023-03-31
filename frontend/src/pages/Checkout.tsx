@@ -45,7 +45,6 @@ export const Checkout = () => {
       }
     );
     const order: IOrder = {
-      clientId: "1",
       date: new Date().toISOString(),
       items: [...orderItems],
     };

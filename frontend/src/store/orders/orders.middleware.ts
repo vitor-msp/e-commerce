@@ -29,7 +29,12 @@ export const postOrder =
 
 export const getOrders = (): AppThunk => async (dispatch) => {
   try {
-    const orders = await billingApi.getOrders();
+    const jwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY_NAME);
+    if (!jwt)
+      throw new Error(
+        "Usuário não autenticado. Gentileza fazer o login novamente!"
+      );
+    const orders = await billingApi.getOrders(jwt);
     dispatch(addOrdersAction(orders));
   } catch (error) {
     alert(error);

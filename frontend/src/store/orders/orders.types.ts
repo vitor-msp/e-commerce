@@ -1,5 +1,5 @@
 export interface IOrder {
-  clientId: string;
+  id?: string;
   date: string;
   items: IOrderItem[];
 }
