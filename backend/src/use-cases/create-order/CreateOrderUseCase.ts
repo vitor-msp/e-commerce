@@ -36,9 +36,6 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
         );
       }
     );
-    const orderId = await this.ordersRepository.insert(order);
-    return {
-      orderId,
-    };
+    return await this.ordersRepository.insert(order);
   }
 }

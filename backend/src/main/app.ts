@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { routes } from "./routes";
-import { UsersDBConfig } from "../infra/db/config/UsersDBConfig";
+import { UsersDBConfig } from "../infra/db/config/DBConfig";
 
 export class App {
   public express: express.Application;

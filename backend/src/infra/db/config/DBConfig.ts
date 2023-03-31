@@ -4,7 +4,7 @@ import { database } from "../../../main/factory";
 import { UserDB } from "../schemas/UserDB";
 import dotenv from "dotenv";
 
-export abstract class UsersDBConfig {
+export abstract class DBConfig {
   public static async connect(): Promise<void> {
     await createDatabase({
       options: this.getOptions(),

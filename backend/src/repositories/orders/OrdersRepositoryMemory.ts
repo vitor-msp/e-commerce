@@ -1,5 +1,6 @@
 import { IOrder } from "../../domain/entities/order/IOrder";
 import { User } from "../../domain/entities/user/User";
+import { CreateOrderOutputDto } from "../../use-cases/create-order/ICreateOrderUseCase";
 import { IOrdersRepository } from "./IOrdersRepository";
 
 export const DEFAULT_DATE = "2023-03-30T00:50:33.638Z";
@@ -59,9 +60,9 @@ export class OrdersRepositoryMemory implements IOrdersRepository {
     ];
   }
 
-  async insert(order: IOrder): Promise<string> {
+  async insert(order: IOrder): Promise<CreateOrderOutputDto> {
     this.orders.push(order);
-    return "order-1";
+    return { orderId: "order-1" };
   }
 
   async select(userId: string): Promise<IOrder[]> {

@@ -8,6 +8,6 @@ export type AuthOutputDto = {
 export interface IUsersRepository {
   insert(user: IUser): Promise<void>;
   existsByEmail(email: string): Promise<boolean>;
-  selectById(id: string): Promise<IUser | undefined>;
+  selectById(id: string): Promise<IUser | null>;
   testEmailAndPassword(email: string, password: string): Promise<AuthOutputDto>;
 }
