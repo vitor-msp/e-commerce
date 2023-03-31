@@ -12,6 +12,11 @@ export interface IOrderItem {
   quantity: number;
 }
 
+export type IShowOrderItem = {
+  supplier: string;
+  productId: string;
+};
+
 export interface IOrdersState {
   orders: IOrder[];
 }

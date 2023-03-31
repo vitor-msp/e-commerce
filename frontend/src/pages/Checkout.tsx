@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { ProductCheckoutItem } from "../components/ProductCheckoutItem";
-import { billingApi } from "../factory";
 import { AppDispatch, RootState } from "../store";
+import { postOrder } from "../store/orders/orders.middleware";
 import { IOrder, IOrderItem } from "../store/orders/orders.types";
 import { cleanCart } from "../store/products/products.middleware";
 import { userBoughtAction } from "../store/user/user.slice";
@@ -35,11 +35,10 @@ export const Checkout = () => {
       items: [...orderItems],
     };
     try {
-      const orderReturn = await billingApi.postOrder(order);
-      dispatch(cleanCart());
-      dispatch(userBoughtAction());
-      navigate("/products");
-      alert(`Id do pedido: ${orderReturn.orderId} - ${orderReturn.status}`);
+      dispatch(postOrder(order));
+      // dispatch(cleanCart());
+      // dispatch(userBoughtAction());
+      // navigate("/products");
     } catch (error) {
       alert(error);
     }

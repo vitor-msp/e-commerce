@@ -1,9 +1,20 @@
 import axios, { AxiosInstance } from "axios";
 import { IOrder } from "../../../store/orders/orders.types";
+import { injectJwt } from "../../../utils/InjectJwt";
 
-type OrderReturn = {
+type CreateOrderReq = {
+  date: string;
+  items: CreateOrderItemReq[];
+};
+type CreateOrderItemReq = {
+  supplierId: string;
+  productId: string;
+  productName: string;
+  unitPrice: number;
+  quantity: number;
+};
+type CreateOrderRes = {
   orderId: string;
-  status: string;
 };
 
 export class BillingApi {
@@ -11,23 +22,37 @@ export class BillingApi {
 
   constructor() {
     this.api = axios.create({
-      baseURL: process.env.REACT_APP_BILLING_API_URL,
+      baseURL: process.env.REACT_APP_ORDER_API_URL,
     });
   }
 
-  async postOrder(order: IOrder): Promise<OrderReturn> {
+  async postOrder(order: IOrder, jwt: string): Promise<CreateOrderRes> {
+    const { date, items } = order;
+    const reqBody: CreateOrderReq = {
+      date,
+      items: items.map(({ name, productId, quantity, supplier, unitPrice }) => {
+        return {
+          productId,
+          quantity,
+          unitPrice,
+          supplierId: supplier,
+          productName: name,
+        };
+      }),
+    };
     let error = true;
-    const res: OrderReturn = await this.api
-      .post("/", order)
+    const res: CreateOrderRes = await this.api
+      .post<CreateOrderRes, any, CreateOrderReq>("/", reqBody, {
+        headers: injectJwt(jwt),
+      })
       .then((res) => {
         error = false;
         return res.data;
       })
       .catch((error) => error.response?.data ?? error.message);
-    return { orderId: "1", status: "pendente" };
     //@ts-ignore
     if (error) throw new Error(res);
-    return res;
+    return { orderId: res.orderId };
   }
 
   async getOrders(): Promise<IOrder[]> {
