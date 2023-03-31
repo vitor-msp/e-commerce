@@ -1,7 +1,7 @@
 # E-Commerce
-E-commerce simples desenvolvido em TypeScript, contendo uma api em NodeJS e um front em ReactJS.
+E-commerce simples desenvolvido em TypeScript, contendo uma API em NodeJS e um front em ReactJS.
 
-![demo](gif/demo.gif)
+![demo](demo/demo.gif)
 
 ## Contextualização
 ### Enunciado
@@ -19,7 +19,7 @@ A persistência dos dados é essencial, principalmente pelo fato de que informa�
 
 Fazendo referência ao Domain Driven Design, pode-se perceber que a API contempla dois bounded contexts, o de usuários e o de pedidos/faturamento. Pelo pequeno porte do sistema, ambos os contextos foram desenvolvidos em um único banco de dados, porém as tabelas e a API foram desenvolvidas de forma desacoplada, buscando deixar os módulos preparados para uma possível ruptura em microsserviços no futuro.
 
-Por fim, apesar de se tratar de um e-commerce "simples", pelo menos três ambientes independentes foram citados: front, api e banco de dados. Por isso, foi escolhido rodá-los em containers de Docker, com sua integração pelo Docker Compose.
+Por fim, apesar de se tratar de um e-commerce "simples", pelo menos três ambientes independentes foram citados: front, API e banco de dados. Por isso, foi escolhido rodá-los em containers de Docker, com sua integração pelo Docker Compose.
 
 ## Execução
 1. Clone este repositório
@@ -30,7 +30,7 @@ git clone https://github.com/vitor-msp/e-commerce.git
 ```
 cd e-commerce
 ```
-3. Execute o docker-compose
+3. Execute o Docker Compose
 ```
 sudo docker-compose up -d
 ```
