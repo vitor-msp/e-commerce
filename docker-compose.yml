@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: admin
+
+  api:
+    container_name: e-commerce-api
+    image: vitormsp/e-commerce-api
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  app:
+    container_name: e-commerce-app
+    image: vitormsp/e-commerce-app
+    ports:
+      - "80:80"
+    depends_on:
+      - api
