@@ -13,7 +13,11 @@ export class UsersRepositoryPG implements IUsersRepository {
 
   async insert(user: IUser): Promise<void> {
     const { id, email, password } = user;
-    await this.database.save({ id, email, password });
+    const userDB = new UserDB();
+    userDB.id = id;
+    userDB.email = email;
+    userDB.password = password!;
+    await this.database.save(userDB);
   }
 
   async existsByEmail(email: string): Promise<boolean> {
@@ -22,8 +26,8 @@ export class UsersRepositoryPG implements IUsersRepository {
     return true;
   }
 
-  selectById(id: string): Promise<IUser | undefined> {
-    throw new Error("Method not implemented.");
+  async selectById(id: string): Promise<IUser | null> {
+    return this.database.findOneBy({ id });
   }
 
   async testEmailAndPassword(
