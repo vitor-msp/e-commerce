@@ -13,16 +13,16 @@ describe("Auth User Use Case Tests", () => {
     app = (await new App().run()).express;
     usersRepository = database.getRepository(UserDB);
     await usersRepository.clear();
-    await usersRepository.save({
-      id: "1",
-      email: "teste@teste.com",
-      password: EncryptData.execute("teste123"),
-    });
-    await usersRepository.save({
-      id: "2",
-      email: "used@teste.com",
-      password: EncryptData.execute("used"),
-    });
+    const user1 = new UserDB();
+    user1.id = "1";
+    user1.email = "teste@teste.com";
+    user1.password = EncryptData.execute("teste123");
+    await usersRepository.save(user1);
+    const user2 = new UserDB();
+    user2.id = "2";
+    user2.email = "used@teste.com";
+    user2.password = EncryptData.execute("used");
+    await usersRepository.save(user2);
   });
 
   it("should receive ok when password is correct", async () => {
