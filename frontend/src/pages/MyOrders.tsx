@@ -9,10 +9,8 @@ export const MyOrders = () => {
   const orders = useSelector((state: RootState) => state.orders.orders);
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    if (orders.length === 0) {
-      dispatch(getOrders());
-    }
-  }, [orders, dispatch]);
+    dispatch(getOrders());
+  }, []);
 
   return (
     <>
