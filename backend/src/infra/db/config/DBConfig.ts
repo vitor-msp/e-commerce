@@ -3,6 +3,8 @@ import { createDatabase } from "typeorm-extension";
 import { database } from "../../../main/factory";
 import { UserDB } from "../schemas/UserDB";
 import dotenv from "dotenv";
+import { OrderDB } from "../schemas/OrderDB";
+import { OrderItemDB } from "../schemas/OrderItemDB";
 
 export abstract class DBConfig {
   public static async connect(): Promise<void> {
@@ -38,7 +40,7 @@ export abstract class DBConfig {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [UserDB],
+      entities: [UserDB, OrderDB, OrderItemDB],
       synchronize: true,
       logging: false,
     };

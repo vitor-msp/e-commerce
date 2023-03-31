@@ -29,9 +29,9 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
           new OrderItem({
             productId,
             productName,
-            quantity,
+            quantity: +quantity,
             supplierId,
-            unitPrice,
+            unitPrice: +unitPrice,
           })
         );
       }

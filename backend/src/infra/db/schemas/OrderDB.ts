@@ -17,6 +17,6 @@ export class OrderDB implements IOrder {
   @Column({ length: 24 })
   date!: string;
 
-  @OneToMany(() => OrderItemDB, (item) => item.order)
+  @OneToMany(() => OrderItemDB, (item) => item.order, { cascade: true })
   items!: OrderItemDB[];
 }
