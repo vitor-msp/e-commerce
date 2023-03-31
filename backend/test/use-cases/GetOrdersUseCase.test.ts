@@ -5,21 +5,15 @@ import { OrderDB } from "../../src/infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
-import { JwtPayload } from "../../src/use-cases/auth-user/AuthUserUseCase";
 import { ThinOrder } from "../../src/use-cases/get-orders/IGetOrdersUseCase";
 import { GenerateJwt } from "../../src/utils/GenerateJwt";
 
 describe("Get Orders Use Case Tests", () => {
   let app: express.Application;
   let ordersRepository: Repository<OrderDB>;
-  let jwt: string;
   const DEFAULT_DATE = new Date().toISOString();
   beforeAll(async () => {
     app = (await new App().run()).express;
-    const jwtPayload: JwtPayload = {
-      userId: "1",
-    };
-    jwt = GenerateJwt.execute(jwtPayload);
     await database.createQueryBuilder().delete().from(OrderItemDB).execute();
     await database.createQueryBuilder().delete().from(OrderDB).execute();
     ordersRepository = database.getRepository(OrderDB);

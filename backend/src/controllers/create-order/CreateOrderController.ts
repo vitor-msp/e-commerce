@@ -29,7 +29,6 @@ export class CreateOrderController implements ICreateOrderController {
         error instanceof CreateOrderError
       )
         return res.status(400).json({ errorMessage: error.message });
-      console.log(error);
       return res.status(500).json({ errorMessage: error.message });
     }
   }
