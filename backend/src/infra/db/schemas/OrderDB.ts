@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { IOrder } from "../../../domain/entities/order/IOrder";
 import { OrderItemDB } from "./OrderItemDB";
 
@@ -10,6 +16,7 @@ export class OrderDB implements IOrder {
   @Column({ length: 100 })
   id!: string;
 
+  @Index()
   @Column({ length: 100 })
   //@ts-ignore
   user!: string;

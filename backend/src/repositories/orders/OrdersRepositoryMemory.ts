@@ -1,6 +1,7 @@
 import { IOrder } from "../../domain/entities/order/IOrder";
 import { User } from "../../domain/entities/user/User";
 import { CreateOrderOutputDto } from "../../use-cases/create-order/ICreateOrderUseCase";
+import { GetOrdersOutputDto } from "../../use-cases/get-orders/IGetOrdersUseCase";
 import { IOrdersRepository } from "./IOrdersRepository";
 
 export const DEFAULT_DATE = "2023-03-30T00:50:33.638Z";
@@ -65,7 +66,7 @@ export class OrdersRepositoryMemory implements IOrdersRepository {
     return { orderId: "order-1" };
   }
 
-  async select(userId: string): Promise<IOrder[]> {
-    return this.orders.filter((order) => order.user.id === userId);
+  async select(userId: string): Promise<GetOrdersOutputDto> {
+    return { orders: this.orders.filter((order) => order.user.id === userId) };
   }
 }

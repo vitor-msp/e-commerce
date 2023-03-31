@@ -22,9 +22,9 @@ describe("Create Order Use Case Tests", () => {
       userId: "1",
     };
     jwt = GenerateJwt.execute(jwtPayload);
-    // await database.getRepository(OrderItemDB).clear();
+    await database.createQueryBuilder().delete().from(OrderItemDB).execute();
+    await database.createQueryBuilder().delete().from(OrderDB).execute();
     ordersRepository = database.getRepository(OrderDB);
-    // await ordersRepository.clear();
     await generateUser();
     await generateOrder1();
     await generateOrder2();

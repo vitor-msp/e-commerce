@@ -1,8 +1,10 @@
 import { DataSource, Repository } from "typeorm";
 import { IOrder } from "../../domain/entities/order/IOrder";
+import { IOrderItem } from "../../domain/entities/order/IOrderItem";
 import { OrderDB } from "../../infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../infra/db/schemas/OrderItemDB";
 import { CreateOrderOutputDto } from "../../use-cases/create-order/ICreateOrderUseCase";
+import { GetOrdersOutputDto } from "../../use-cases/get-orders/IGetOrdersUseCase";
 import { IOrdersRepository } from "./IOrdersRepository";
 
 export class OrdersRepositoryPG implements IOrdersRepository {
@@ -37,7 +39,19 @@ export class OrdersRepositoryPG implements IOrdersRepository {
     };
   }
 
-  select(userId: string): Promise<IOrder[]> {
-    throw new Error("Method not implemented.");
+  async select(userId: string): Promise<GetOrdersOutputDto> {
+    const savedOrders = await this.database.find({
+      where: { user: userId },
+      relations: { items: true },
+    });
+    return {
+      orders: savedOrders.map(({ id, date, items }) => {
+        return {
+          id,
+          date,
+          items,
+        };
+      }),
+    };
   }
 }
