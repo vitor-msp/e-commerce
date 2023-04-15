@@ -43,6 +43,7 @@ export abstract class DBConfig {
       entities: [UserDB, OrderDB, OrderItemDB],
       synchronize: true,
       logging: false,
+      ssl: true,
     };
   }
 }
