@@ -8,7 +8,7 @@ phases:
     commands: 
     - echo Build started on `date` 
     - echo Building the Docker image... 
-    - docker build -t ecommerce-front .
+    - docker build -t ecommerce-front frontend
     - docker tag ecommerce-front:latest 501570643391.dkr.ecr.us-east-1.amazonaws.com/ecommerce-front:latest
   post_build: 
     commands: 
