@@ -1,0 +1,22 @@
+version: 0.2 
+phases: 
+  pre_build: 
+    commands: 
+    - echo Logging in to Amazon ECR...
+    - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 501570643391.dkr.ecr.us-east-1.amazonaws.com
+  build: 
+    commands: 
+    - echo Build started on `date` 
+    - echo Building the Docker image... 
+    - docker build -t ecommerce-front .
+    - docker tag ecommerce-front:latest 501570643391.dkr.ecr.us-east-1.amazonaws.com/ecommerce-front:latest
+  post_build: 
+    commands: 
+    - echo Build completed on `date` 
+    - echo pushing to repo
+    - docker push 501570643391.dkr.ecr.us-east-1.amazonaws.com/ecommerce-front:latest
+    - echo Writing image definitions file...
+    - printf '[{"name":"ecommerce","imageUri":"%s"}]' 501570643391.dkr.ecr.us-east-1.amazonaws.com/ecommerce:latest > imagedefinitions.json 
+artifacts:
+  files:
+    - imagedefinitions.json
