@@ -16,7 +16,7 @@ phases:
     - echo pushing to repo
     - docker push 501570643391.dkr.ecr.us-east-1.amazonaws.com/ecommerce-front:latest
     - echo Writing image definitions file...
-    - printf '[{"name":"ecommerce","imageUri":"%s"}]' 501570643391.dkr.ecr.us-east-1.amazonaws.com/ecommerce:latest > imagedefinitions.json 
+    - printf '[{"name":"api","imageUri":"%s"}]' 501570643391.dkr.ecr.us-east-1.amazonaws.com/ecommerce:latest > imagedefinitions.json 
 artifacts:
   files:
     - imagedefinitions.json
