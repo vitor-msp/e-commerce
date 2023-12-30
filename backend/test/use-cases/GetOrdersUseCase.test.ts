@@ -7,7 +7,7 @@ import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
 import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
 import { JwtGenerator } from "../../src/utils/JwtGenerator";
-import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/IGetOrdersUseCase";
+import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/GetOrdersOutput";
 
 describe("Get Orders Use Case Tests", () => {
   let app: express.Application;

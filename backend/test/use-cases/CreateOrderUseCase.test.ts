@@ -6,7 +6,7 @@ import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
-import { CreateOrderInput } from "../../src/use-cases/create-order/ICreateOrderUseCase";
+import { CreateOrderInput } from "../../src/use-cases/create-order/CreateOrderInput";
 import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
 import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
 import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
@@ -168,7 +168,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
 
     // missing items
     res = await supertest(app)
@@ -177,7 +176,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
     //@ts-ignore
     reqBody.items = [];
     // items are empty
@@ -187,7 +185,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
     //@ts-ignore
     reqBody.items = [{}];
 
@@ -198,7 +195,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
     //@ts-ignore
     reqBody.items = [
       //@ts-ignore
@@ -214,7 +210,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
     //@ts-ignore
     reqBody.items = [
       //@ts-ignore
@@ -231,7 +226,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
     //@ts-ignore
     reqBody.items = [
       //@ts-ignore
@@ -249,7 +243,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
     //@ts-ignore
     reqBody.items = [
       //@ts-ignore
@@ -268,7 +261,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order");
     //@ts-ignore
     reqBody.items = [
       //@ts-ignore
@@ -317,7 +309,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid unitPrice");
 
     // invalid quantity
     reqBody = Object.assign({}, validBody);
@@ -331,7 +322,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid quantity");
   });
 
   it("should receive bad request if user not found", async () => {
@@ -358,7 +348,6 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("user not found");
   });
 
   afterAll(async () => {

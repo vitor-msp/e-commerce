@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
-import {
-  CreateOrderInput,
-  ICreateOrderUseCase,
-} from "../../use-cases/create-order/ICreateOrderUseCase";
+import { ICreateOrderUseCase } from "../../use-cases/create-order/ICreateOrderUseCase";
 import { ICreateOrderController } from "./ICreateOrderController";
 import { DomainError } from "../../errors/DomainError";
 import { ApplicationError } from "../../errors/ApplicationError";
+import { CreateOrderInput } from "../../use-cases/create-order/CreateOrderInput";
 
 export class CreateOrderController implements ICreateOrderController {
   constructor(private readonly createOrderUseCase: ICreateOrderUseCase) {}

@@ -1,5 +1,6 @@
 import { IOrdersRepository } from "../../domain/contract/repositories/IOrdersRepository";
-import { GetOrdersOutput, IGetOrdersUseCase } from "./IGetOrdersUseCase";
+import { GetOrdersOutput } from "./GetOrdersOutput";
+import { IGetOrdersUseCase } from "./IGetOrdersUseCase";
 
 export class GetOrdersUseCase implements IGetOrdersUseCase {
   constructor(private readonly ordersRepository: IOrdersRepository) {}
@@ -8,8 +9,8 @@ export class GetOrdersUseCase implements IGetOrdersUseCase {
     const orders = await this.ordersRepository.select(userId);
     return {
       orders: orders.map((order) => ({
-        id: order.getFields().getData().id,
-        createdAt: order.getFields().getData().createdAt.toISOString(),
+        id: order.getId(),
+        createdAt: order.getCreatedAt().toISOString(),
         items: order.getItems().map((item) => item.getFields().getData()),
       })),
     };

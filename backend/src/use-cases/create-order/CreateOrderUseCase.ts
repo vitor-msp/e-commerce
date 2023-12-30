@@ -2,12 +2,10 @@ import { Order } from "../../domain/entities/order/Order";
 import { OrderItem } from "../../domain/entities/order/OrderItem";
 import { IOrdersRepository } from "../../domain/contract/repositories/IOrdersRepository";
 import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
-import {
-  CreateOrderInput,
-  CreateOrderOutput,
-  ICreateOrderUseCase,
-} from "./ICreateOrderUseCase";
+import { ICreateOrderUseCase } from "./ICreateOrderUseCase";
 import { ApplicationError } from "../../errors/ApplicationError";
+import { CreateOrderInput } from "./CreateOrderInput";
+import { CreateOrderOutput } from "./CreateOrderOutput";
 
 export class CreateOrderUseCase implements ICreateOrderUseCase {
   constructor(

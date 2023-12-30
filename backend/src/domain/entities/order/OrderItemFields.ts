@@ -1,5 +1,3 @@
-import { DomainError } from "../../../errors/DomainError";
-
 export class OrderItemFields {
   private constructor(
     private readonly supplierId: string,
@@ -10,14 +8,6 @@ export class OrderItemFields {
   ) {}
 
   public static build(input: any): OrderItemFields {
-    if (!input["supplierId"]) throw new DomainError("invalid supplierId");
-    if (!input["productId"]) throw new DomainError("invalid productId");
-    if (!input["productName"]) throw new DomainError("invalid productName");
-    if (!input["unitPrice"] || isNaN(input["unitPrice"]))
-      throw new DomainError("invalid unitPrice");
-    if (!input["quantity"] || isNaN(input["quantity"]))
-      throw new DomainError("invalid quantity");
-
     return new OrderItemFields(
       input["supplierId"],
       input["productId"],

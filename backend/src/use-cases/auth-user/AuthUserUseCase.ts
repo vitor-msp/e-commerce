@@ -21,7 +21,6 @@ export class AuthUserUseCase implements IAuthUserUseCase {
     if (!savedUserDB) throw new ApplicationError("email not found");
 
     const hash = savedUserDB.getPassword();
-    console.log("hash", hash);
     if (!hash) throw new ApplicationError("password hash not found");
 
     const authenticated = this.passwordEncryptor.compare(

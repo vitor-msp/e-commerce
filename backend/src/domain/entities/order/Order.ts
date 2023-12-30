@@ -30,4 +30,12 @@ export class Order {
   public getItems(): OrderItem[] {
     return this.items;
   }
+
+  public getId(): string {
+    return this.fields.getData().id;
+  }
+
+  public getCreatedAt(): Date {
+    return this.fields.getData().createdAt;
+  }
 }
