@@ -1,23 +1,24 @@
 import { DataSource } from "typeorm";
-import { AuthUserController } from "../controllers/auth-user/AuthUserController";
-import { CreateOrderController } from "../controllers/create-order/CreateOrderController";
-import { CreateUserController } from "../controllers/create-user/CreateUserController";
-import { GetOrdersController } from "../controllers/get-orders/GetOrdersController";
+import { AuthUserController } from "../controllers/AuthUserController";
+import { CreateOrderController } from "../controllers/CreateOrderController";
+import { CreateUserController } from "../controllers/CreateUserController";
+import { GetOrdersController } from "../controllers/GetOrdersController";
 import { OrdersRepositoryPG } from "../repositories/orders/OrdersRepositoryPG";
 import { UsersRepositoryPG } from "../repositories/users/UsersRepositoryPG";
 import { AuthUserUseCase } from "../use-cases/auth-user/AuthUserUseCase";
 import { CreateOrderUseCase } from "../use-cases/create-order/CreateOrderUseCase";
 import { CreateUserUseCase } from "../use-cases/create-user/CreateUserUseCase";
 import { GetOrdersUseCase } from "../use-cases/get-orders/GetOrdersUseCase";
-import { PasswordEncryptor } from "../utils/PasswordEncryptor";
-import { IPasswordEncryptor } from "../utils/IPasswordEncryptor";
-import { JwtGenerator } from "../utils/JwtGenerator";
+import { PasswordEncryptor } from "../utils/password-encryptor/PasswordEncryptor";
+import { IPasswordEncryptor } from "../utils/password-encryptor/IPasswordEncryptor";
+import { JwtGenerator } from "../utils/jwt-generator/JwtGenerator";
+import { IController } from "../controllers/IController";
 
 export type Controllers = {
-  createUser: CreateUserController;
-  authUser: AuthUserController;
-  createOrder: CreateOrderController;
-  getOrders: GetOrdersController;
+  createUser: IController;
+  authUser: IController;
+  createOrder: IController;
+  getOrders: IController;
 };
 
 export class Factory {

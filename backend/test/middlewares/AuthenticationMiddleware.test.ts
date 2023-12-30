@@ -1,7 +1,7 @@
 import supertest from "supertest";
 import { App } from "../../src/main/App";
-import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
-import { JwtGenerator } from "../../src/utils/JwtGenerator";
+import { IJwtGenerator } from "../../src/utils/jwt-generator/IJwtGenerator";
+import { JwtGenerator } from "../../src/utils/jwt-generator/JwtGenerator";
 
 describe("Verify Auth Tests", () => {
   let app: any;

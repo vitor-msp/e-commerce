@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { AuthUserError } from "../../errors/AuthUserError";
-import { IAuthUserUseCase } from "../../use-cases/auth-user/IAuthUserUseCase";
-import { IAuthUserController } from "./IAuthUserController";
-import { DomainError } from "../../errors/DomainError";
-import { AuthUserInput } from "../../use-cases/auth-user/AuthUserInput";
-import { ApplicationError } from "../../errors/ApplicationError";
+import { AuthUserError } from "../errors/AuthUserError";
+import { IAuthUserUseCase } from "../use-cases/auth-user/IAuthUserUseCase";
+import { DomainError } from "../errors/DomainError";
+import { AuthUserInput } from "../use-cases/auth-user/AuthUserInput";
+import { ApplicationError } from "../errors/ApplicationError";
+import { IController } from "./IController";
 
-export class AuthUserController implements IAuthUserController {
+export class AuthUserController implements IController {
   constructor(private readonly authUserUseCase: IAuthUserUseCase) {}
 
   async execute(req: Request, res: Response): Promise<Response> {

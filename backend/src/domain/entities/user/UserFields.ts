@@ -10,7 +10,7 @@ export class UserFields {
   ) {}
 
   public static build(input: any): UserFields {
-    const email = Email.build(input["email"]); //inverter dependencia
+    const email = Email.build(input["email"]);
     const fields = new UserFields(uuid.v4(), email);
     fields.password = input["password"];
     return fields;

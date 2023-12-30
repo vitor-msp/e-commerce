@@ -4,8 +4,8 @@ import { DataSource, Repository } from "typeorm";
 import { OrderDB } from "../../src/infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { App } from "../../src/main/App";
-import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
-import { JwtGenerator } from "../../src/utils/JwtGenerator";
+import { IJwtGenerator } from "../../src/utils/jwt-generator/IJwtGenerator";
+import { JwtGenerator } from "../../src/utils/jwt-generator/JwtGenerator";
 import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/GetOrdersOutput";
 
 describe("Get Orders Use Case Tests", () => {
@@ -103,7 +103,6 @@ describe("Get Orders Use Case Tests", () => {
     const savedOrder0: GetOrdersOrderOutput = savedOrders[0];
     expect(savedOrder0.id === "100").toBe(true);
     expect(savedOrder0.createdAt === DEFAULT_DATE).toBe(true);
-    console.log(savedOrder0.items.length);
     expect(savedOrder0.items.length === 2).toBe(true);
 
     const item0 = savedOrder0.items[0];

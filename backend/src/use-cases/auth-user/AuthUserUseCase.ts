@@ -1,10 +1,10 @@
 import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
 import { IAuthUserUseCase } from "./IAuthUserUseCase";
-import { IJwtGenerator } from "../../utils/IJwtGenerator";
+import { IJwtGenerator } from "../../utils/jwt-generator/IJwtGenerator";
 import { AuthUserInput } from "./AuthUserInput";
 import { AuthUserOutput } from "./AuthUserOutput";
 import { ApplicationError } from "../../errors/ApplicationError";
-import { IPasswordEncryptor } from "../../utils/IPasswordEncryptor";
+import { IPasswordEncryptor } from "../../utils/password-encryptor/IPasswordEncryptor";
 import { AuthUserError } from "../../errors/AuthUserError";
 
 export class AuthUserUseCase implements IAuthUserUseCase {

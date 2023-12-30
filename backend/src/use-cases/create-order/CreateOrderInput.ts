@@ -24,7 +24,7 @@ export class CreateOrderInput {
     return OrderFields.build();
   }
 
-  public getItems(): OrderItemFields[] {
+  public getItemFields(): OrderItemFields[] {
     return this.items.map((item) => item.getFields());
   }
 }

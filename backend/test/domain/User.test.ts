@@ -2,8 +2,8 @@ import uuidValidate from "uuid-validate";
 import * as uuid from "uuid";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
-import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
-import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
+import { IPasswordEncryptor } from "../../src/utils/password-encryptor/IPasswordEncryptor";
+import { PasswordEncryptor } from "../../src/utils/password-encryptor/PasswordEncryptor";
 
 describe("User Tests", () => {
   const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();

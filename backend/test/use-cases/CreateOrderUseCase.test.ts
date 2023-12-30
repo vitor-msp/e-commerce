@@ -6,10 +6,10 @@ import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/App";
 import { CreateOrderInput } from "../../src/use-cases/create-order/CreateOrderInput";
-import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
-import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
-import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
-import { JwtGenerator } from "../../src/utils/JwtGenerator";
+import { IPasswordEncryptor } from "../../src/utils/password-encryptor/IPasswordEncryptor";
+import { PasswordEncryptor } from "../../src/utils/password-encryptor/PasswordEncryptor";
+import { IJwtGenerator } from "../../src/utils/jwt-generator/IJwtGenerator";
+import { JwtGenerator } from "../../src/utils/jwt-generator/JwtGenerator";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { User } from "../../src/domain/entities/user/User";
 

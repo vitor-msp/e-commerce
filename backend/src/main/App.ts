@@ -21,14 +21,14 @@ export class App {
     this.express = express();
     this.express.use(cors());
     this.express.use(express.json());
+
     const controllers = factory.getControllers();
     const routes = router.getRoutes(controllers);
     this.express.use(routes);
   }
 
   public async run(): Promise<App> {
-    const dbConnector = new DBConnector(this.dataSource, this.dbOptions);
-    await dbConnector.connect();
+    await new DBConnector(this.dataSource, this.dbOptions).connect();
     return this;
   }
 

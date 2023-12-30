@@ -6,7 +6,7 @@ import { User } from "../../domain/entities/user/User";
 export class UsersRepositoryPG implements IUsersRepository {
   private readonly database: Repository<UserDB>;
 
-  constructor(database: DataSource) {
+  public constructor(database: DataSource) {
     this.database = database.getRepository(UserDB);
   }
 

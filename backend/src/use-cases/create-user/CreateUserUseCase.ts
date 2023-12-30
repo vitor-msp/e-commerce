@@ -1,7 +1,7 @@
 import { User } from "../../domain/entities/user/User";
 import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
 import { ICreateUserUseCase } from "./ICreateUserUseCase";
-import { IPasswordEncryptor } from "../../utils/IPasswordEncryptor";
+import { IPasswordEncryptor } from "../../utils/password-encryptor/IPasswordEncryptor";
 import { CreateUserInput } from "./CreateUserInput";
 import { ApplicationError } from "../../errors/ApplicationError";
 

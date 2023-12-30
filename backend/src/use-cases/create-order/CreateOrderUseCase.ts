@@ -18,7 +18,7 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
     if (!user) throw new ApplicationError("user not found");
     const order = new Order(input.getFields());
     order.setUser(user);
-    input.getItems().forEach((item) => {
+    input.getItemFields().forEach((item) => {
       order.addItem(new OrderItem(item));
     });
     return await this.ordersRepository.insert(order);

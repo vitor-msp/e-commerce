@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { IGetOrdersUseCase } from "../../use-cases/get-orders/IGetOrdersUseCase";
-import { IGetOrdersController } from "./IGetOrdersController";
-import { GetOrdersInput } from "../../use-cases/get-orders/GetOrdersInput";
+import { IGetOrdersUseCase } from "../use-cases/get-orders/IGetOrdersUseCase";
+import { GetOrdersInput } from "../use-cases/get-orders/GetOrdersInput";
+import { IController } from "./IController";
 
-export class GetOrdersController implements IGetOrdersController {
+export class GetOrdersController implements IController {
   constructor(private readonly getOrdersUseCase: IGetOrdersUseCase) {}
 
   async execute(req: Request, res: Response): Promise<Response> {
