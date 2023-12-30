@@ -6,7 +6,7 @@ import { CreateUserInput } from "../../use-cases/create-user/CreateUserInput";
 import { ApplicationError } from "../../errors/ApplicationError";
 
 export class CreateUserController implements ICreateUserController {
-  constructor(readonly createUserUseCase: ICreateUserUseCase) {}
+  constructor(private readonly createUserUseCase: ICreateUserUseCase) {}
 
   async execute(req: Request, res: Response): Promise<Response> {
     try {

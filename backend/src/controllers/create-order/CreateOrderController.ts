@@ -10,15 +10,16 @@ export class CreateOrderController implements ICreateOrderController {
 
   async execute(req: Request, res: Response): Promise<Response> {
     try {
-      const userId = req.query["userId"];
-      if (!userId) throw new Error("missing userId");
-      req.body["userId"] = userId.toString();
-      const input = new CreateOrderInput(req.body);
+      const input = new CreateOrderInput({
+        ...req.body,
+        userId: req.query["userId"],
+      });
       const output = await this.createOrderUseCase.execute(input);
       return res.status(201).json(output);
     } catch (error: any) {
       if (error instanceof DomainError || error instanceof ApplicationError)
         return res.status(400).json({ errorMessage: error.message });
+
       return res.status(500).json({ errorMessage: error.message });
     }
   }

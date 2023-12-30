@@ -7,7 +7,7 @@ import { AuthUserInput } from "../../use-cases/auth-user/AuthUserInput";
 import { ApplicationError } from "../../errors/ApplicationError";
 
 export class AuthUserController implements IAuthUserController {
-  constructor(readonly authUserUseCase: IAuthUserUseCase) {}
+  constructor(private readonly authUserUseCase: IAuthUserUseCase) {}
 
   async execute(req: Request, res: Response): Promise<Response> {
     try {
