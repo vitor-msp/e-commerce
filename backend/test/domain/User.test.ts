@@ -8,27 +8,22 @@ import { PasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/
 describe("User Tests", () => {
   const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
 
-  const buildUserExample = (): User => {
-    return new User(
-      UserFields.build({
-        email: "teste@teste.com",
-        password: passwordEncryptor.generateHash("teste123"),
-      })
-    );
-  };
-
-  const rebuildUserExample = (id: string): User => {
-    return new User(
-      UserFields.rebuild(
-        id,
-        "teste@teste.com",
-        passwordEncryptor.generateHash("teste123")
-      )
-    );
+  const getUserExample = (id?: string): User => {
+    const userFiels = id
+      ? UserFields.rebuild(
+          id,
+          "teste@teste.com",
+          passwordEncryptor.generateHash("teste123")
+        )
+      : UserFields.build({
+          email: "teste@teste.com",
+          password: passwordEncryptor.generateHash("teste123"),
+        });
+    return new User(userFiels);
   };
 
   it("should build a user", () => {
-    const userFields = buildUserExample().getFields();
+    const userFields = getUserExample().getFields();
     expect(uuidValidate(userFields.getData().id)).toBeTruthy();
     expect(userFields.getData().email.email).toBe("teste@teste.com");
     expect(userFields.getData().password).toBeDefined();
@@ -42,7 +37,7 @@ describe("User Tests", () => {
 
   it("should rebuild a user with password", () => {
     const id = uuid.v4();
-    const userFields = rebuildUserExample(id).getFields();
+    const userFields = getUserExample(id).getFields();
     expect(userFields.getData().id).toBe(id);
     expect(userFields.getData().email.email).toBe("teste@teste.com");
     expect(userFields.getData().password).toBeDefined();

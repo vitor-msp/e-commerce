@@ -1,3 +1,4 @@
+import uuidValidate from "uuid-validate";
 import { User } from "../../src/domain/entities/user/User";
 import { Order } from "../../src/domain/entities/order/Order";
 import { OrderItem } from "../../src/domain/entities/order/OrderItem";
@@ -9,7 +10,7 @@ describe("Order Tests", () => {
   const getUserExample = () => {
     return new User(
       UserFields.build({
-        email: "  teste@teste.com  ",
+        email: "teste@teste.com",
         password: "teste123",
       })
     );
@@ -17,8 +18,14 @@ describe("Order Tests", () => {
 
   it("should create order", () => {
     const user = getUserExample();
+    const beforeDate = new Date();
     const order = new Order(OrderFields.build());
+    const afterDate = new Date();
     order.setUser(user);
+
+    expect(uuidValidate(order.getFields().getData().id)).toBeTruthy();
+    expect(order.getFields().getData().createdAt >= beforeDate).toBeTruthy();
+    expect(order.getFields().getData().createdAt <= afterDate).toBeTruthy();
     expect(order.getUser()).toEqual(user);
     expect(order.getItems().length === 0).toBe(true);
   });
@@ -47,7 +54,7 @@ describe("Order Tests", () => {
     order.addItem(item0);
     order.addItem(item1);
     const items = order.getItems();
-    expect(items.length === 2).toBe(true);
+    expect(items.length === 2).toBeTruthy();
     expect(items[0]).toEqual(item0);
     expect(items[1]).toEqual(item1);
   });
