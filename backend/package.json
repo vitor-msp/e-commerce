@@ -4,10 +4,10 @@
   "description": "simple e-commerce",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' ts-node-dev --respawn --transpile-only src/main/server.ts",
+    "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' ts-node-dev --respawn --transpile-only src/main/Server.ts",
     "test": "jest --detectOpenHandles",
     "build": "rm -rf ./dist && tsc",
-    "start": "NODE_TLS_REJECT_UNAUTHORIZED='0' node ./dist/main/server.js"
+    "start": "NODE_TLS_REJECT_UNAUTHORIZED='0' node ./dist/main/Server.js"
   },
   "repository": {
     "type": "git",

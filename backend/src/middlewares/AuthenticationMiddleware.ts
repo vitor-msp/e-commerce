@@ -1,9 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { IMiddleware } from "./IMiddleware";
 
-export abstract class VerifyAuth {
-  public static verify(req: Request, res: Response, next: NextFunction) {
+export class AuthenticationMiddleware implements IMiddleware {
+  public constructor() {}
+
+  public handle(req: Request, res: Response, next: NextFunction) {
     dotenv.config();
     const bearer = req.headers.authorization;
     if (!bearer) return res.status(403).json({ errorMessage: "missing jwt" });

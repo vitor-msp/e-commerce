@@ -1,11 +1,10 @@
 import express from "express";
 import supertest from "supertest";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { OrderDB } from "../../src/infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
-import { App } from "../../src/main/app";
-import { database } from "../../src/main/factory";
+import { App } from "../../src/main/App";
 import { CreateOrderInput } from "../../src/use-cases/create-order/CreateOrderInput";
 import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
 import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
@@ -16,6 +15,7 @@ import { User } from "../../src/domain/entities/user/User";
 
 describe("Create Order Use Case Tests", () => {
   let app: express.Application;
+  let dataSource: DataSource;
   let ordersRepository: Repository<OrderDB>;
   let jwt: string;
   const DEFAULT_DATE = new Date().toISOString();
@@ -24,10 +24,12 @@ describe("Create Order Use Case Tests", () => {
   const jwtGenerator: IJwtGenerator = new JwtGenerator();
 
   beforeAll(async () => {
-    app = (await new App().run()).express;
-    await database.createQueryBuilder().delete().from(OrderItemDB).execute();
-    await database.createQueryBuilder().delete().from(OrderDB).execute();
-    ordersRepository = database.getRepository(OrderDB);
+    const application = await new App().run();
+    app = application.express;
+    dataSource = application.getDataSource();
+    await dataSource.createQueryBuilder().delete().from(OrderItemDB).execute();
+    await dataSource.createQueryBuilder().delete().from(OrderDB).execute();
+    ordersRepository = dataSource.getRepository(OrderDB);
     await generateUser();
     await generateOrder1();
     await generateOrder2();
@@ -38,7 +40,7 @@ describe("Create Order Use Case Tests", () => {
   });
 
   const generateUser = async (): Promise<void> => {
-    const usersRepository = database.getRepository(UserDB);
+    const usersRepository = dataSource.getRepository(UserDB);
     await usersRepository.clear();
     const user = UserDB.build(
       new User(
@@ -351,6 +353,6 @@ describe("Create Order Use Case Tests", () => {
   });
 
   afterAll(async () => {
-    await database.destroy();
+    await dataSource.destroy();
   });
 });

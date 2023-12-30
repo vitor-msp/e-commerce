@@ -1,9 +1,8 @@
 import express from "express";
 import supertest from "supertest";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
-import { App } from "../../src/main/app";
-import { database } from "../../src/main/factory";
+import { App } from "../../src/main/App";
 import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
 import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
@@ -11,12 +10,15 @@ import { User } from "../../src/domain/entities/user/User";
 
 describe("Auth User Use Case Tests", () => {
   let app: express.Application;
+  let dataSource: DataSource;
   let usersRepository: Repository<UserDB>;
   const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
 
   beforeAll(async () => {
-    app = (await new App().run()).express;
-    usersRepository = database.getRepository(UserDB);
+    const application = await new App().run();
+    app = application.express;
+    dataSource = application.getDataSource();
+    usersRepository = dataSource.getRepository(UserDB);
     await usersRepository.clear();
     const user1 = UserDB.build(
       new User(
@@ -128,6 +130,6 @@ describe("Auth User Use Case Tests", () => {
   });
 
   afterAll(async () => {
-    await database.destroy();
+    await dataSource.destroy();
   });
 });

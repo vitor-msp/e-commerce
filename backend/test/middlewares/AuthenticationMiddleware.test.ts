@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { App } from "../../src/main/app";
+import { App } from "../../src/main/App";
 import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
 import { JwtGenerator } from "../../src/utils/JwtGenerator";
 

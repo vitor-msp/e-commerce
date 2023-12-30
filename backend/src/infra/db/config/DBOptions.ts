@@ -1,28 +1,10 @@
 import { DataSourceOptions } from "typeorm";
-import { createDatabase } from "typeorm-extension";
-import { database } from "../../../main/factory";
 import { UserDB } from "../schemas/UserDB";
 import dotenv from "dotenv";
 import { OrderDB } from "../schemas/OrderDB";
 import { OrderItemDB } from "../schemas/OrderItemDB";
 
-export abstract class DBConfig {
-  public static async connect(): Promise<void> {
-    await createDatabase({
-      options: this.getOptions(),
-      ifNotExist: true,
-    });
-    await database
-      .initialize()
-      .then(() => {
-        console.log("connected to PostgreSQL");
-      })
-      .catch((error) => {
-        console.log(`error to connect to PostgreSQL: ${error}`);
-        console.error(error.stack);
-      });
-  }
-
+export abstract class DBOptions {
   public static getOptions(): DataSourceOptions {
     dotenv.config();
     if (

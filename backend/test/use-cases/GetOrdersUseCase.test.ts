@@ -1,25 +1,27 @@
 import express from "express";
 import supertest from "supertest";
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { OrderDB } from "../../src/infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
-import { App } from "../../src/main/app";
-import { database } from "../../src/main/factory";
+import { App } from "../../src/main/App";
 import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
 import { JwtGenerator } from "../../src/utils/JwtGenerator";
 import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/GetOrdersOutput";
 
 describe("Get Orders Use Case Tests", () => {
   let app: express.Application;
+  let dataSource: DataSource;
   let ordersRepository: Repository<OrderDB>;
   const DEFAULT_DATE = new Date().toISOString();
   const jwtGenerator: IJwtGenerator = new JwtGenerator();
 
   beforeAll(async () => {
-    app = (await new App().run()).express;
-    await database.createQueryBuilder().delete().from(OrderItemDB).execute();
-    await database.createQueryBuilder().delete().from(OrderDB).execute();
-    ordersRepository = database.getRepository(OrderDB);
+    const application = await new App().run();
+    app = application.express;
+    dataSource = application.getDataSource();
+    await dataSource.createQueryBuilder().delete().from(OrderItemDB).execute();
+    await dataSource.createQueryBuilder().delete().from(OrderDB).execute();
+    ordersRepository = dataSource.getRepository(OrderDB);
     await generateOrder1();
     await generateOrder2();
     await generateOrder3();
@@ -145,6 +147,6 @@ describe("Get Orders Use Case Tests", () => {
   });
 
   afterAll(async () => {
-    await database.destroy();
+    await dataSource.destroy();
   });
 });
