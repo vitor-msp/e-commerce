@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CreateUserError } from "../../errors/CreateUserError";
-import { UserError } from "../../errors/UserError";
+import { DomainError } from "../../errors/DomainError";
 import {
   CreateUserInput,
   ICreateUserUseCase,
@@ -16,7 +16,7 @@ export class CreateUserController implements ICreateUserController {
       await this.createUserUseCase.execute(input);
       return res.status(201).send();
     } catch (error: any) {
-      if (error instanceof UserError || error instanceof CreateUserError)
+      if (error instanceof DomainError || error instanceof CreateUserError)
         return res.status(400).json({ errorMessage: error.message });
       return res.status(500).json({ errorMessage: error.message });
     }

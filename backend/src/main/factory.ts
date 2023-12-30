@@ -10,12 +10,15 @@ import { AuthUserUseCase } from "../use-cases/auth-user/AuthUserUseCase";
 import { CreateOrderUseCase } from "../use-cases/create-order/CreateOrderUseCase";
 import { CreateUserUseCase } from "../use-cases/create-user/CreateUserUseCase";
 import { GetOrdersUseCase } from "../use-cases/get-orders/GetOrdersUseCase";
+import { PasswordEncryptor } from "../utils/PasswordEncryptor";
+import { IPasswordEncryptor } from "../utils/IPasswordEncryptor";
 
 export const database = new DataSource(DBConfig.getOptions());
 
-const usersRepositoryPG = new UsersRepositoryPG(database);
+const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
+const usersRepositoryPG = new UsersRepositoryPG(database, passwordEncryptor);
 export const createUserController = new CreateUserController(
-  new CreateUserUseCase(usersRepositoryPG)
+  new CreateUserUseCase(usersRepositoryPG, passwordEncryptor)
 );
 export const authUserController = new AuthUserController(
   new AuthUserUseCase(usersRepositoryPG)

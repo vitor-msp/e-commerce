@@ -1,21 +1,23 @@
 import { DataSource, Repository } from "typeorm";
 import { UserDB } from "../../infra/db/schemas/UserDB";
-import { CompareEncryptedData } from "../../utils/CompareEncryptedData";
+import { IPasswordEncryptor } from "../../utils/IPasswordEncryptor";
 import {
-  AuthOutputDto,
+  AuthOutput,
   IUsersRepository,
 } from "../../domain/contract/repositories/IUsersRepository";
 import { User } from "../../domain/entities/user/User";
 
 export class UsersRepositoryPG implements IUsersRepository {
   private readonly database: Repository<UserDB>;
+  private readonly passwordEncryptor: IPasswordEncryptor;
 
-  constructor(database: DataSource) {
+  constructor(database: DataSource, passwordEncryptor: IPasswordEncryptor) {
     this.database = database.getRepository(UserDB);
+    this.passwordEncryptor = passwordEncryptor;
   }
 
   async insert(user: User): Promise<void> {
-    const userDB = UserDB.build(user.getFields());
+    const userDB = UserDB.build(user);
     await this.database.save(userDB);
   }
 
@@ -33,11 +35,11 @@ export class UsersRepositoryPG implements IUsersRepository {
   async testEmailAndPassword(
     email: string,
     password: string
-  ): Promise<AuthOutputDto> {
+  ): Promise<AuthOutput> {
     const savedUserDB = await this.database.findOneBy({ email });
     if (!savedUserDB || !savedUserDB.password || !savedUserDB.id)
       return { authenticated: false, userId: "" };
-    const authenticated = CompareEncryptedData.execute(
+    const authenticated = this.passwordEncryptor.compare(
       password,
       savedUserDB.password
     );

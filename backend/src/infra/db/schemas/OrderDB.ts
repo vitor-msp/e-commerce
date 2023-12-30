@@ -8,6 +8,7 @@ import {
 import { OrderItemDB } from "./OrderItemDB";
 import { OrderFields } from "../../../domain/entities/order/OrderFields";
 import { Order } from "../../../domain/entities/order/Order";
+import { ApplicationError } from "../../../errors/ApplicationError";
 
 @Entity()
 export class OrderDB {
@@ -29,19 +30,19 @@ export class OrderDB {
 
   public constructor() {}
 
-  public static build(fields: OrderFields): OrderDB {
-    return new OrderDB().hydrate(fields);
+  public static build(order: Order): OrderDB {
+    return new OrderDB().hydrate(order);
   }
 
-  public hydrate(fields: OrderFields): OrderDB {
-    const { id, createdAt } = fields.getData();
+  public hydrate(order: Order): OrderDB {
+    const { id, createdAt } = order.getFields().getData();
     this.id = id;
     this.createdAt = createdAt.toISOString();
     return this;
   }
 
   public getEntity(): Order {
-    if (!this.id || !this.createdAt) throw new Error("missing fields");
+    if (!this.id || !this.createdAt) throw new ApplicationError("missing fields");
     return new Order(OrderFields.rebuild(this.id, new Date(this.createdAt)));
   }
 }

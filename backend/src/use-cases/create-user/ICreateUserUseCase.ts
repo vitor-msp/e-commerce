@@ -31,6 +31,5 @@ export class CreateUserInput {
 }
 
 export interface ICreateUserUseCase {
-  readonly usersRepository: IUsersRepository;
   execute(input: CreateUserInput): Promise<void>;
 }

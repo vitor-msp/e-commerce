@@ -4,30 +4,38 @@ import { Repository } from "typeorm";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
-import { EncryptData } from "../../src/utils/EncryptData";
+import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
+import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { User } from "../../src/domain/entities/user/User";
 
 describe("Auth User Use Case Tests", () => {
   let app: express.Application;
   let usersRepository: Repository<UserDB>;
+  const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
+
   beforeAll(async () => {
     app = (await new App().run()).express;
     usersRepository = database.getRepository(UserDB);
     await usersRepository.clear();
     const user1 = UserDB.build(
-      UserFields.build({
-        id: "1",
-        email: "teste@teste.com",
-        password: EncryptData.execute("teste123"),
-      })
+      new User(
+        UserFields.build({
+          id: "1",
+          email: "teste@teste.com",
+          password: passwordEncryptor.generateHash("teste123"),
+        })
+      )
     );
     await usersRepository.save(user1);
     const user2 = UserDB.build(
-      UserFields.build({
-        id: "2",
-        email: "used@teste.com",
-        password: EncryptData.execute("used"),
-      })
+      new User(
+        UserFields.build({
+          id: "2",
+          email: "used@teste.com",
+          password: passwordEncryptor.generateHash("used"),
+        })
+      )
     );
     await usersRepository.save(user2);
   });

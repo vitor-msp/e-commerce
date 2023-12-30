@@ -1,4 +1,4 @@
-export class OrderError extends Error {
+export class DomainError extends Error {
   constructor(message: string) {
     super(message);
   }

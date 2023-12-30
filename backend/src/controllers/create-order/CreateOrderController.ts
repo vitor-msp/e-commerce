@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import { CreateOrderError } from "../../errors/CreateOrderError";
-import { OrderError } from "../../errors/OrderError";
-import { OrderItemError } from "../../errors/OrderItemError";
 import {
   CreateOrderInput,
   ICreateOrderUseCase,
 } from "../../use-cases/create-order/ICreateOrderUseCase";
 import { ICreateOrderController } from "./ICreateOrderController";
+import { DomainError } from "../../errors/DomainError";
 
 export class CreateOrderController implements ICreateOrderController {
   constructor(private readonly createOrderUseCase: ICreateOrderUseCase) {}
@@ -21,8 +20,7 @@ export class CreateOrderController implements ICreateOrderController {
       return res.status(201).json(output);
     } catch (error: any) {
       if (
-        error instanceof OrderError ||
-        error instanceof OrderItemError ||
+        error instanceof DomainError ||
         error instanceof CreateOrderError
       )
         return res.status(400).json({ errorMessage: error.message });

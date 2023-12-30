@@ -11,8 +11,7 @@ export class User {
     return this.fields;
   }
 
-  // passwordIsCorrect(password: string): boolean {
-  //   if (!this.password) throw new UserError("none password saved");
-  //   return CompareEncryptedData.execute(password, this.password);
-  // }
+  public getId(): string {
+    return this.fields.getData().id;
+  }
 }

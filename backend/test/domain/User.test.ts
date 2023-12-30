@@ -2,22 +2,28 @@ import uuidValidate from "uuid-validate";
 import * as uuid from "uuid";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
-import { CompareEncryptedData } from "../../src/utils/CompareEncryptedData";
-import { EncryptData } from "../../src/utils/EncryptData";
+import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
+import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
 
 describe("User Tests", () => {
+  const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
+
   const buildUserExample = (): User => {
     return new User(
       UserFields.build({
         email: "teste@teste.com",
-        password: EncryptData.execute("teste123"),
+        password: passwordEncryptor.generateHash("teste123"),
       })
     );
   };
 
   const rebuildUserExample = (id: string): User => {
     return new User(
-      UserFields.rebuild(id, "teste@teste.com", EncryptData.execute("teste123"))
+      UserFields.rebuild(
+        id,
+        "teste@teste.com",
+        passwordEncryptor.generateHash("teste123")
+      )
     );
   };
 
@@ -27,10 +33,10 @@ describe("User Tests", () => {
     expect(userFields.getData().email.email).toBe("teste@teste.com");
     expect(userFields.getData().password).toBeDefined();
     expect(
-      CompareEncryptedData.execute("teste123", userFields.getData().password!)
+      passwordEncryptor.compare("teste123", userFields.getData().password!)
     ).toBeTruthy();
     expect(
-      CompareEncryptedData.execute("Teste123", userFields.getData().password!)
+      passwordEncryptor.compare("Teste123", userFields.getData().password!)
     ).toBeFalsy();
   });
 
@@ -41,10 +47,10 @@ describe("User Tests", () => {
     expect(userFields.getData().email.email).toBe("teste@teste.com");
     expect(userFields.getData().password).toBeDefined();
     expect(
-      CompareEncryptedData.execute("teste123", userFields.getData().password!)
+      passwordEncryptor.compare("teste123", userFields.getData().password!)
     ).toBeTruthy();
     expect(
-      CompareEncryptedData.execute("Teste123", userFields.getData().password!)
+      passwordEncryptor.compare("Teste123", userFields.getData().password!)
     ).toBeFalsy();
   });
 

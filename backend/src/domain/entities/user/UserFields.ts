@@ -1,5 +1,6 @@
 import * as uuid from "uuid";
 import { Email } from "../../value-objects/Email";
+import { DomainError } from "../../../errors/DomainError";
 
 export class UserFields {
   private password?: string;
@@ -10,8 +11,8 @@ export class UserFields {
   ) {}
 
   public static build(input: any): UserFields {
-    if (!input["email"]) throw new Error("missing email");
-    const email = Email.build(input["email"]);
+    if (!input["email"]) throw new DomainError("missing email");
+    const email = Email.build(input["email"]); //inverter dependencia
     const fields = new UserFields(uuid.v4(), email);
     fields.password = input["password"];
     return fields;

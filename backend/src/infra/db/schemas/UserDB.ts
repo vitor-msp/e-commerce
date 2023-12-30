@@ -1,6 +1,7 @@
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 import { UserFields } from "../../../domain/entities/user/UserFields";
 import { User } from "../../../domain/entities/user/User";
+import { ApplicationError } from "../../../errors/ApplicationError";
 
 @Entity()
 export class UserDB {
@@ -20,12 +21,12 @@ export class UserDB {
 
   public constructor() {}
 
-  public static build(fields: UserFields) {
-    return new UserDB().hydrate(fields);
+  public static build(user: User) {
+    return new UserDB().hydrate(user);
   }
 
-  public hydrate(fields: UserFields): UserDB {
-    const { id, email, password } = fields.getData();
+  public hydrate(user: User): UserDB {
+    const { id, email, password } = user.getFields().getData();
     this.id = id;
     this.email = email.email;
     this.password = password;
@@ -33,7 +34,7 @@ export class UserDB {
   }
 
   public getEntity(): User {
-    if (!this.id || !this.email) throw new Error("id and/or email not setted");
+    if (!this.id || !this.email) throw new ApplicationError("id and/or email not setted");
     return new User(UserFields.rebuild(this.id, this.email, this.password));
   }
 }

@@ -8,9 +8,11 @@ import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
 import { JwtPayload } from "../../src/use-cases/auth-user/AuthUserUseCase";
 import { CreateOrderInput } from "../../src/use-cases/create-order/ICreateOrderUseCase";
-import { EncryptData } from "../../src/utils/EncryptData";
+import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
+import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
 import { GenerateJwt } from "../../src/utils/GenerateJwt";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { User } from "../../src/domain/entities/user/User";
 
 describe("Create Order Use Case Tests", () => {
   let app: express.Application;
@@ -18,6 +20,7 @@ describe("Create Order Use Case Tests", () => {
   let jwt: string;
   const DEFAULT_DATE = new Date().toISOString();
   let userId: string;
+  const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
 
   beforeAll(async () => {
     app = (await new App().run()).express;
@@ -38,10 +41,12 @@ describe("Create Order Use Case Tests", () => {
     const usersRepository = database.getRepository(UserDB);
     await usersRepository.clear();
     const user = UserDB.build(
-      UserFields.build({
-        email: "teste@teste.com",
-        password: EncryptData.execute("teste123"),
-      })
+      new User(
+        UserFields.build({
+          email: "teste@teste.com",
+          password: passwordEncryptor.generateHash("teste123"),
+        })
+      )
     );
     userId = user.id!;
     await usersRepository.save(user);

@@ -2,6 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { OrderDB } from "./OrderDB";
 import { OrderItemFields } from "../../../domain/entities/order/OrderItemFields";
 import { OrderItem } from "../../../domain/entities/order/OrderItem";
+import { ApplicationError } from "../../../errors/ApplicationError";
 
 @Entity()
 export class OrderItemDB {
@@ -28,13 +29,13 @@ export class OrderItemDB {
 
   constructor() {}
 
-  public static build(fields: OrderItemFields): OrderItemDB {
-    return new OrderItemDB().hydrate(fields);
+  public static build(orderItem: OrderItem): OrderItemDB {
+    return new OrderItemDB().hydrate(orderItem);
   }
 
-  public hydrate(fields: OrderItemFields): OrderItemDB {
+  public hydrate(orderItem: OrderItem): OrderItemDB {
     const { productId, productName, quantity, supplierId, unitPrice } =
-      fields.getData();
+      orderItem.getFields().getData();
     this.productId = productId;
     this.productName = productName;
     this.quantity = quantity;
@@ -51,7 +52,7 @@ export class OrderItemDB {
       !this.unitPrice ||
       !this.quantity
     )
-      throw new Error("missing fields");
+      throw new ApplicationError("missing fields");
     return new OrderItem(
       OrderItemFields.rebuild(
         this.supplierId,

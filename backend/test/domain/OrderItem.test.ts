@@ -1,6 +1,6 @@
 import { OrderItem } from "../../src/domain/entities/order/OrderItem";
 import { OrderItemFields } from "../../src/domain/entities/order/OrderItemFields";
-import { OrderItemError } from "../../src/errors/OrderItemError";
+import { DomainError } from "../../src/errors/DomainError";
 
 describe("Order Item Tests", () => {
   it("should create order item", () => {
@@ -36,7 +36,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
     expect(() => {
       new OrderItem(
         OrderItemFields.build({
@@ -47,7 +47,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
   });
 
   it("should not create order item with blank/invalid productId", () => {
@@ -60,7 +60,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
     expect(() => {
       new OrderItem(
         OrderItemFields.build({
@@ -71,7 +71,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
   });
 
   it("should not create order item with blank/invalid productName", () => {
@@ -84,7 +84,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
     expect(() => {
       new OrderItem(
         OrderItemFields.build({
@@ -95,7 +95,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
   });
 
   it("should not create order item with blank/invalid unitPrice", () => {
@@ -108,7 +108,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
     expect(() => {
       new OrderItem(
         OrderItemFields.build({
@@ -119,7 +119,7 @@ describe("Order Item Tests", () => {
           quantity: 5,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
   });
 
   it("should not create order item with blank/invalid quantity", () => {
@@ -132,7 +132,7 @@ describe("Order Item Tests", () => {
           unitPrice: 15.62,
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
     expect(() => {
       new OrderItem(
         OrderItemFields.build({
@@ -143,6 +143,6 @@ describe("Order Item Tests", () => {
           quantity: "invalid",
         })
       );
-    }).toThrow(OrderItemError);
+    }).toThrow(DomainError);
   });
 });

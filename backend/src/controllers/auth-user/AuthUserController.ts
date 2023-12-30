@@ -3,12 +3,12 @@ import {
   AuthUserControllerError,
   AuthUserUseCaseError,
 } from "../../errors/AuthUserError";
-import { UserError } from "../../errors/UserError";
 import {
   AuthUserInputDto,
   IAuthUserUseCase,
 } from "../../use-cases/auth-user/IAuthUserUseCase";
 import { IAuthUserController } from "./IAuthUserController";
+import { DomainError } from "../../errors/DomainError";
 
 export class AuthUserController implements IAuthUserController {
   constructor(readonly authUserUseCase: IAuthUserUseCase) {}
@@ -23,7 +23,7 @@ export class AuthUserController implements IAuthUserController {
       return res.status(200).json(output);
     } catch (error: any) {
       if (
-        error instanceof UserError ||
+        error instanceof DomainError ||
         error instanceof AuthUserControllerError
       )
         return res.status(400).json({ errorMessage: error.message });
