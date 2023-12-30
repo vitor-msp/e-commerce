@@ -3,8 +3,8 @@ import supertest from "supertest";
 import { DataSource, Repository } from "typeorm";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/App";
-import { IPasswordEncryptor } from "../../src/utils/password-encryptor/IPasswordEncryptor";
-import { PasswordEncryptor } from "../../src/utils/password-encryptor/PasswordEncryptor";
+import { IPasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/IPasswordEncryptor";
+import { PasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/PasswordEncryptor";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { User } from "../../src/domain/entities/user/User";
 

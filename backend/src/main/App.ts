@@ -5,7 +5,7 @@ import { Router } from "./Router";
 import { DBConnector } from "../infra/db/config/DBConnector";
 import { DBOptions } from "../infra/db/config/DBOptions";
 import { DataSource } from "typeorm";
-import { AuthenticationMiddleware } from "../middlewares/AuthenticationMiddleware";
+import { AuthenticationMiddleware } from "../api/middlewares/AuthenticationMiddleware";
 
 export class App {
   public readonly express: express.Application;

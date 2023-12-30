@@ -1,5 +1,5 @@
 import { Router as ExpressRouter } from "express";
-import { IMiddleware } from "../middlewares/IMiddleware";
+import { IMiddleware } from "../api/middlewares/IMiddleware";
 import { Controllers } from "./Factory";
 
 export class Router {

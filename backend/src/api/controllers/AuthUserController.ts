@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { AuthUserError } from "../errors/AuthUserError";
-import { IAuthUserUseCase } from "../use-cases/auth-user/IAuthUserUseCase";
-import { DomainError } from "../errors/DomainError";
-import { AuthUserInput } from "../use-cases/auth-user/AuthUserInput";
-import { ApplicationError } from "../errors/ApplicationError";
+import { AuthUserError } from "../../errors/AuthUserError";
+import { IAuthUserUseCase } from "../../use-cases/auth-user/IAuthUserUseCase";
+import { DomainError } from "../../errors/DomainError";
+import { AuthUserInput } from "../../use-cases/auth-user/AuthUserInput";
+import { ApplicationError } from "../../errors/ApplicationError";
 import { IController } from "./IController";
 
 export class AuthUserController implements IController {

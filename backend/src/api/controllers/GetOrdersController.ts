@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { IGetOrdersUseCase } from "../use-cases/get-orders/IGetOrdersUseCase";
-import { GetOrdersInput } from "../use-cases/get-orders/GetOrdersInput";
+import { IGetOrdersUseCase } from "../../use-cases/get-orders/IGetOrdersUseCase";
+import { GetOrdersInput } from "../../use-cases/get-orders/GetOrdersInput";
 import { IController } from "./IController";
 
 export class GetOrdersController implements IController {

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { IMiddleware } from "./IMiddleware";
-import { HttpResponses } from "../http/HttpResponses";
+import { HttpResponses } from "../HttpResponses";
 
 export class AuthenticationMiddleware implements IMiddleware {
   public constructor() {}

@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { DomainError } from "../errors/DomainError";
-import { ICreateUserUseCase } from "../use-cases/create-user/ICreateUserUseCase";
-import { CreateUserInput } from "../use-cases/create-user/CreateUserInput";
-import { ApplicationError } from "../errors/ApplicationError";
+import { DomainError } from "../../errors/DomainError";
+import { ICreateUserUseCase } from "../../use-cases/create-user/ICreateUserUseCase";
+import { CreateUserInput } from "../../use-cases/create-user/CreateUserInput";
+import { ApplicationError } from "../../errors/ApplicationError";
 import { IController } from "./IController";
 
 export class CreateUserController implements IController {

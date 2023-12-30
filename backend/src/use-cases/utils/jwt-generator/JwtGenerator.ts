@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { ApplicationError } from "../../errors/ApplicationError";
+import { ApplicationError } from "../../../errors/ApplicationError";
 import { IJwtGenerator } from "./IJwtGenerator";
 
 export class JwtGenerator implements IJwtGenerator {
