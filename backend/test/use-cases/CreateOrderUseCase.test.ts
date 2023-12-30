@@ -6,11 +6,11 @@ import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
-import { JwtPayload } from "../../src/use-cases/auth-user/AuthUserUseCase";
 import { CreateOrderInput } from "../../src/use-cases/create-order/ICreateOrderUseCase";
 import { IPasswordEncryptor } from "../../src/utils/IPasswordEncryptor";
 import { PasswordEncryptor } from "../../src/utils/PasswordEncryptor";
-import { GenerateJwt } from "../../src/utils/GenerateJwt";
+import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
+import { JwtGenerator } from "../../src/utils/JwtGenerator";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { User } from "../../src/domain/entities/user/User";
 
@@ -21,6 +21,7 @@ describe("Create Order Use Case Tests", () => {
   const DEFAULT_DATE = new Date().toISOString();
   let userId: string;
   const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
+  const jwtGenerator: IJwtGenerator = new JwtGenerator();
 
   beforeAll(async () => {
     app = (await new App().run()).express;
@@ -31,10 +32,9 @@ describe("Create Order Use Case Tests", () => {
     await generateOrder1();
     await generateOrder2();
     await generateOrder3();
-    const jwtPayload: JwtPayload = {
+    jwt = jwtGenerator.generate({
       userId,
-    };
-    jwt = GenerateJwt.execute(jwtPayload);
+    });
   });
 
   const generateUser = async (): Promise<void> => {
@@ -349,10 +349,9 @@ describe("Create Order Use Case Tests", () => {
         },
       ],
     };
-    const jwtPayload: JwtPayload = {
+    const jwt = jwtGenerator.generate({
       userId: "100",
-    };
-    const jwt = GenerateJwt.execute(jwtPayload);
+    });
     const res: supertest.Response = await supertest(app)
       .post("/api/v1/order")
       .auth(jwt, { type: "bearer" })

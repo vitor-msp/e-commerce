@@ -12,16 +12,17 @@ import { CreateUserUseCase } from "../use-cases/create-user/CreateUserUseCase";
 import { GetOrdersUseCase } from "../use-cases/get-orders/GetOrdersUseCase";
 import { PasswordEncryptor } from "../utils/PasswordEncryptor";
 import { IPasswordEncryptor } from "../utils/IPasswordEncryptor";
+import { JwtGenerator } from "../utils/JwtGenerator";
 
 export const database = new DataSource(DBConfig.getOptions());
 
 const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
-const usersRepositoryPG = new UsersRepositoryPG(database, passwordEncryptor);
+const usersRepositoryPG = new UsersRepositoryPG(database);
 export const createUserController = new CreateUserController(
   new CreateUserUseCase(usersRepositoryPG, passwordEncryptor)
 );
 export const authUserController = new AuthUserController(
-  new AuthUserUseCase(usersRepositoryPG)
+  new AuthUserUseCase(usersRepositoryPG, passwordEncryptor, new JwtGenerator())
 );
 
 const ordersRepositoryPG = new OrdersRepositoryPG(database);

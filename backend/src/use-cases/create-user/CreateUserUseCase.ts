@@ -1,8 +1,9 @@
 import { User } from "../../domain/entities/user/User";
-import { CreateUserError } from "../../errors/CreateUserError";
 import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
-import { CreateUserInput, ICreateUserUseCase } from "./ICreateUserUseCase";
+import { ICreateUserUseCase } from "./ICreateUserUseCase";
 import { IPasswordEncryptor } from "../../utils/IPasswordEncryptor";
+import { CreateUserInput } from "./CreateUserInput";
+import { ApplicationError } from "../../errors/ApplicationError";
 
 export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(
@@ -11,11 +12,14 @@ export class CreateUserUseCase implements ICreateUserUseCase {
   ) {}
 
   async execute(input: CreateUserInput): Promise<void> {
-    if (await this.usersRepository.existsByEmail(input.getEmail()))
-      throw new CreateUserError("email already in use");
-    input.setEncryptedPassword(
-      this.passwordEncryptor.generateHash(input.getPassword())
+    const emailInUse = await this.usersRepository.existsByEmail(
+      input.getEmail()
     );
+    if (emailInUse) throw new ApplicationError("email already in use");
+    const encryptedPassword = this.passwordEncryptor.generateHash(
+      input.getPassword()
+    );
+    input.setEncryptedPassword(encryptedPassword);
     const user = new User(input.getFields());
     await this.usersRepository.insert(user);
   }

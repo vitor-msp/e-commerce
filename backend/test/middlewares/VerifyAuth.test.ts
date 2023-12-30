@@ -1,13 +1,16 @@
 import supertest from "supertest";
 import { App } from "../../src/main/app";
-import { GenerateJwt } from "../../src/utils/GenerateJwt";
+import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
+import { JwtGenerator } from "../../src/utils/JwtGenerator";
 
 describe("Verify Auth Tests", () => {
   let app: any;
   let jwt: string;
+  const jwtGenerator: IJwtGenerator = new JwtGenerator();
+
   beforeAll(async () => {
     app = new App().express;
-    jwt = GenerateJwt.execute({
+    jwt = jwtGenerator.generate({
       invalidField: "1",
     });
   });
@@ -29,21 +32,21 @@ describe("Verify Auth Tests", () => {
     expect(res.statusCode).toBe(403);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toEqual("missing jwt");
-});
+  });
 
   it("should receive unauthorized for an invalid jwt", async () => {
-      const res: supertest.Response = await supertest(app)
+    const res: supertest.Response = await supertest(app)
       .post("/api/v1/order")
       .auth("invalid-jwt", { type: "bearer" })
       .send();
-      expect(res.statusCode).toBe(401);
-    });
-    
-    it("should receive bad request if missing userId", async () => {
+    expect(res.statusCode).toBe(401);
+  });
+
+  it("should receive bad request if missing userId", async () => {
     const res: supertest.Response = await supertest(app)
-    .post("/api/v1/order")
-    .auth(jwt, { type: "bearer" })
-    .send();
+      .post("/api/v1/order")
+      .auth(jwt, { type: "bearer" })
+      .send();
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toEqual("missing userId");

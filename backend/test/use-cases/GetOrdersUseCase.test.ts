@@ -5,13 +5,15 @@ import { OrderDB } from "../../src/infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
-import { GenerateJwt } from "../../src/utils/GenerateJwt";
+import { IJwtGenerator } from "../../src/utils/IJwtGenerator";
+import { JwtGenerator } from "../../src/utils/JwtGenerator";
 import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/IGetOrdersUseCase";
 
 describe("Get Orders Use Case Tests", () => {
   let app: express.Application;
   let ordersRepository: Repository<OrderDB>;
   const DEFAULT_DATE = new Date().toISOString();
+  const jwtGenerator: IJwtGenerator = new JwtGenerator();
 
   beforeAll(async () => {
     app = (await new App().run()).express;
@@ -85,7 +87,7 @@ describe("Get Orders Use Case Tests", () => {
   };
 
   it("should receive ok with orders", async () => {
-    const jwt = GenerateJwt.execute({
+    const jwt = jwtGenerator.generate({
       userId: "100",
     });
     const res: supertest.Response = await supertest(app)
@@ -130,7 +132,7 @@ describe("Get Orders Use Case Tests", () => {
   });
 
   it("should receive ok with empty orders list", async () => {
-    const jwt = GenerateJwt.execute({
+    const jwt = jwtGenerator.generate({
       userId: "101",
     });
     const res: supertest.Response = await supertest(app)

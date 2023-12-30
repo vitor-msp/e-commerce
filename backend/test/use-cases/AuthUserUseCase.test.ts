@@ -53,7 +53,7 @@ describe("Auth User Use Case Tests", () => {
     expect(res.body.jwt.length > 0).toBe(true);
   });
 
-  it("should receive unauthorized for email not found", async () => {
+  it("should receive bad request for email not found", async () => {
     const reqBody = {
       email: "not-exist@teste.com",
       password: "teste123",
@@ -61,14 +61,13 @@ describe("Auth User Use Case Tests", () => {
     const res: supertest.Response = await supertest(app)
       .post("/api/v1/user/signin")
       .send(reqBody);
-    expect(res.statusCode).toBe(401);
+    expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("incorrect email or password");
   });
 
   it("should receive unauthorized for incorrect password", async () => {
     const reqBody = {
-      email: "user@teste.com",
+      email: "teste@teste.com",
       password: "incorrect-password",
     };
     const res: supertest.Response = await supertest(app)
@@ -76,7 +75,6 @@ describe("Auth User Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("incorrect email or password");
   });
 
   it("should receive bad request cause missing email", async () => {

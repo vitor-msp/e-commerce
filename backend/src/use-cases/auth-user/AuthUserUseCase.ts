@@ -1,31 +1,40 @@
 import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
-import {
-  AuthUserInputDto,
-  AuthUserOutputDto,
-  IAuthUserUseCase,
-} from "./IAuthUserUseCase";
-import { GenerateJwt } from "../../utils/GenerateJwt";
-import { AuthUserUseCaseError } from "../../errors/AuthUserError";
-
-export type JwtPayload = {
-  userId: string;
-};
+import { IAuthUserUseCase } from "./IAuthUserUseCase";
+import { IJwtGenerator } from "../../utils/IJwtGenerator";
+import { AuthUserInput } from "./AuthUserInput";
+import { AuthUserOutput } from "./AuthUserOutput";
+import { ApplicationError } from "../../errors/ApplicationError";
+import { IPasswordEncryptor } from "../../utils/IPasswordEncryptor";
+import { AuthUserError } from "../../errors/AuthUserError";
 
 export class AuthUserUseCase implements IAuthUserUseCase {
-  constructor(readonly usersRepository: IUsersRepository) {}
+  constructor(
+    private readonly usersRepository: IUsersRepository,
+    private readonly passwordEncryptor: IPasswordEncryptor,
+    private readonly jwtGenerator: IJwtGenerator
+  ) {}
 
-  async execute(input: AuthUserInputDto): Promise<AuthUserOutputDto> {
-    const authData = await this.usersRepository.testEmailAndPassword(
-      input.email,
-      input.password
+  async execute(input: AuthUserInput): Promise<AuthUserOutput> {
+    const savedUserDB = await this.usersRepository.selectByEmail(
+      input.getEmail()
     );
-    if (!authData.authenticated)
-      throw new AuthUserUseCaseError("incorrect email or password");
-    const jwtPayload: JwtPayload = {
-      userId: authData.userId,
-    };
+    if (!savedUserDB) throw new ApplicationError("email not found");
+
+    const hash = savedUserDB.getPassword();
+    console.log("hash", hash);
+    if (!hash) throw new ApplicationError("password hash not found");
+
+    const authenticated = this.passwordEncryptor.compare(
+      input.getPassword(),
+      hash
+    );
+    if (!authenticated) throw new AuthUserError("incorrect email or password");
+
+    const jwt = this.jwtGenerator.generate({
+      userId: savedUserDB.getId(),
+    });
     return {
-      jwt: GenerateJwt.execute(jwtPayload),
+      jwt,
     };
   }
 }

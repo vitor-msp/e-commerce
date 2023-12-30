@@ -1,11 +1,9 @@
 import { Request, Response } from "express";
-import { CreateUserError } from "../../errors/CreateUserError";
 import { DomainError } from "../../errors/DomainError";
-import {
-  CreateUserInput,
-  ICreateUserUseCase,
-} from "../../use-cases/create-user/ICreateUserUseCase";
+import { ICreateUserUseCase } from "../../use-cases/create-user/ICreateUserUseCase";
 import { ICreateUserController } from "./ICreateUserController";
+import { CreateUserInput } from "../../use-cases/create-user/CreateUserInput";
+import { ApplicationError } from "../../errors/ApplicationError";
 
 export class CreateUserController implements ICreateUserController {
   constructor(readonly createUserUseCase: ICreateUserUseCase) {}
@@ -16,8 +14,9 @@ export class CreateUserController implements ICreateUserController {
       await this.createUserUseCase.execute(input);
       return res.status(201).send();
     } catch (error: any) {
-      if (error instanceof DomainError || error instanceof CreateUserError)
+      if (error instanceof DomainError || error instanceof ApplicationError)
         return res.status(400).json({ errorMessage: error.message });
+
       return res.status(500).json({ errorMessage: error.message });
     }
   }

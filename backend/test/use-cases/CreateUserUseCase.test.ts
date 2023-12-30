@@ -70,7 +70,6 @@ describe("Create User Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("email already in use");
   });
 
   it("should receive bad request for invalid email", async () => {

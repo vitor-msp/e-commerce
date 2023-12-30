@@ -14,4 +14,8 @@ export class User {
   public getId(): string {
     return this.fields.getData().id;
   }
+
+  public getPassword(): string | undefined {
+    return this.fields.getData().password;
+  }
 }

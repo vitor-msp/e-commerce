@@ -1,17 +1,17 @@
 import { OrderFields } from "../../domain/entities/order/OrderFields";
 import { OrderItemFields } from "../../domain/entities/order/OrderItemFields";
-import { CreateOrderError } from "../../errors/CreateOrderError";
+import { ApplicationError } from "../../errors/ApplicationError";
 
 export class CreateOrderInput {
   private userId: string;
   private items: CreateOrderOrderItemInput[];
 
   public constructor(input: any) {
-    if (!input["userId"]) throw new CreateOrderError("missing userId");
+    if (!input["userId"]) throw new ApplicationError("missing userId");
     this.userId = input["userId"];
-    if (!input["items"]) throw new CreateOrderError("invalid order");
+    if (!input["items"]) throw new ApplicationError("invalid order");
     const items: any[] = input["items"];
-    if (items.length === 0) throw new CreateOrderError("invalid order");
+    if (items.length === 0) throw new ApplicationError("invalid order");
     this.items = items.map((item) => new CreateOrderOrderItemInput(item));
   }
 
@@ -43,7 +43,7 @@ export class CreateOrderOrderItemInput {
       !input["unitPrice"] ||
       !input["quantity"]
     )
-      throw new CreateOrderError("invalid order");
+      throw new ApplicationError("invalid order");
 
     this.supplierId = input["supplierId"];
     this.productId = input["productId"];

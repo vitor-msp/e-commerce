@@ -1,6 +1,5 @@
 import { Order } from "../../domain/entities/order/Order";
 import { OrderItem } from "../../domain/entities/order/OrderItem";
-import { CreateOrderError } from "../../errors/CreateOrderError";
 import { IOrdersRepository } from "../../domain/contract/repositories/IOrdersRepository";
 import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
 import {
@@ -8,6 +7,7 @@ import {
   CreateOrderOutput,
   ICreateOrderUseCase,
 } from "./ICreateOrderUseCase";
+import { ApplicationError } from "../../errors/ApplicationError";
 
 export class CreateOrderUseCase implements ICreateOrderUseCase {
   constructor(
@@ -17,7 +17,7 @@ export class CreateOrderUseCase implements ICreateOrderUseCase {
 
   async execute(input: CreateOrderInput): Promise<CreateOrderOutput> {
     const user = await this.usersRepository.selectById(input.getUserId());
-    if (!user) throw new CreateOrderError("user not found");
+    if (!user) throw new ApplicationError("user not found");
     const order = new Order(input.getFields());
     order.setUser(user);
     input.getItems().forEach((item) => {
