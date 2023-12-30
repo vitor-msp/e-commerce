@@ -7,6 +7,7 @@ import uuidValidate from "uuid-validate";
 import { database } from "../../src/main/factory";
 import { Repository } from "typeorm";
 import { EncryptData } from "../../src/utils/EncryptData";
+import { UserFields } from "../../src/domain/entities/user/UserFields";
 
 describe("Create User Use Case Tests", () => {
   let app: express.Application;
@@ -15,15 +16,22 @@ describe("Create User Use Case Tests", () => {
     app = (await new App().run()).express;
     usersRepository = database.getRepository(UserDB);
     await usersRepository.clear();
-    const user1 = new UserDB();
-    user1.id = "1";
-    user1.email = "teste@teste.com";
-    user1.password = EncryptData.execute("teste123");
+    const user1 = UserDB.build(
+      UserFields.build({
+        id: "1",
+        email: "teste@teste.com",
+        password: EncryptData.execute("teste123"),
+      })
+    );
     await usersRepository.save(user1);
-    const user2 = new UserDB();
-    user2.id = "2";
-    user2.email = "used@teste.com";
-    user2.password = EncryptData.execute("used");
+    const user2 = UserDB.build(
+      UserFields.build({
+        id: "2",
+        email: "used@teste.com",
+        password: EncryptData.execute("used"),
+      })
+    );
+
     await usersRepository.save(user2);
   });
 
@@ -37,10 +45,11 @@ describe("Create User Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(201);
     const savedUser = await usersRepository.findOneBy({ email: reqBody.email });
-    expect(uuidValidate(savedUser!.id)).toBe(true);
+    expect(savedUser).toBeDefined();
+    expect(uuidValidate(savedUser!.id!)).toBe(true);
     expect(savedUser!.email).toBe(reqBody.email);
     expect(
-      CompareEncryptedData.execute(reqBody.password, savedUser!.password)
+      CompareEncryptedData.execute(reqBody.password, savedUser!.password!)
     ).toBe(true);
   });
 

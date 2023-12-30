@@ -1,4 +1,4 @@
-import { IUsersRepository } from "../../repositories/users/IUsersRepository";
+import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
 import {
   AuthUserInputDto,
   AuthUserOutputDto,

@@ -5,6 +5,7 @@ import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
 import { EncryptData } from "../../src/utils/EncryptData";
+import { UserFields } from "../../src/domain/entities/user/UserFields";
 
 describe("Auth User Use Case Tests", () => {
   let app: express.Application;
@@ -13,15 +14,21 @@ describe("Auth User Use Case Tests", () => {
     app = (await new App().run()).express;
     usersRepository = database.getRepository(UserDB);
     await usersRepository.clear();
-    const user1 = new UserDB();
-    user1.id = "1";
-    user1.email = "teste@teste.com";
-    user1.password = EncryptData.execute("teste123");
+    const user1 = UserDB.build(
+      UserFields.build({
+        id: "1",
+        email: "teste@teste.com",
+        password: EncryptData.execute("teste123"),
+      })
+    );
     await usersRepository.save(user1);
-    const user2 = new UserDB();
-    user2.id = "2";
-    user2.email = "used@teste.com";
-    user2.password = EncryptData.execute("used");
+    const user2 = UserDB.build(
+      UserFields.build({
+        id: "2",
+        email: "used@teste.com",
+        password: EncryptData.execute("used"),
+      })
+    );
     await usersRepository.save(user2);
   });
 

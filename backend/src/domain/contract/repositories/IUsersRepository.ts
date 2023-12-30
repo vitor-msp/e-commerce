@@ -1,4 +1,4 @@
-import { IUser } from "../../domain/entities/user/IUser";
+import { User } from "../../entities/user/User";
 
 export type AuthOutputDto = {
   authenticated: boolean;
@@ -6,8 +6,8 @@ export type AuthOutputDto = {
 };
 
 export interface IUsersRepository {
-  insert(user: IUser): Promise<void>;
+  insert(user: User): Promise<void>;
   existsByEmail(email: string): Promise<boolean>;
-  selectById(id: string): Promise<IUser | null>;
+  selectById(id: string): Promise<User | null>;
   testEmailAndPassword(email: string, password: string): Promise<AuthOutputDto>;
 }

@@ -1,14 +1,14 @@
-import { IOrdersRepository } from "../../repositories/orders/IOrdersRepository";
+export type GetOrdersOutput = {
+  orders: GetOrdersOrderOutput[];
+};
 
-export type GetOrdersOutputDto = {
-  orders: ThinOrder[];
-};
-export type ThinOrder = {
+export type GetOrdersOrderOutput = {
   id: string;
-  date: string;
-  items: OrderItem[];
+  createdAt: string;
+  items: GetOrdersOrderItemOutput[];
 };
-type OrderItem = {
+
+type GetOrdersOrderItemOutput = {
   supplierId: string;
   productId: string;
   productName: string;
@@ -17,6 +17,5 @@ type OrderItem = {
 };
 
 export interface IGetOrdersUseCase {
-  readonly ordersRepository: IOrdersRepository;
-  execute(userId: string): Promise<GetOrdersOutputDto>;
+  execute(userId: string): Promise<GetOrdersOutput>;
 }

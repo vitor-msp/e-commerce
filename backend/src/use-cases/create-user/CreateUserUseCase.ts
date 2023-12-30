@@ -1,15 +1,17 @@
 import { User } from "../../domain/entities/user/User";
 import { CreateUserError } from "../../errors/CreateUserError";
-import { IUsersRepository } from "../../repositories/users/IUsersRepository";
-import { CreateUserInputDto, ICreateUserUseCase } from "./ICreateUserUseCase";
+import { IUsersRepository } from "../../domain/contract/repositories/IUsersRepository";
+import { CreateUserInput, ICreateUserUseCase } from "./ICreateUserUseCase";
+import { EncryptData } from "../../utils/EncryptData";
 
 export class CreateUserUseCase implements ICreateUserUseCase {
   constructor(readonly usersRepository: IUsersRepository) {}
 
-  async execute(input: CreateUserInputDto): Promise<void> {
-    if (await this.usersRepository.existsByEmail(input.email))
+  async execute(input: CreateUserInput): Promise<void> {
+    if (await this.usersRepository.existsByEmail(input.getEmail()))
       throw new CreateUserError("email already in use");
-    const user = new User(input);
-    await this.usersRepository.insert(user.getDataAndPassword());
+    input.setEncryptedPassword(EncryptData.execute(input.getPassword()));
+    const user = new User(input.getFields());
+    await this.usersRepository.insert(user);
   }
 }

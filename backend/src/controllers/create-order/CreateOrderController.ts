@@ -3,23 +3,20 @@ import { CreateOrderError } from "../../errors/CreateOrderError";
 import { OrderError } from "../../errors/OrderError";
 import { OrderItemError } from "../../errors/OrderItemError";
 import {
-  CreateOrderInputDto,
+  CreateOrderInput,
   ICreateOrderUseCase,
 } from "../../use-cases/create-order/ICreateOrderUseCase";
-import { IValidateOrder } from "../../validators/IValidateOrder";
 import { ICreateOrderController } from "./ICreateOrderController";
 
 export class CreateOrderController implements ICreateOrderController {
-  constructor(
-    readonly createOrderUseCase: ICreateOrderUseCase,
-    readonly validateOrder: IValidateOrder
-  ) {}
+  constructor(private readonly createOrderUseCase: ICreateOrderUseCase) {}
 
   async execute(req: Request, res: Response): Promise<Response> {
     try {
-      const input: CreateOrderInputDto = req.body;
-      this.validateOrder.validate(input);
-      input.userId = req.query.userId!.toString();
+      const userId = req.query["userId"];
+      if (!userId) throw new Error("missing userId");
+      req.body["userId"] = userId.toString();
+      const input = new CreateOrderInput(req.body);
       const output = await this.createOrderUseCase.execute(input);
       return res.status(201).json(output);
     } catch (error: any) {

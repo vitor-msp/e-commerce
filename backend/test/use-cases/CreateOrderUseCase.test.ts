@@ -7,21 +7,20 @@ import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
 import { JwtPayload } from "../../src/use-cases/auth-user/AuthUserUseCase";
-import { CreateOrderInputDto } from "../../src/use-cases/create-order/ICreateOrderUseCase";
+import { CreateOrderInput } from "../../src/use-cases/create-order/ICreateOrderUseCase";
 import { EncryptData } from "../../src/utils/EncryptData";
 import { GenerateJwt } from "../../src/utils/GenerateJwt";
+import { UserFields } from "../../src/domain/entities/user/UserFields";
 
 describe("Create Order Use Case Tests", () => {
   let app: express.Application;
   let ordersRepository: Repository<OrderDB>;
   let jwt: string;
   const DEFAULT_DATE = new Date().toISOString();
+  let userId: string;
+
   beforeAll(async () => {
     app = (await new App().run()).express;
-    const jwtPayload: JwtPayload = {
-      userId: "1",
-    };
-    jwt = GenerateJwt.execute(jwtPayload);
     await database.createQueryBuilder().delete().from(OrderItemDB).execute();
     await database.createQueryBuilder().delete().from(OrderDB).execute();
     ordersRepository = database.getRepository(OrderDB);
@@ -29,23 +28,30 @@ describe("Create Order Use Case Tests", () => {
     await generateOrder1();
     await generateOrder2();
     await generateOrder3();
+    const jwtPayload: JwtPayload = {
+      userId,
+    };
+    jwt = GenerateJwt.execute(jwtPayload);
   });
 
   const generateUser = async (): Promise<void> => {
     const usersRepository = database.getRepository(UserDB);
     await usersRepository.clear();
-    const user = new UserDB();
-    user.id = "1";
-    user.email = "teste@teste.com";
-    user.password = EncryptData.execute("teste123");
+    const user = UserDB.build(
+      UserFields.build({
+        email: "teste@teste.com",
+        password: EncryptData.execute("teste123"),
+      })
+    );
+    userId = user.id!;
     await usersRepository.save(user);
   };
 
   const generateOrder1 = async (): Promise<void> => {
     const order = new OrderDB();
     order.id = "99";
-    order.date = new Date().toISOString();
-    order.user = "99";
+    order.createdAt = new Date().toISOString();
+    order.userId = "99";
     const orderItems: OrderItemDB[] = [];
     const orderItem = new OrderItemDB();
     orderItem.supplierId = "supplierId";
@@ -61,8 +67,8 @@ describe("Create Order Use Case Tests", () => {
   const generateOrder2 = async (): Promise<void> => {
     const order = new OrderDB();
     order.id = "100";
-    order.date = DEFAULT_DATE;
-    order.user = "100";
+    order.createdAt = DEFAULT_DATE;
+    order.userId = "100";
     const orderItems: OrderItemDB[] = [];
 
     const orderItem1 = new OrderItemDB();
@@ -88,8 +94,8 @@ describe("Create Order Use Case Tests", () => {
   const generateOrder3 = async (): Promise<void> => {
     const order = new OrderDB();
     order.id = "101";
-    order.date = DEFAULT_DATE;
-    order.user = "100";
+    order.createdAt = DEFAULT_DATE;
+    order.userId = "100";
     const orderItems: OrderItemDB[] = [];
     const orderItem = new OrderItemDB();
     orderItem.supplierId = "3";
@@ -103,14 +109,12 @@ describe("Create Order Use Case Tests", () => {
   };
 
   it("should receive created for a valid order", async () => {
-    const date = new Date().toISOString();
     const supplierId = "supplier-id";
     const productId = "product-id";
     const productName = "product-name";
     const unitPrice = 15.62;
     const quantity = 5;
     const reqBody = {
-      date,
       items: [
         {
           supplierId,
@@ -136,24 +140,23 @@ describe("Create Order Use Case Tests", () => {
       })
     )[0];
     expect(savedOrder!.id === orderId).toBe(true);
-    expect(savedOrder!.date === date).toBe(true);
-    expect(savedOrder!.user === "1").toBe(true);
-    expect(savedOrder!.items.length === 1).toBe(true);
+    expect(savedOrder!.userId === userId).toBe(true);
+    expect(savedOrder!.items!.length === 1).toBe(true);
 
-    const item = savedOrder!.items[0];
+    const item = savedOrder!.items![0];
     expect(item.supplierId === supplierId).toBe(true);
     expect(item.productId === productId).toBe(true);
     expect(item.productName === productName).toBe(true);
     expect(item.quantity === quantity).toBe(true);
-    expect(+item.unitPrice === unitPrice).toBe(true);
+    expect(+item.unitPrice! === unitPrice).toBe(true);
   });
 
   it("should receive bad request if missing any field", async () => {
     let res: supertest.Response;
     //@ts-ignore
-    let reqBody: CreateOrderInputDto = {};
+    let reqBody: CreateOrderInput = {};
 
-    // missing date
+    // missing createdAt
     res = await supertest(app)
       .post("/api/v1/order")
       .auth(jwt, { type: "bearer" })
@@ -161,7 +164,6 @@ describe("Create Order Use Case Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order");
-    reqBody.date = new Date().toISOString();
 
     // missing items
     res = await supertest(app)
@@ -171,6 +173,7 @@ describe("Create Order Use Case Tests", () => {
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
     expect(res.body.errorMessage).toBe("invalid order");
+    //@ts-ignore
     reqBody.items = [];
     // items are empty
     res = await supertest(app)
@@ -190,7 +193,8 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order item");
+    expect(res.body.errorMessage).toBe("invalid order");
+    //@ts-ignore
     reqBody.items = [
       //@ts-ignore
       {
@@ -205,7 +209,8 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order item");
+    expect(res.body.errorMessage).toBe("invalid order");
+    //@ts-ignore
     reqBody.items = [
       //@ts-ignore
       {
@@ -221,7 +226,8 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order item");
+    expect(res.body.errorMessage).toBe("invalid order");
+    //@ts-ignore
     reqBody.items = [
       //@ts-ignore
       {
@@ -238,7 +244,8 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order item");
+    expect(res.body.errorMessage).toBe("invalid order");
+    //@ts-ignore
     reqBody.items = [
       //@ts-ignore
       {
@@ -256,8 +263,10 @@ describe("Create Order Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid order item");
+    expect(res.body.errorMessage).toBe("invalid order");
+    //@ts-ignore
     reqBody.items = [
+      //@ts-ignore
       {
         supplierId: "supplierId",
         productId: "productId",
@@ -277,11 +286,12 @@ describe("Create Order Use Case Tests", () => {
 
   it("should receive bad request if any invalid field", async () => {
     let res: supertest.Response;
-    let reqBody: CreateOrderInputDto;
+    let reqBody: CreateOrderInput;
     //@ts-ignore
-    const validBody: CreateOrderInputDto = {
-      date: new Date().toISOString(),
+    const validBody: CreateOrderInput = {
+      //@ts-ignore
       items: [
+        //@ts-ignore
         {
           supplierId: "supplierId",
           productId: "productId",
@@ -291,17 +301,6 @@ describe("Create Order Use Case Tests", () => {
         },
       ],
     };
-
-    // invalid date
-    reqBody = Object.assign({}, validBody);
-    reqBody.date = "invalid";
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid date");
 
     // invalid unitPrice
     reqBody = Object.assign({}, validBody);
@@ -332,9 +331,10 @@ describe("Create Order Use Case Tests", () => {
 
   it("should receive bad request if user not found", async () => {
     //@ts-ignore
-    const reqBody: CreateOrderInputDto = {
-      date: new Date().toISOString(),
+    const reqBody: CreateOrderInput = {
+      //@ts-ignore
       items: [
+        //@ts-ignore
         {
           supplierId: "supplierId",
           productId: "productId",

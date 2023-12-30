@@ -1,57 +1,48 @@
 import { DataSource, Repository } from "typeorm";
-import { IOrder } from "../../domain/entities/order/IOrder";
-import { IOrderItem } from "../../domain/entities/order/IOrderItem";
 import { OrderDB } from "../../infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../infra/db/schemas/OrderItemDB";
-import { CreateOrderOutputDto } from "../../use-cases/create-order/ICreateOrderUseCase";
-import { GetOrdersOutputDto } from "../../use-cases/get-orders/IGetOrdersUseCase";
-import { IOrdersRepository } from "./IOrdersRepository";
+import { IOrdersRepository } from "../../domain/contract/repositories/IOrdersRepository";
+import { Order } from "../../domain/entities/order/Order";
 
 export class OrdersRepositoryPG implements IOrdersRepository {
   private readonly database: Repository<OrderDB>;
 
-  constructor(database: DataSource) {
+  public constructor(database: DataSource) {
     this.database = database.getRepository(OrderDB);
   }
 
-  async insert(order: IOrder): Promise<CreateOrderOutputDto> {
-    const { id, date, user, items } = order;
-    const orderDB = new OrderDB();
-    orderDB.id = id;
-    orderDB.date = date;
-    orderDB.user = user.id;
+  public async insert(order: Order): Promise<{
+    orderId: string;
+  }> {
+    const orderDB = OrderDB.build(order.getFields());
+    const user = order.getUser();
+    if (!user) throw new Error("missing user");
+    orderDB.userId = user.getFields().getData().id;
+
     const orderItemsDB: OrderItemDB[] = [];
-    items.forEach(
-      ({ productId, productName, quantity, supplierId, unitPrice }) => {
-        const orderItemDB = new OrderItemDB();
-        orderItemDB.productId = productId;
-        orderItemDB.productName = productName;
-        orderItemDB.quantity = quantity;
-        orderItemDB.supplierId = supplierId;
-        orderItemDB.unitPrice = unitPrice;
-        orderItemsDB.push(orderItemDB);
-      }
-    );
+    order.getItems().map((item) => {
+      const orderItemDB = OrderItemDB.build(item.getFields());
+      orderItemsDB.push(orderItemDB);
+    });
     orderDB.items = orderItemsDB;
+
     const savedOrder = await this.database.save(orderDB);
     return {
-      orderId: savedOrder.id,
+      orderId: savedOrder.id!,
     };
   }
 
-  async select(userId: string): Promise<GetOrdersOutputDto> {
-    const savedOrders = await this.database.find({
-      where: { user: userId },
+  public async select(userId: string): Promise<Order[]> {
+    const ordersDB = await this.database.find({
+      where: { userId },
       relations: { items: true },
     });
-    return {
-      orders: savedOrders.map(({ id, date, items }) => {
-        return {
-          id,
-          date,
-          items,
-        };
-      }),
-    };
+    return ordersDB.map((orderDB) => {
+      const order = orderDB.getEntity();
+      orderDB.items?.forEach((item) => {
+        order.addItem(item.getEntity());
+      });
+      return order;
+    });
   }
 }

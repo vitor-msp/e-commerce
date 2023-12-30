@@ -1,72 +1,60 @@
-import { User } from "../../src/domain/entities/user/User";
 import uuidValidate from "uuid-validate";
-import { UserError } from "../../src/errors/UserError";
+import * as uuid from "uuid";
+import { User } from "../../src/domain/entities/user/User";
+import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { CompareEncryptedData } from "../../src/utils/CompareEncryptedData";
+import { EncryptData } from "../../src/utils/EncryptData";
 
 describe("User Tests", () => {
-  const getUserExample = (id?: string) => {
-    return {
-      email: "  teste@teste.com  ",
-      password: "teste123",
-      id: id ?? "",
-    };
+  const buildUserExample = (): User => {
+    return new User(
+      UserFields.build({
+        email: "teste@teste.com",
+        password: EncryptData.execute("teste123"),
+      })
+    );
   };
 
-  it("should create user without id", () => {
-    const user = new User({
-      email: "  teste@teste.com  ",
-      password: "teste123",
-    });
-    const savedUser = user.getData();
-    //@ts-ignore
-    expect(uuidValidate(savedUser.id)).toBe(true);
-    expect(savedUser.email).toBe("teste@teste.com");
-    expect(user.passwordIsCorrect("teste123")).toBe(true);
-    expect(user.passwordIsCorrect("Teste123")).toBe(false);
+  const rebuildUserExample = (id: string): User => {
+    return new User(
+      UserFields.rebuild(id, "teste@teste.com", EncryptData.execute("teste123"))
+    );
+  };
+
+  it("should build a user", () => {
+    const userFields = buildUserExample().getFields();
+    expect(uuidValidate(userFields.getData().id)).toBeTruthy();
+    expect(userFields.getData().email.email).toBe("teste@teste.com");
+    expect(userFields.getData().password).toBeDefined();
+    expect(
+      CompareEncryptedData.execute("teste123", userFields.getData().password!)
+    ).toBeTruthy();
+    expect(
+      CompareEncryptedData.execute("Teste123", userFields.getData().password!)
+    ).toBeFalsy();
   });
 
-  it("should create user with blank id", () => {
-    const userData = getUserExample();
-    const user = new User(userData);
-    const savedUser = user.getData();
-    //@ts-ignore
-    expect(uuidValidate(savedUser.id)).toBe(true);
-    expect(savedUser.email).toBe("teste@teste.com");
-    expect(user.passwordIsCorrect("teste123")).toBe(true);
-    expect(user.passwordIsCorrect("Teste123")).toBe(false);
+  it("should rebuild a user with password", () => {
+    const id = uuid.v4();
+    const userFields = rebuildUserExample(id).getFields();
+    expect(userFields.getData().id).toBe(id);
+    expect(userFields.getData().email.email).toBe("teste@teste.com");
+    expect(userFields.getData().password).toBeDefined();
+    expect(
+      CompareEncryptedData.execute("teste123", userFields.getData().password!)
+    ).toBeTruthy();
+    expect(
+      CompareEncryptedData.execute("Teste123", userFields.getData().password!)
+    ).toBeFalsy();
   });
 
-  it("should create user with id", () => {
-    const userData = getUserExample("testing-id");
-    const user = new User(userData);
-    const savedUser = user.getData();
-    expect(savedUser.id).toBe("testing-id");
-    expect(savedUser.email).toBe("teste@teste.com");
-    expect(user.passwordIsCorrect("teste123")).toBe(true);
-    expect(user.passwordIsCorrect("Teste123")).toBe(false);
-  });
-
-  it("should not create user with invalid email", () => {
-    const userData = getUserExample();
-    userData.email = "  teste.teste.com  ";
-    expect(() => {
-      new User(userData);
-    }).toThrow(UserError);
-  });
-
-  it("should not create user with blank email", () => {
-    const userData = getUserExample();
-    userData.email = "    ";
-    expect(() => {
-      new User(userData);
-    }).toThrow(UserError);
-  });
-
-  it("should create user with blank password", () => {
-    const userData = getUserExample();
-    userData.password = "";
-    const user = new User(userData);
-    expect(() => {
-      user.passwordIsCorrect("");
-    }).toThrow(UserError);
+  it("should rebuild a user without password", () => {
+    const id = uuid.v4();
+    const userFields = new User(
+      UserFields.rebuild(id, "teste@teste.com")
+    ).getFields();
+    expect(userFields.getData().id).toBe(id);
+    expect(userFields.getData().email.email).toBe("teste@teste.com");
+    expect(userFields.getData().password).toBeUndefined();
   });
 });

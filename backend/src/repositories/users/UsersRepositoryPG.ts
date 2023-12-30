@@ -1,8 +1,11 @@
 import { DataSource, Repository } from "typeorm";
-import { IUser } from "../../domain/entities/user/IUser";
 import { UserDB } from "../../infra/db/schemas/UserDB";
 import { CompareEncryptedData } from "../../utils/CompareEncryptedData";
-import { AuthOutputDto, IUsersRepository } from "./IUsersRepository";
+import {
+  AuthOutputDto,
+  IUsersRepository,
+} from "../../domain/contract/repositories/IUsersRepository";
+import { User } from "../../domain/entities/user/User";
 
 export class UsersRepositoryPG implements IUsersRepository {
   private readonly database: Repository<UserDB>;
@@ -11,38 +14,36 @@ export class UsersRepositoryPG implements IUsersRepository {
     this.database = database.getRepository(UserDB);
   }
 
-  async insert(user: IUser): Promise<void> {
-    const { id, email, password } = user;
-    const userDB = new UserDB();
-    userDB.id = id;
-    userDB.email = email;
-    userDB.password = password!;
+  async insert(user: User): Promise<void> {
+    const userDB = UserDB.build(user.getFields());
     await this.database.save(userDB);
   }
 
   async existsByEmail(email: string): Promise<boolean> {
     const user = await this.database.findOneBy({ email });
-    if (!user) return false;
-    return true;
+    return !!user;
   }
 
-  async selectById(id: string): Promise<IUser | null> {
-    return this.database.findOneBy({ id });
+  async selectById(id: string): Promise<User | null> {
+    const userDB = await this.database.findOneBy({ id });
+    if (!userDB) return null;
+    return userDB.getEntity();
   }
 
   async testEmailAndPassword(
     email: string,
     password: string
   ): Promise<AuthOutputDto> {
-    const savedUser = await this.database.findOneBy({ email });
-    if (!savedUser) return { authenticated: false, userId: "" };
+    const savedUserDB = await this.database.findOneBy({ email });
+    if (!savedUserDB || !savedUserDB.password || !savedUserDB.id)
+      return { authenticated: false, userId: "" };
     const authenticated = CompareEncryptedData.execute(
       password,
-      savedUser.password
+      savedUserDB.password
     );
     return {
       authenticated,
-      userId: authenticated ? savedUser.id : "",
+      userId: authenticated ? savedUserDB.id : "",
     };
   }
 }

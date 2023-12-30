@@ -10,7 +10,6 @@ import { AuthUserUseCase } from "../use-cases/auth-user/AuthUserUseCase";
 import { CreateOrderUseCase } from "../use-cases/create-order/CreateOrderUseCase";
 import { CreateUserUseCase } from "../use-cases/create-user/CreateUserUseCase";
 import { GetOrdersUseCase } from "../use-cases/get-orders/GetOrdersUseCase";
-import { ValidateOrder } from "../validators/ValidateOrder";
 
 export const database = new DataSource(DBConfig.getOptions());
 
@@ -24,8 +23,7 @@ export const authUserController = new AuthUserController(
 
 const ordersRepositoryPG = new OrdersRepositoryPG(database);
 export const createOrderController = new CreateOrderController(
-  new CreateOrderUseCase(ordersRepositoryPG, usersRepositoryPG),
-  new ValidateOrder()
+  new CreateOrderUseCase(ordersRepositoryPG, usersRepositoryPG)
 );
 export const getOrdersController = new GetOrdersController(
   new GetOrdersUseCase(ordersRepositoryPG)

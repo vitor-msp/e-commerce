@@ -5,13 +5,14 @@ import { OrderDB } from "../../src/infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { App } from "../../src/main/app";
 import { database } from "../../src/main/factory";
-import { ThinOrder } from "../../src/use-cases/get-orders/IGetOrdersUseCase";
 import { GenerateJwt } from "../../src/utils/GenerateJwt";
+import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/IGetOrdersUseCase";
 
 describe("Get Orders Use Case Tests", () => {
   let app: express.Application;
   let ordersRepository: Repository<OrderDB>;
   const DEFAULT_DATE = new Date().toISOString();
+
   beforeAll(async () => {
     app = (await new App().run()).express;
     await database.createQueryBuilder().delete().from(OrderItemDB).execute();
@@ -25,8 +26,8 @@ describe("Get Orders Use Case Tests", () => {
   const generateOrder1 = async (): Promise<void> => {
     const order = new OrderDB();
     order.id = "99";
-    order.date = new Date().toISOString();
-    order.user = "99";
+    order.createdAt = new Date().toISOString();
+    order.userId = "99";
     const orderItems: OrderItemDB[] = [];
     const orderItem = new OrderItemDB();
     orderItem.supplierId = "supplierId";
@@ -42,8 +43,8 @@ describe("Get Orders Use Case Tests", () => {
   const generateOrder2 = async (): Promise<void> => {
     const order = new OrderDB();
     order.id = "100";
-    order.date = DEFAULT_DATE;
-    order.user = "100";
+    order.createdAt = DEFAULT_DATE;
+    order.userId = "100";
     const orderItems: OrderItemDB[] = [];
 
     const orderItem1 = new OrderItemDB();
@@ -69,8 +70,8 @@ describe("Get Orders Use Case Tests", () => {
   const generateOrder3 = async (): Promise<void> => {
     const order = new OrderDB();
     order.id = "101";
-    order.date = DEFAULT_DATE;
-    order.user = "100";
+    order.createdAt = DEFAULT_DATE;
+    order.userId = "100";
     const orderItems: OrderItemDB[] = [];
     const orderItem = new OrderItemDB();
     orderItem.supplierId = "3";
@@ -93,11 +94,12 @@ describe("Get Orders Use Case Tests", () => {
       .send();
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("orders");
-    const savedOrders: ThinOrder[] = res.body.orders;
+    const savedOrders: GetOrdersOrderOutput[] = res.body.orders;
 
-    const savedOrder0: ThinOrder = savedOrders[0];
+    const savedOrder0: GetOrdersOrderOutput = savedOrders[0];
     expect(savedOrder0.id === "100").toBe(true);
-    expect(savedOrder0.date === DEFAULT_DATE).toBe(true);
+    expect(savedOrder0.createdAt === DEFAULT_DATE).toBe(true);
+    console.log(savedOrder0.items.length);
     expect(savedOrder0.items.length === 2).toBe(true);
 
     const item0 = savedOrder0.items[0];
@@ -114,9 +116,9 @@ describe("Get Orders Use Case Tests", () => {
     expect(item1.quantity === 10).toBe(true);
     expect(+item1.unitPrice === 10.5).toBe(true);
 
-    const savedOrder1: ThinOrder = savedOrders[1];
+    const savedOrder1: GetOrdersOrderOutput = savedOrders[1];
     expect(savedOrder1.id === "101").toBe(true);
-    expect(savedOrder1.date === DEFAULT_DATE).toBe(true);
+    expect(savedOrder1.createdAt === DEFAULT_DATE).toBe(true);
     expect(savedOrder1.items.length === 1).toBe(true);
 
     const item3 = savedOrder1.items[0];

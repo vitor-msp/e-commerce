@@ -1,46 +1,33 @@
-import * as uuid from "uuid";
 import { OrderItem } from "./OrderItem";
-import { IOrder, OrderProps } from "./IOrder";
 import { User } from "../user/User";
-import { OrderError } from "../../../errors/OrderError";
+import { OrderFields } from "./OrderFields";
 
-export class Order implements IOrder {
-  readonly id: string;
-  readonly user: User;
-  readonly date: string;
-  readonly items: OrderItem[];
+export class Order {
+  private readonly fields: OrderFields;
+  private user?: User;
+  private readonly items: OrderItem[] = [];
 
-  constructor(orderInput: OrderProps) {
-    orderInput.id = orderInput.id?.trim();
-    this.id =
-      orderInput.id && orderInput.id.localeCompare("") !== 0
-        ? orderInput.id
-        : uuid.v4();
-    if (!(orderInput.user instanceof User))
-      throw new OrderError("invalid user");
-    this.user = orderInput.user;
-    this.date = this.filterDate(orderInput.date);
-    this.items = [];
+  constructor(fields: OrderFields) {
+    this.fields = fields;
   }
 
-  private filterDate(date: string): string {
-    if (!date) throw new OrderError("empty date");
-    const timeInMiliSeconds = new Date(date).getTime();
-    if (isNaN(timeInMiliSeconds)) throw new OrderError("invalid date");
-    return date;
+  public getFields(): OrderFields {
+    return this.fields;
   }
 
-  getData(): IOrder {
-    return {
-      id: this.id,
-      user: this.user,
-      date: this.date,
-      items: this.items,
-    };
+  public setUser(user: User): void {
+    this.user = user;
   }
 
-  addItem(item: OrderItem): void {
-    if (!(item instanceof OrderItem)) throw new OrderError("invalid item");
+  public getUser(): User | undefined {
+    return this.user;
+  }
+
+  public addItem(item: OrderItem): void {
     this.items.push(item);
+  }
+
+  public getItems(): OrderItem[] {
+    return this.items;
   }
 }
