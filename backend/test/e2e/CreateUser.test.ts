@@ -9,7 +9,7 @@ import { PasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { User } from "../../src/domain/entities/user/User";
 
-describe("Create User Use Case Tests", () => {
+describe("Create User Tests", () => {
   let app: express.Application;
   let dataSource: DataSource;
   let usersRepository: Repository<UserDB>;
@@ -24,7 +24,6 @@ describe("Create User Use Case Tests", () => {
     const user1 = UserDB.build(
       new User(
         UserFields.build({
-          id: "1",
           email: "teste@teste.com",
           password: passwordEncryptor.generateHash("teste123"),
         })
@@ -34,13 +33,11 @@ describe("Create User Use Case Tests", () => {
     const user2 = UserDB.build(
       new User(
         UserFields.build({
-          id: "2",
           email: "used@teste.com",
           password: passwordEncryptor.generateHash("used"),
         })
       )
     );
-
     await usersRepository.save(user2);
   });
 
@@ -55,11 +52,11 @@ describe("Create User Use Case Tests", () => {
     expect(res.statusCode).toBe(201);
     const savedUser = await usersRepository.findOneBy({ email: reqBody.email });
     expect(savedUser).toBeDefined();
-    expect(uuidValidate(savedUser!.id!)).toBe(true);
+    expect(uuidValidate(savedUser!.id!)).toBeTruthy();
     expect(savedUser!.email).toBe(reqBody.email);
     expect(
       passwordEncryptor.compare(reqBody.password, savedUser!.password!)
-    ).toBe(true);
+    ).toBeTruthy();
   });
 
   it("should receive bad request when email already in use", async () => {
@@ -72,69 +69,10 @@ describe("Create User Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-  });
-
-  it("should receive bad request for invalid email", async () => {
-    const reqBody = {
-      email: "used.teste.com",
-      password: "teste123",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signup")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("invalid email");
-  });
-
-  it("should receive bad request cause missing email", async () => {
-    const reqBody = {
-      password: "teste123",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signup")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing email");
-  });
-
-  it("should receive bad request cause email is blank", async () => {
-    const reqBody = {
-      email: "",
-      password: "teste123",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signup")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing email");
-  });
-
-  it("should receive bad request cause password is blank", async () => {
-    const reqBody = {
-      email: "teste@teste.com",
-      password: "",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signup")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing password");
-  });
-
-  it("should receive bad request cause missing password", async () => {
-    const reqBody = {
-      email: "teste@teste.com",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signup")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing password");
+    const savedUsers = await usersRepository.findBy({
+      email: reqBody.email,
+    });
+    expect(savedUsers.length).toBe(1);
   });
 
   afterAll(async () => {

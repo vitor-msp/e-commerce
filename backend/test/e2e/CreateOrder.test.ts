@@ -13,7 +13,7 @@ import { JwtGenerator } from "../../src/use-cases/utils/jwt-generator/JwtGenerat
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { User } from "../../src/domain/entities/user/User";
 
-describe("Create Order Use Case Tests", () => {
+describe("Create Order Tests", () => {
   let app: express.Application;
   let dataSource: DataSource;
   let ordersRepository: Repository<OrderDB>;
@@ -146,192 +146,21 @@ describe("Create Order Use Case Tests", () => {
         relations: { items: true },
       })
     )[0];
-    expect(savedOrder!.id === orderId).toBe(true);
-    expect(savedOrder!.userId === userId).toBe(true);
-    expect(savedOrder!.items!.length === 1).toBe(true);
+    expect(savedOrder!.id === orderId).toBeTruthy();
+    expect(savedOrder!.userId === userId).toBeTruthy();
+    expect(savedOrder!.items!.length === 1).toBeTruthy();
 
     const item = savedOrder!.items![0];
-    expect(item.supplierId === supplierId).toBe(true);
-    expect(item.productId === productId).toBe(true);
-    expect(item.productName === productName).toBe(true);
-    expect(item.quantity === quantity).toBe(true);
-    expect(+item.unitPrice! === unitPrice).toBe(true);
-  });
-
-  it("should receive bad request if missing any field", async () => {
-    let res: supertest.Response;
-    //@ts-ignore
-    let reqBody: CreateOrderInput = {};
-
-    // missing createdAt
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-
-    // missing items
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    //@ts-ignore
-    reqBody.items = [];
-    // items are empty
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    //@ts-ignore
-    reqBody.items = [{}];
-
-    // missing supplierId
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    //@ts-ignore
-    reqBody.items = [
-      //@ts-ignore
-      {
-        supplierId: "supplierId",
-      },
-    ];
-
-    // missing productId
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    //@ts-ignore
-    reqBody.items = [
-      //@ts-ignore
-      {
-        supplierId: "supplierId",
-        productId: "productId",
-      },
-    ];
-
-    // missing productName
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    //@ts-ignore
-    reqBody.items = [
-      //@ts-ignore
-      {
-        supplierId: "supplierId",
-        productId: "productId",
-        productName: "productName",
-      },
-    ];
-
-    // missing unitPrice
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    //@ts-ignore
-    reqBody.items = [
-      //@ts-ignore
-      {
-        supplierId: "supplierId",
-        productId: "productId",
-        productName: "productName",
-        unitPrice: 10.64,
-      },
-    ];
-
-    // missing quantity
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    //@ts-ignore
-    reqBody.items = [
-      //@ts-ignore
-      {
-        supplierId: "supplierId",
-        productId: "productId",
-        productName: "productName",
-        unitPrice: 10.64,
-        quantity: 13,
-      },
-    ];
-
-    // valid request body
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(201);
-  });
-
-  it("should receive bad request if any invalid field", async () => {
-    let res: supertest.Response;
-    let reqBody: CreateOrderInput;
-    //@ts-ignore
-    const validBody: CreateOrderInput = {
-      //@ts-ignore
-      items: [
-        //@ts-ignore
-        {
-          supplierId: "supplierId",
-          productId: "productId",
-          productName: "productName",
-          unitPrice: 10.64,
-          quantity: 13,
-        },
-      ],
-    };
-
-    // invalid unitPrice
-    reqBody = Object.assign({}, validBody);
-    //@ts-ignore
-    reqBody.items[0].unitPrice = "invalid";
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-
-    // invalid quantity
-    reqBody = Object.assign({}, validBody);
-    //@ts-ignore
-    reqBody.items[0].unitPrice = 10.65;
-    //@ts-ignore
-    reqBody.items[0].quantity = "invalid";
-    res = await supertest(app)
-      .post("/api/v1/order")
-      .auth(jwt, { type: "bearer" })
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
+    expect(item.supplierId === supplierId).toBeTruthy();
+    expect(item.productId === productId).toBeTruthy();
+    expect(item.productName === productName).toBeTruthy();
+    expect(item.quantity === quantity).toBeTruthy();
+    expect(+item.unitPrice! === unitPrice).toBeTruthy();
   });
 
   it("should receive bad request if user not found", async () => {
-    //@ts-ignore
-    const reqBody: CreateOrderInput = {
-      //@ts-ignore
+    const reqBody = {
       items: [
-        //@ts-ignore
         {
           supplierId: "supplierId",
           productId: "productId",

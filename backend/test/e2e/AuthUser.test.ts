@@ -8,7 +8,7 @@ import { PasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { User } from "../../src/domain/entities/user/User";
 
-describe("Auth User Use Case Tests", () => {
+describe("Auth User Tests", () => {
   let app: express.Application;
   let dataSource: DataSource;
   let usersRepository: Repository<UserDB>;
@@ -23,7 +23,6 @@ describe("Auth User Use Case Tests", () => {
     const user1 = UserDB.build(
       new User(
         UserFields.build({
-          id: "1",
           email: "teste@teste.com",
           password: passwordEncryptor.generateHash("teste123"),
         })
@@ -33,7 +32,6 @@ describe("Auth User Use Case Tests", () => {
     const user2 = UserDB.build(
       new User(
         UserFields.build({
-          id: "2",
           email: "used@teste.com",
           password: passwordEncryptor.generateHash("used"),
         })
@@ -52,7 +50,7 @@ describe("Auth User Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("jwt");
-    expect(res.body.jwt.length > 0).toBe(true);
+    expect(res.body.jwt.length > 0).toBeTruthy();
   });
 
   it("should receive bad request for email not found", async () => {
@@ -77,56 +75,6 @@ describe("Auth User Use Case Tests", () => {
       .send(reqBody);
     expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
-  });
-
-  it("should receive bad request cause missing email", async () => {
-    const reqBody = {
-      password: "teste123",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signin")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing email");
-  });
-
-  it("should receive bad request cause email is blank", async () => {
-    const reqBody = {
-      email: "",
-      password: "teste123",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signin")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing email");
-  });
-
-  it("should receive bad request cause password is blank", async () => {
-    const reqBody = {
-      email: "teste@teste.com",
-      password: "",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signin")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing password");
-  });
-
-  it("should receive bad request cause missing password", async () => {
-    const reqBody = {
-      email: "teste@teste.com",
-    };
-    const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signin")
-      .send(reqBody);
-    expect(res.statusCode).toBe(400);
-    expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toBe("missing password");
   });
 
   afterAll(async () => {

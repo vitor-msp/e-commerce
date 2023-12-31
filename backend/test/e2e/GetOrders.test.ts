@@ -8,7 +8,7 @@ import { IJwtGenerator } from "../../src/use-cases/utils/jwt-generator/IJwtGener
 import { JwtGenerator } from "../../src/use-cases/utils/jwt-generator/JwtGenerator";
 import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/GetOrdersOutput";
 
-describe("Get Orders Use Case Tests", () => {
+describe("Get Orders Tests", () => {
   let app: express.Application;
   let dataSource: DataSource;
   let ordersRepository: Repository<OrderDB>;
@@ -101,35 +101,35 @@ describe("Get Orders Use Case Tests", () => {
     const savedOrders: GetOrdersOrderOutput[] = res.body.orders;
 
     const savedOrder0: GetOrdersOrderOutput = savedOrders[0];
-    expect(savedOrder0.id === "100").toBe(true);
-    expect(savedOrder0.createdAt === DEFAULT_DATE).toBe(true);
-    expect(savedOrder0.items.length === 2).toBe(true);
+    expect(savedOrder0.id === "100").toBeTruthy();
+    expect(savedOrder0.createdAt === DEFAULT_DATE).toBeTruthy();
+    expect(savedOrder0.items.length === 2).toBeTruthy();
 
     const item0 = savedOrder0.items[0];
-    expect(item0.supplierId === "1").toBe(true);
-    expect(item0.productId === "1").toBe(true);
-    expect(item0.productName === "productName").toBe(true);
-    expect(item0.quantity === 10).toBe(true);
-    expect(+item0.unitPrice === 10.5).toBe(true);
+    expect(item0.supplierId === "1").toBeTruthy();
+    expect(item0.productId === "1").toBeTruthy();
+    expect(item0.productName === "productName").toBeTruthy();
+    expect(item0.quantity === 10).toBeTruthy();
+    expect(+item0.unitPrice === 10.5).toBeTruthy();
 
     const item1 = savedOrder0.items[1];
-    expect(item1.supplierId === "2").toBe(true);
-    expect(item1.productId === "2").toBe(true);
-    expect(item1.productName === "productName").toBe(true);
-    expect(item1.quantity === 10).toBe(true);
-    expect(+item1.unitPrice === 10.5).toBe(true);
+    expect(item1.supplierId === "2").toBeTruthy();
+    expect(item1.productId === "2").toBeTruthy();
+    expect(item1.productName === "productName").toBeTruthy();
+    expect(item1.quantity === 10).toBeTruthy();
+    expect(+item1.unitPrice === 10.5).toBeTruthy();
 
     const savedOrder1: GetOrdersOrderOutput = savedOrders[1];
-    expect(savedOrder1.id === "101").toBe(true);
-    expect(savedOrder1.createdAt === DEFAULT_DATE).toBe(true);
-    expect(savedOrder1.items.length === 1).toBe(true);
+    expect(savedOrder1.id === "101").toBeTruthy();
+    expect(savedOrder1.createdAt === DEFAULT_DATE).toBeTruthy();
+    expect(savedOrder1.items.length === 1).toBeTruthy();
 
     const item3 = savedOrder1.items[0];
-    expect(item3.supplierId === "3").toBe(true);
-    expect(item3.productId === "3").toBe(true);
-    expect(item3.productName === "productName").toBe(true);
-    expect(item3.quantity === 10).toBe(true);
-    expect(+item3.unitPrice === 10.5).toBe(true);
+    expect(item3.supplierId === "3").toBeTruthy();
+    expect(item3.productId === "3").toBeTruthy();
+    expect(item3.productName === "productName").toBeTruthy();
+    expect(item3.quantity === 10).toBeTruthy();
+    expect(+item3.unitPrice === 10.5).toBeTruthy();
   });
 
   it("should receive ok with empty orders list", async () => {
