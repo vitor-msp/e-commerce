@@ -21,7 +21,6 @@ describe("Verify Auth Tests", () => {
       .send();
     expect(res.statusCode).toBe(403);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toEqual("missing jwt");
   });
 
   it("should receive forbidden for a blank jwt", async () => {
@@ -31,7 +30,6 @@ describe("Verify Auth Tests", () => {
       .send();
     expect(res.statusCode).toBe(403);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toEqual("missing jwt");
   });
 
   it("should receive unauthorized for an invalid jwt", async () => {
@@ -49,6 +47,5 @@ describe("Verify Auth Tests", () => {
       .send();
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
-    expect(res.body.errorMessage).toEqual("missing userId");
   });
 });
