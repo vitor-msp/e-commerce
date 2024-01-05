@@ -33,6 +33,20 @@ const makeSut = () => {
   };
 };
 
+const getUserExample = (withPassword: boolean): User => {
+  const fields = withPassword
+    ? { email: "teste@teste.com", password: "teste-hash" }
+    : { email: "teste@teste.com" };
+  return new User(UserFields.build(fields));
+};
+
+const getAuthUserInputExample = (): AuthUserInput => {
+  return new AuthUserInput({
+    email: "teste@teste.com",
+    password: "teste",
+  });
+};
+
 describe("Auth User Use Case Tests", () => {
   let sut: AuthUserUseCase;
   let usersRepositoryPGMock: jest.Mocked<UsersRepositoryPG>;
@@ -48,18 +62,12 @@ describe("Auth User Use Case Tests", () => {
   });
 
   it("should authenticate user when password is correct", async () => {
-    const savedUser = new User(
-      UserFields.build({ email: "teste@teste.com", password: "teste-hash" })
-    );
+    const savedUser = getUserExample(true);
     usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(savedUser);
     passwordEncryptorMock.compare.mockReturnValueOnce(true);
     jwtGeneratorMock.generate.mockReturnValueOnce("jwt-token");
 
-    const input = new AuthUserInput({
-      email: "teste@teste.com",
-      password: "teste",
-    });
-    const output = await sut.execute(input);
+    const output = await sut.execute(getAuthUserInputExample());
 
     expect(output.jwt).toBe("jwt-token");
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
@@ -78,12 +86,6 @@ describe("Auth User Use Case Tests", () => {
   });
 
   it("should throw exception for email not found", () => {
-    const {
-      sut,
-      usersRepositoryPGMock,
-      jwtGeneratorMock,
-      passwordEncryptorMock,
-    } = makeSut();
     usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(null);
 
     const input = new AuthUserInput({
@@ -94,6 +96,7 @@ describe("Auth User Use Case Tests", () => {
     expect(async () => await sut.execute(input)).rejects.toThrowError(
       "email not found"
     );
+
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
       "used@teste.com"
@@ -103,23 +106,13 @@ describe("Auth User Use Case Tests", () => {
   });
 
   it("should throw exception for password hash not found", () => {
-    const {
-      sut,
-      usersRepositoryPGMock,
-      jwtGeneratorMock,
-      passwordEncryptorMock,
-    } = makeSut();
-    const savedUser = new User(UserFields.build({ email: "teste@teste.com" }));
+    const savedUser = getUserExample(false);
     usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(savedUser);
 
-    const input = new AuthUserInput({
-      email: "teste@teste.com",
-      password: "teste",
-    });
+    expect(
+      async () => await sut.execute(getAuthUserInputExample())
+    ).rejects.toThrowError("password hash not found");
 
-    expect(async () => await sut.execute(input)).rejects.toThrowError(
-      "password hash not found"
-    );
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
       "teste@teste.com"
@@ -129,20 +122,14 @@ describe("Auth User Use Case Tests", () => {
   });
 
   it("should throw exception for incorrect password", () => {
-    const savedUser = new User(
-      UserFields.build({ email: "teste@teste.com", password: "teste-hash" })
-    );
+    const savedUser = getUserExample(true);
     usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(savedUser);
     passwordEncryptorMock.compare.mockReturnValueOnce(false);
 
-    const input = new AuthUserInput({
-      email: "teste@teste.com",
-      password: "incorrect",
-    });
+    expect(
+      async () => await sut.execute(getAuthUserInputExample())
+    ).rejects.toThrowError("incorrect email or password");
 
-    expect(async () => await sut.execute(input)).rejects.toThrowError(
-      "incorrect email or password"
-    );
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
       "teste@teste.com"

@@ -22,17 +22,30 @@ const makeSut = () => {
   return { sut, usersRepositoryPGMock, passwordEncryptorMock };
 };
 
+const getCreateUserInputExample = (): CreateUserInput => {
+  return new CreateUserInput({
+    email: "teste@teste.com",
+    password: "teste",
+  });
+};
+
 describe("Create User Use Case Tests", () => {
+  let sut: CreateUserUseCase;
+  let usersRepositoryPGMock: jest.Mocked<UsersRepositoryPG>;
+  let passwordEncryptorMock: jest.Mocked<PasswordEncryptor>;
+
+  beforeAll(() => {
+    const mocks = makeSut();
+    sut = mocks.sut;
+    usersRepositoryPGMock = mocks.usersRepositoryPGMock;
+    passwordEncryptorMock = mocks.passwordEncryptorMock;
+  });
+
   it("should create a valid user", async () => {
-    const { sut, usersRepositoryPGMock, passwordEncryptorMock } = makeSut();
     usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(false);
     passwordEncryptorMock.generateHash.mockReturnValueOnce("password-hash");
 
-    const input = new CreateUserInput({
-      email: "teste@teste.com",
-      password: "teste",
-    });
-    await sut.execute(input);
+    await sut.execute(getCreateUserInputExample());
 
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledWith(
@@ -53,17 +66,16 @@ describe("Create User Use Case Tests", () => {
   });
 
   it("should throw exception when email already in use", () => {
-    const { sut, usersRepositoryPGMock, passwordEncryptorMock } = makeSut();
     usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(true);
 
     const input = new CreateUserInput({
       email: "used@teste.com",
       password: "teste",
     });
-
     expect(async () => await sut.execute(input)).rejects.toThrowError(
       ApplicationError
     );
+
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledWith(
       "used@teste.com"
