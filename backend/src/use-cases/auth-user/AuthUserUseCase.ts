@@ -15,12 +15,12 @@ export class AuthUserUseCase implements IAuthUserUseCase {
   ) {}
 
   async execute(input: AuthUserInput): Promise<AuthUserOutput> {
-    const savedUserDB = await this.usersRepository.selectByEmail(
+    const user = await this.usersRepository.selectByEmail(
       input.getEmail()
     );
-    if (!savedUserDB) throw new ApplicationError("email not found");
+    if (!user) throw new ApplicationError("email not found");
 
-    const hash = savedUserDB.getPassword();
+    const hash = user.getPassword();
     if (!hash) throw new ApplicationError("password hash not found");
 
     const authenticated = this.passwordEncryptor.compare(
@@ -30,7 +30,7 @@ export class AuthUserUseCase implements IAuthUserUseCase {
     if (!authenticated) throw new AuthUserError("incorrect email or password");
 
     const jwt = this.jwtGenerator.generate({
-      userId: savedUserDB.getId(),
+      userId: user.getId(),
     });
     return {
       jwt,

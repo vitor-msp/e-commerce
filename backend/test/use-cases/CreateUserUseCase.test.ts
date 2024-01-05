@@ -23,7 +23,7 @@ const makeSut = () => {
 };
 
 describe("Create User Use Case Tests", () => {
-  it("should receive created for a valid user", async () => {
+  it("should create a valid user", async () => {
     const { sut, usersRepositoryPGMock, passwordEncryptorMock } = makeSut();
     usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(false);
     passwordEncryptorMock.generateHash.mockReturnValueOnce("password-hash");
@@ -52,7 +52,7 @@ describe("Create User Use Case Tests", () => {
     );
   });
 
-  it("should receive bad request when email already in use", () => {
+  it("should throw exception when email already in use", () => {
     const { sut, usersRepositoryPGMock, passwordEncryptorMock } = makeSut();
     usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(true);
 
