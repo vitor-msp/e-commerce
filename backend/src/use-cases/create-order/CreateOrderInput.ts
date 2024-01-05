@@ -7,7 +7,7 @@ export class CreateOrderInput {
   private items: CreateOrderOrderItemInput[];
 
   public constructor(input: any) {
-    if (!input["userId"]) throw new ApplicationError("missing order");
+    if (!input["userId"]) throw new ApplicationError("missing user id");
     if (!input["items"]) throw new ApplicationError("invalid order");
     const items: any[] = input["items"];
     if (items.length === 0) throw new ApplicationError("invalid order");
