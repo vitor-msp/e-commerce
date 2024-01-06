@@ -1,7 +1,6 @@
 import { OrdersRepositoryPG } from "../../src/repositories/orders/OrdersRepositoryPG";
 import { UsersRepositoryPG } from "../../src/repositories/users/UsersRepositoryPG";
 import { CreateOrderUseCase } from "../../src/use-cases/create-order/CreateOrderUseCase";
-import { ApplicationError } from "../../src/errors/ApplicationError";
 import { CreateOrderInput } from "../../src/use-cases/create-order/CreateOrderInput";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
