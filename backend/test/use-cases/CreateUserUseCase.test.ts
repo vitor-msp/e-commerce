@@ -22,10 +22,15 @@ const makeSut = () => {
   return { sut, usersRepositoryPGMock, passwordEncryptorMock };
 };
 
+const USED_USER_EMAIL: string = "used@teste.com";
+const NEW_USER_EMAIL: string = "teste@teste.com";
+const USER_PASSWORD: string = "password";
+const USER_PASSWORD_HASH: string = "password-hash";
+
 const getCreateUserInputExample = (): CreateUserInput => {
   return new CreateUserInput({
-    email: "teste@teste.com",
-    password: "teste",
+    email: NEW_USER_EMAIL,
+    password: USER_PASSWORD,
   });
 };
 
@@ -43,23 +48,25 @@ describe("Create User Use Case Tests", () => {
 
   it("should create a valid user", async () => {
     usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(false);
-    passwordEncryptorMock.generateHash.mockReturnValueOnce("password-hash");
+    passwordEncryptorMock.generateHash.mockReturnValueOnce(USER_PASSWORD_HASH);
 
     await sut.execute(getCreateUserInputExample());
 
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledWith(
-      "teste@teste.com"
+      NEW_USER_EMAIL
     );
     expect(passwordEncryptorMock.generateHash).toHaveBeenCalledTimes(1);
-    expect(passwordEncryptorMock.generateHash).toHaveBeenCalledWith("teste");
+    expect(passwordEncryptorMock.generateHash).toHaveBeenCalledWith(
+      USER_PASSWORD
+    );
     expect(usersRepositoryPGMock.insert).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.insert).toHaveBeenCalledWith(
       expect.objectContaining({
         fields: {
           id: expect.any(String),
-          email: { email: "teste@teste.com" },
-          password: "password-hash",
+          email: { email: NEW_USER_EMAIL },
+          password: USER_PASSWORD_HASH,
         },
       })
     );
@@ -69,8 +76,8 @@ describe("Create User Use Case Tests", () => {
     usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(true);
 
     const input = new CreateUserInput({
-      email: "used@teste.com",
-      password: "teste",
+      email: USED_USER_EMAIL,
+      password: USER_PASSWORD,
     });
     expect(async () => await sut.execute(input)).rejects.toThrowError(
       ApplicationError
@@ -78,7 +85,7 @@ describe("Create User Use Case Tests", () => {
 
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledWith(
-      "used@teste.com"
+      USED_USER_EMAIL
     );
     expect(passwordEncryptorMock.generateHash).toHaveBeenCalledTimes(0);
     expect(usersRepositoryPGMock.insert).toHaveBeenCalledTimes(0);

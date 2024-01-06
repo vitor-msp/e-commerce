@@ -33,17 +33,23 @@ const makeSut = () => {
   };
 };
 
+const EMAIL_NOT_USED: string = "not-used@teste.com";
+const USER_EMAIL: string = "teste@teste.com";
+const USER_PASSWORD: string = "password";
+const USER_PASSWORD_HASH: string = "password-hash";
+const JWT: string = "jwt-token";
+
 const getUserExample = (withPassword: boolean): User => {
   const fields = withPassword
-    ? { email: "teste@teste.com", password: "teste-hash" }
-    : { email: "teste@teste.com" };
+    ? { email: USER_EMAIL, password: USER_PASSWORD_HASH }
+    : { email: USER_EMAIL };
   return new User(UserFields.build(fields));
 };
 
 const getAuthUserInputExample = (): AuthUserInput => {
   return new AuthUserInput({
-    email: "teste@teste.com",
-    password: "teste",
+    email: USER_EMAIL,
+    password: USER_PASSWORD,
   });
 };
 
@@ -62,26 +68,26 @@ describe("Auth User Use Case Tests", () => {
   });
 
   it("should authenticate user when password is correct", async () => {
-    const savedUser = getUserExample(true);
-    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(savedUser);
+    const user = getUserExample(true);
+    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(user);
     passwordEncryptorMock.compare.mockReturnValueOnce(true);
-    jwtGeneratorMock.generate.mockReturnValueOnce("jwt-token");
+    jwtGeneratorMock.generate.mockReturnValueOnce(JWT);
 
     const output = await sut.execute(getAuthUserInputExample());
 
-    expect(output.jwt).toBe("jwt-token");
+    expect(output.jwt).toBe(JWT);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
-      "teste@teste.com"
+      USER_EMAIL
     );
     expect(passwordEncryptorMock.compare).toHaveBeenCalledTimes(1);
     expect(passwordEncryptorMock.compare).toHaveBeenCalledWith(
-      "teste",
-      savedUser.getPassword()
+      USER_PASSWORD,
+      user.getPassword()
     );
     expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(1);
     expect(jwtGeneratorMock.generate).toHaveBeenCalledWith({
-      userId: savedUser.getId(),
+      userId: user.getId(),
     });
   });
 
@@ -89,25 +95,25 @@ describe("Auth User Use Case Tests", () => {
     usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(null);
 
     const input = new AuthUserInput({
-      email: "used@teste.com",
-      password: "teste",
+      email: EMAIL_NOT_USED,
+      password: USER_PASSWORD,
     });
-
     expect(async () => await sut.execute(input)).rejects.toThrowError(
       "email not found"
     );
 
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
-      "used@teste.com"
+      EMAIL_NOT_USED
     );
     expect(passwordEncryptorMock.compare).toHaveBeenCalledTimes(0);
     expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(0);
   });
 
   it("should throw exception for password hash not found", () => {
-    const savedUser = getUserExample(false);
-    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(savedUser);
+    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(
+      getUserExample(false)
+    );
 
     expect(
       async () => await sut.execute(getAuthUserInputExample())
@@ -115,15 +121,15 @@ describe("Auth User Use Case Tests", () => {
 
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
-      "teste@teste.com"
+      USER_EMAIL
     );
     expect(passwordEncryptorMock.compare).toHaveBeenCalledTimes(0);
     expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(0);
   });
 
   it("should throw exception for incorrect password", () => {
-    const savedUser = getUserExample(true);
-    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(savedUser);
+    const user = getUserExample(true);
+    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(user);
     passwordEncryptorMock.compare.mockReturnValueOnce(false);
 
     expect(
@@ -132,12 +138,12 @@ describe("Auth User Use Case Tests", () => {
 
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
-      "teste@teste.com"
+      USER_EMAIL
     );
     // expect(passwordEncryptorMock.compare).toHaveBeenCalledTimes(1);
     // expect(passwordEncryptorMock.compare).toHaveBeenCalledWith(
     //   "incorrect",
-    //   savedUser.getPassword()
+    //   user.getPassword()
     // );
     expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(0);
   });

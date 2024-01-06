@@ -24,23 +24,32 @@ const makeSut = () => {
   return { sut, ordersRepositoryPGMock, usersRepositoryPGMock };
 };
 
+const USER_ID: string = "1";
+const USER_EMAIL: string = "teste@teste.com";
+const ORDER_ID: string = "1";
+const PRODUCT_ID: string = "1";
+const PRODUCT_NAME: string = "product";
+const SUPPLIER_ID: string = "1";
+const QUANTITY: number = 2;
+const UNIT_PRICE: number = 10.5;
+
 const getCreateOrderInputExample = (): CreateOrderInput => {
   return new CreateOrderInput({
-    userId: "1",
+    userId: USER_ID,
     items: [
       {
-        supplierId: "1",
-        productId: "1",
-        productName: "product",
-        unitPrice: 10.5,
-        quantity: 2,
+        supplierId: SUPPLIER_ID,
+        productId: PRODUCT_ID,
+        productName: PRODUCT_NAME,
+        unitPrice: UNIT_PRICE,
+        quantity: QUANTITY,
       },
     ],
   });
 };
 
 const getUserExample = (): User => {
-  return new User(UserFields.rebuild("1", "teste@teste.com"));
+  return new User(UserFields.rebuild(USER_ID, USER_EMAIL));
 };
 
 describe("Create Order Use Case Tests", () => {
@@ -63,20 +72,20 @@ describe("Create Order Use Case Tests", () => {
     ).rejects.toThrowError("user not found");
 
     expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
-    expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith("1");
+    expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(USER_ID);
     expect(ordersRepositoryPGMock.insert).toHaveBeenCalledTimes(0);
   });
 
   it("should create order", async () => {
     const user = getUserExample();
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(user);
-    ordersRepositoryPGMock.insert.mockResolvedValueOnce({ orderId: "1" });
+    ordersRepositoryPGMock.insert.mockResolvedValueOnce({ orderId: ORDER_ID });
 
     const output = await sut.execute(getCreateOrderInputExample());
 
-    expect(output).toEqual({ orderId: "1" });
+    expect(output).toEqual({ orderId: ORDER_ID });
     expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
-    expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith("1");
+    expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(USER_ID);
     expect(ordersRepositoryPGMock.insert).toHaveBeenCalledTimes(1);
     const expectedOrderToSave = expect.objectContaining({
       fields: {
@@ -87,11 +96,11 @@ describe("Create Order Use Case Tests", () => {
       items: [
         {
           fields: {
-            supplierId: "1",
-            productId: "1",
-            productName: "product",
-            unitPrice: 10.5,
-            quantity: 2,
+            supplierId: SUPPLIER_ID,
+            productId: PRODUCT_ID,
+            productName: PRODUCT_NAME,
+            unitPrice: UNIT_PRICE,
+            quantity: QUANTITY,
           },
         },
       ],

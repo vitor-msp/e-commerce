@@ -21,10 +21,6 @@ const makeSut = () => {
   return { sut, ordersRepositoryPGMock };
 };
 
-const getUserExample = (): User => {
-  return new User(UserFields.rebuild("1", "teste@teste.com"));
-};
-
 const ORDER_ID: string = "1";
 const ORDER_CREATED_AT: Date = new Date();
 const PRODUCT_ID: string = "1";
@@ -32,6 +28,12 @@ const PRODUCT_NAME: string = "product";
 const SUPPLIER_ID: string = "1";
 const QUANTITY: number = 2;
 const UNIT_PRICE: number = 10.5;
+const USER_ID: string = "1";
+const USER_EMAIL: string = "teste@teste.com";
+
+const getUserExample = (): User => {
+  return new User(UserFields.rebuild(USER_ID, USER_EMAIL));
+};
 
 const getOrderItemExample = (): OrderItem => {
   return new OrderItem(
@@ -52,6 +54,10 @@ const getOrdersExample = (): Order[] => {
   return [order];
 };
 
+const getOrdersInputExample = (): GetOrdersInput => {
+  return new GetOrdersInput({ userId: USER_ID });
+};
+
 describe("Get Orders Use Case Tests", () => {
   let sut: GetOrdersUseCase;
   let ordersRepositoryPGMock: jest.Mocked<OrdersRepositoryPG>;
@@ -65,20 +71,20 @@ describe("Get Orders Use Case Tests", () => {
   it("should return empty orders list", async () => {
     ordersRepositoryPGMock.select.mockResolvedValueOnce([]);
 
-    const output = await sut.execute(new GetOrdersInput({ userId: "1" }));
+    const output = await sut.execute(getOrdersInputExample());
 
     const expectedOutput: GetOrdersOutput = {
       orders: [],
     };
     expect(output).toEqual(expectedOutput);
     expect(ordersRepositoryPGMock.select).toHaveBeenCalledTimes(1);
-    expect(ordersRepositoryPGMock.select).toHaveBeenCalledWith("1");
+    expect(ordersRepositoryPGMock.select).toHaveBeenCalledWith(USER_ID);
   });
 
   it("should return orders list", async () => {
     ordersRepositoryPGMock.select.mockResolvedValueOnce(getOrdersExample());
 
-    const output = await sut.execute(new GetOrdersInput({ userId: "1" }));
+    const output = await sut.execute(getOrdersInputExample());
 
     const expectedOutput: GetOrdersOutput = {
       orders: [
@@ -99,6 +105,6 @@ describe("Get Orders Use Case Tests", () => {
     };
     expect(output).toEqual(expectedOutput);
     expect(ordersRepositoryPGMock.select).toHaveBeenCalledTimes(1);
-    expect(ordersRepositoryPGMock.select).toHaveBeenCalledWith("1");
+    expect(ordersRepositoryPGMock.select).toHaveBeenCalledWith(ORDER_ID);
   });
 });
