@@ -1,3 +1,3 @@
 export interface IJwtGenerator {
-  generate(payload: any): string;
+  generate(payload: any, expiresIn: string | number): string;
 }

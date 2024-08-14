@@ -31,4 +31,11 @@ export class UsersRepositoryPG implements IUsersRepository {
     if (!userDB) return null;
     return userDB.getEntity();
   }
+
+  public async updateRefreshJwt(
+    userId: string,
+    refreshJwt: string
+  ): Promise<void> {
+    await this.database.update({ id: userId }, { refreshJwt });
+  }
 }

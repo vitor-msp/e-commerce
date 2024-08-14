@@ -38,6 +38,7 @@ const USER_EMAIL: string = "teste@teste.com";
 const USER_PASSWORD: string = "password";
 const USER_PASSWORD_HASH: string = "password-hash";
 const JWT: string = "jwt-token";
+const REFRESH_JWT: string = "refresh-jwt-token";
 
 const getUserExample = (withPassword: boolean): User => {
   const fields = withPassword
@@ -72,10 +73,12 @@ describe("Auth User Use Case Tests", () => {
     usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(user);
     passwordEncryptorMock.compare.mockReturnValueOnce(true);
     jwtGeneratorMock.generate.mockReturnValueOnce(JWT);
+    jwtGeneratorMock.generate.mockReturnValueOnce(REFRESH_JWT);
 
     const output = await sut.execute(getAuthUserInputExample());
 
     expect(output.jwt).toBe(JWT);
+    expect(output.refreshJwt).toBe(REFRESH_JWT);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
       USER_EMAIL
@@ -85,10 +88,23 @@ describe("Auth User Use Case Tests", () => {
       USER_PASSWORD,
       user.getPassword()
     );
-    expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(1);
-    expect(jwtGeneratorMock.generate).toHaveBeenCalledWith({
-      userId: user.getId(),
-    });
+    expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(2);
+    const userId = user.getId();
+    expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
+      1,
+      { userId },
+      "15m"
+    );
+    expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
+      2,
+      { userId },
+      "7d"
+    );
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledWith(
+      userId,
+      REFRESH_JWT
+    );
   });
 
   it("should throw exception for email not found", () => {

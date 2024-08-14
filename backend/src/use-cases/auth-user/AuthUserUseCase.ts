@@ -15,9 +15,7 @@ export class AuthUserUseCase implements IAuthUserUseCase {
   ) {}
 
   async execute(input: AuthUserInput): Promise<AuthUserOutput> {
-    const user = await this.usersRepository.selectByEmail(
-      input.getEmail()
-    );
+    const user = await this.usersRepository.selectByEmail(input.getEmail());
     if (!user) throw new ApplicationError("email not found");
 
     const hash = user.getPassword();
@@ -29,11 +27,15 @@ export class AuthUserUseCase implements IAuthUserUseCase {
     );
     if (!authenticated) throw new AuthUserError("incorrect email or password");
 
-    const jwt = this.jwtGenerator.generate({
-      userId: user.getId(),
-    });
+    const userId = user.getId();
+    const jwt = this.jwtGenerator.generate({ userId }, "15m");
+    const refreshJwt = this.jwtGenerator.generate({ userId }, "7d");
+
+    await this.usersRepository.updateRefreshJwt(userId, refreshJwt);
+
     return {
       jwt,
+      refreshJwt,
     };
   }
 }

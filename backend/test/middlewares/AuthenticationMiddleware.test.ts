@@ -10,9 +10,7 @@ describe("Verify Auth Tests", () => {
 
   beforeAll(async () => {
     app = new App().express;
-    jwt = jwtGenerator.generate({
-      invalidField: "1",
-    });
+    jwt = jwtGenerator.generate({ invalidField: "1" }, "1d");
   });
 
   it("should receive forbidden when jwt was not sent", async () => {

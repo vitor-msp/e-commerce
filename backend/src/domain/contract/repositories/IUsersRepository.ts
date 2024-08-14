@@ -5,4 +5,5 @@ export interface IUsersRepository {
   existsByEmail(email: string): Promise<boolean>;
   selectById(id: string): Promise<User | null>;
   selectByEmail(email: string): Promise<User | null>;
+  updateRefreshJwt(userId: string, refreshJwt: string): Promise<void>;
 }

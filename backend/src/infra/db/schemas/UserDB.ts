@@ -19,6 +19,9 @@ export class UserDB {
   @Column({ length: 100 })
   password?: string;
 
+  @Column({ length: 500 })
+  refreshJwt?: string;
+
   public constructor() {}
 
   public static build(user: User) {
@@ -34,7 +37,8 @@ export class UserDB {
   }
 
   public getEntity(): User {
-    if (!this.id || !this.email) throw new ApplicationError("id and/or email not setted");
+    if (!this.id || !this.email)
+      throw new ApplicationError("id and/or email not setted");
     return new User(UserFields.rebuild(this.id, this.email, this.password));
   }
 }
