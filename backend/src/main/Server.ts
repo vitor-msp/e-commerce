@@ -1,3 +1,12 @@
+import elasticApm from "elastic-apm-node";
+
+elasticApm.start({
+  serviceName: "e-commerce-api",
+  apiKey: "",
+  serverUrl: "http://localhost:8200",
+  environment: "production",
+});
+
 import dotenv from "dotenv";
 import { App } from "./App";
 
