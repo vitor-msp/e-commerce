@@ -25,6 +25,9 @@ export class Router {
     this.router.post("/api/v1/user/refresh-token", (req, res) =>
       controllers.refreshToken.execute(req, res)
     );
+    this.router.post("/api/v1/user/logout", (req, res) =>
+      controllers.logout.execute(req, res)
+    );
     this.router.post(
       "/api/v1/order",
       this.authenticationMiddleware.handle,

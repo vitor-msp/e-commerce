@@ -16,11 +16,14 @@ import { JwtGenerator } from "../use-cases/utils/jwt-generator/JwtGenerator";
 import { RefreshTokenController } from "../api/controllers/RefreshTokenController";
 import { RefreshTokenUseCase } from "../use-cases/refresh-token/RefreshTokenUseCase";
 import { JwtValidator } from "../use-cases/utils/jwt-validator/JwtValidator";
+import { LogutController } from "../api/controllers/LogutController";
+import { LogoutUseCase } from "../use-cases/logout/LogoutUseCase";
 
 export type Controllers = {
   createUser: IController;
   authUser: IController;
   refreshToken: IController;
+  logout: IController;
   createOrder: IController;
   getOrders: IController;
 };
@@ -28,7 +31,8 @@ export type Controllers = {
 export class Factory {
   private createUserController!: CreateUserController;
   private authUserController!: AuthUserController;
-  private refreshTokenUserController!: RefreshTokenController;
+  private refreshTokenController!: RefreshTokenController;
+  private logoutController!: LogutController;
   private createOrderController!: CreateOrderController;
   private getOrdersController!: GetOrdersController;
 
@@ -42,16 +46,16 @@ export class Factory {
     this.createUserController = new CreateUserController(
       new CreateUserUseCase(usersRepositoryPG, passwordEncryptor)
     );
+    const jwtValidator = new JwtValidator();
     const jwtGenerator = new JwtGenerator();
     this.authUserController = new AuthUserController(
       new AuthUserUseCase(usersRepositoryPG, passwordEncryptor, jwtGenerator)
     );
-    this.refreshTokenUserController = new RefreshTokenController(
-      new RefreshTokenUseCase(
-        usersRepositoryPG,
-        new JwtValidator(),
-        jwtGenerator
-      )
+    this.refreshTokenController = new RefreshTokenController(
+      new RefreshTokenUseCase(usersRepositoryPG, jwtValidator, jwtGenerator)
+    );
+    this.logoutController = new LogutController(
+      new LogoutUseCase(usersRepositoryPG, jwtValidator)
     );
     const ordersRepositoryPG = new OrdersRepositoryPG(dataSource);
     this.createOrderController = new CreateOrderController(
@@ -66,7 +70,8 @@ export class Factory {
     return {
       createUser: this.createUserController,
       authUser: this.authUserController,
-      refreshToken: this.refreshTokenUserController,
+      refreshToken: this.refreshTokenController,
+      logout: this.logoutController,
       createOrder: this.createOrderController,
       getOrders: this.getOrdersController,
     };
