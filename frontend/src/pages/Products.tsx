@@ -6,8 +6,9 @@ import { RootState } from "../store";
 import { IProduct } from "../store/products/products.types";
 
 export const Products = () => {
+  const MAX_PRICE_TO_SHOW = 100;
   const [currentName, setCurrentName] = useState<string>("");
-  const [currentMaxPrice, setCurrentMaxPrice] = useState<number>(1000);
+  const [currentMaxPrice, setCurrentMaxPrice] = useState<number>(MAX_PRICE_TO_SHOW);
   const [currentCategories, setCurrentCategories] = useState<string[]>([]);
   const [currentMaterials, setCurrentMaterials] = useState<string[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);
@@ -120,9 +121,9 @@ export const Products = () => {
             <input
               type="range"
               id="max-price"
-              min={50}
-              max={1000}
-              step={50}
+              min={5}
+              max={MAX_PRICE_TO_SHOW}
+              step={5}
               value={currentMaxPrice}
               onChange={changePrice}
               className="w-100"
