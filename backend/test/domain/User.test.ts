@@ -13,7 +13,8 @@ describe("User Tests", () => {
       ? UserFields.rebuild(
           id,
           "teste@teste.com",
-          passwordEncryptor.generateHash("teste123")
+          passwordEncryptor.generateHash("teste123"),
+          "REFRESH_JWT"
         )
       : UserFields.build({
           email: "teste@teste.com",
@@ -33,9 +34,10 @@ describe("User Tests", () => {
     expect(
       passwordEncryptor.compare("Teste123", userFields.getData().password!)
     ).toBeFalsy();
+    expect(userFields.getData().refreshJwt).toBeUndefined();
   });
 
-  it("should rebuild a user with password", () => {
+  it("should rebuild a user with password and refreshJwt", () => {
     const id = uuid.v4();
     const userFields = getUserExample(id).getFields();
     expect(userFields.getData().id).toBe(id);
@@ -47,9 +49,10 @@ describe("User Tests", () => {
     expect(
       passwordEncryptor.compare("Teste123", userFields.getData().password!)
     ).toBeFalsy();
+    expect(userFields.getData().refreshJwt).toBeDefined();
   });
 
-  it("should rebuild a user without password", () => {
+  it("should rebuild a user without password and refreshJwt", () => {
     const id = uuid.v4();
     const userFields = new User(
       UserFields.rebuild(id, "teste@teste.com")
@@ -57,5 +60,6 @@ describe("User Tests", () => {
     expect(userFields.getData().id).toBe(id);
     expect(userFields.getData().email.email).toBe("teste@teste.com");
     expect(userFields.getData().password).toBeUndefined();
+    expect(userFields.getData().refreshJwt).toBeUndefined();
   });
 });
