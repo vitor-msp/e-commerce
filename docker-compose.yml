@@ -1,25 +1,40 @@
 version: "3"
 
 services:
-
   postgres:
     container_name: postgres
     image: postgres
     environment:
       POSTGRES_PASSWORD: admin
+    networks:
+      - e-commerce
 
-  api:
+  e-commerce-api:
     container_name: e-commerce-api
     image: vitormsp/e-commerce-api
+    build:
+      context: backend
     ports:
       - "3001:3001"
+    networks:
+      - e-commerce
+    volumes:
+      - ./backend/.env:/api/.env
     depends_on:
       - postgres
 
-  app:
+  e-commerce-app:
     container_name: e-commerce-app
     image: vitormsp/e-commerce-app
+    build:
+      context: frontend
     ports:
       - "80:80"
+    networks:
+      - e-commerce
     depends_on:
-      - api
+      - e-commerce-api
+
+networks:
+  e-commerce:
+    driver: bridge

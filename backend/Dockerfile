@@ -1,4 +1,4 @@
-FROM node:18.15.0-alpine as builder
+FROM node:18.15.0-alpine AS builder
 RUN mkdir /api
 WORKDIR /api
 COPY . .
@@ -10,7 +10,6 @@ RUN mkdir /api
 WORKDIR /api
 COPY --from=builder /api/dist ./dist
 COPY package.json .
-COPY .env .
 RUN npm install --only=production
 EXPOSE 3001
 CMD ["npm", "run", "start"]

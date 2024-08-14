@@ -1,4 +1,4 @@
-FROM node:18.15.0-alpine as builder
+FROM node:18.15.0-alpine AS builder
 RUN mkdir /app
 WORKDIR /app
 COPY . .
