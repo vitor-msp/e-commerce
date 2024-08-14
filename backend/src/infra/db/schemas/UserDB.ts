@@ -19,7 +19,7 @@ export class UserDB {
   @Column({ length: 100 })
   password?: string;
 
-  @Column({ length: 500 })
+  @Column({ length: 500, nullable: true })
   refreshJwt?: string;
 
   public constructor() {}
@@ -29,16 +29,17 @@ export class UserDB {
   }
 
   public hydrate(user: User): UserDB {
-    const { id, email, password } = user.getFields().getData();
+    const { id, email, password, refreshJwt } = user.getFields().getData();
     this.id = id;
     this.email = email.email;
     this.password = password;
+    this.refreshJwt = refreshJwt;
     return this;
   }
 
   public getEntity(): User {
     if (!this.id || !this.email)
       throw new ApplicationError("id and/or email not setted");
-    return new User(UserFields.rebuild(this.id, this.email, this.password));
+    return new User(UserFields.rebuild(this.id, this.email, this.password, this.refreshJwt));
   }
 }

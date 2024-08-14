@@ -43,7 +43,7 @@ describe("Verify Auth Tests", () => {
       .post("/api/v1/order")
       .auth(jwt, { type: "bearer" })
       .send();
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
   });
 });

@@ -18,4 +18,8 @@ export class User {
   public getPassword(): string | undefined {
     return this.fields.getData().password;
   }
+
+  public getRefreshJwt(): string | undefined {
+    return this.fields.getData().refreshJwt;
+  }
 }

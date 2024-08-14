@@ -3,6 +3,7 @@ import { Email } from "../../value-objects/Email";
 
 export class UserFields {
   private password?: string;
+  private refreshJwt?: string;
 
   private constructor(
     private readonly id: string,
@@ -19,14 +20,21 @@ export class UserFields {
   public static rebuild(
     id: string,
     email: string,
-    password?: string
+    password?: string,
+    refreshJwt?: string
   ): UserFields {
     const fields = new UserFields(id, Email.build(email));
     if (password) fields.password = password;
+    if (refreshJwt) fields.refreshJwt = refreshJwt;
     return fields;
   }
 
   public getData() {
-    return { id: this.id, email: this.email, password: this.password };
+    return {
+      id: this.id,
+      email: this.email,
+      password: this.password,
+      refreshJwt: this.refreshJwt,
+    };
   }
 }
