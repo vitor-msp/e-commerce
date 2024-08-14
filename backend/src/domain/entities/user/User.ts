@@ -1,3 +1,4 @@
+import { Role } from "../../value-objects/Role";
 import { UserFields } from "./UserFields";
 
 export class User {
@@ -13,6 +14,10 @@ export class User {
 
   public getId(): string {
     return this.fields.getData().id;
+  }
+
+  public getRole(): Role {
+    return this.fields.getData().role;
   }
 
   public getPassword(): string | undefined {
