@@ -6,7 +6,7 @@ import { IRefreshTokenUseCase } from "./IRefreshTokenUseCase";
 import { IJwtValidator } from "../utils/jwt-validator/IJwtValidator";
 import { AuthUserError } from "../../errors/AuthUserError";
 import { NotFoundError } from "../../errors/NotFoundError";
-import { JWT_EXPIRES_IN } from "../utils/constans";
+import { JWT_EXPIRES_IN } from "../utils/constants";
 
 export class RefreshTokenUseCase implements IRefreshTokenUseCase {
   constructor(
@@ -18,7 +18,7 @@ export class RefreshTokenUseCase implements IRefreshTokenUseCase {
   async execute(input: RefreshTokenInput): Promise<RefreshTokenOutput> {
     const inputJwt = input.getRefreshJwt();
 
-    const userId = await this.jwtValidator.getContent(inputJwt);
+    const userId = (await this.jwtValidator.getContent(inputJwt)).userId;
 
     const user = await this.usersRepository.selectById(userId);
     if (!user) throw new NotFoundError("user not found");

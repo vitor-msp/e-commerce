@@ -14,7 +14,7 @@ export class LogoutUseCase implements ILogoutUseCase {
   async execute(input: LogoutInput): Promise<void> {
     const inputJwt = input.getRefreshJwt();
 
-    const userId = await this.jwtValidator.getContent(inputJwt, false);
+    const userId = (await this.jwtValidator.getContent(inputJwt, false)).userId;
 
     const user = await this.usersRepository.selectById(userId);
     if (!user) throw new NotFoundError("user not found");

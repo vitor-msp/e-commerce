@@ -7,6 +7,7 @@ import { App } from "../../src/main/App";
 import { IJwtGenerator } from "../../src/use-cases/utils/jwt-generator/IJwtGenerator";
 import { JwtGenerator } from "../../src/use-cases/utils/jwt-generator/JwtGenerator";
 import { GetOrdersOrderOutput } from "../../src/use-cases/get-orders/GetOrdersOutput";
+import { Role } from "../../src/domain/value-objects/Role";
 
 describe("Get Orders Tests", () => {
   let app: express.Application;
@@ -92,6 +93,7 @@ describe("Get Orders Tests", () => {
     const jwt = jwtGenerator.generate(
       {
         userId: "100",
+        role: Role.Customer,
       },
       "15m"
     );
@@ -139,6 +141,7 @@ describe("Get Orders Tests", () => {
     const jwt = jwtGenerator.generate(
       {
         userId: "101",
+        role: Role.Customer,
       },
       "15m"
     );

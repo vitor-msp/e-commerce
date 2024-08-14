@@ -75,7 +75,10 @@ describe("Refresh Token Use Case Tests", () => {
   it("should generate new jwt token", async () => {
     const user = getUserExample();
     const userId = USER_ID;
-    jwtValidatorMock.getContent.mockResolvedValueOnce(userId);
+    jwtValidatorMock.getContent.mockResolvedValueOnce({
+      userId,
+      role: Role.Customer,
+    });
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(user);
     jwtGeneratorMock.generate.mockReturnValueOnce(JWT);
 
@@ -93,7 +96,10 @@ describe("Refresh Token Use Case Tests", () => {
   });
 
   it("should throw exception for jwt not equal saved jwt", async () => {
-    jwtValidatorMock.getContent.mockResolvedValueOnce(USER_ID);
+    jwtValidatorMock.getContent.mockResolvedValueOnce({
+      userId: USER_ID,
+      role: Role.Customer,
+    });
     const user = getUserExample(OTHER_REFRESH_JWT);
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(user);
 
@@ -111,7 +117,10 @@ describe("Refresh Token Use Case Tests", () => {
   });
 
   it("should throw exception when user not found", async () => {
-    jwtValidatorMock.getContent.mockResolvedValueOnce(USER_ID);
+    jwtValidatorMock.getContent.mockResolvedValueOnce({
+      userId: USER_ID,
+      role: Role.Customer,
+    });
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(null);
 
     expect(

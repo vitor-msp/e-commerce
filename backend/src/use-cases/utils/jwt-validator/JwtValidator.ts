@@ -2,6 +2,7 @@ import jwtLib from "jsonwebtoken";
 import dotenv from "dotenv";
 import { IJwtValidator } from "./IJwtValidator";
 import { AuthUserError } from "../../../errors/AuthUserError";
+import { JwtContent } from "../../../domain/value-objects/JwtContent";
 
 export class JwtValidator implements IJwtValidator {
   public constructor() {}
@@ -9,7 +10,7 @@ export class JwtValidator implements IJwtValidator {
   public async getContent(
     jwt: string,
     ifValid: boolean = true
-  ): Promise<string> {
+  ): Promise<JwtContent> {
     dotenv.config();
     const jwtKey = process.env.JWT_KEY;
     if (!jwtKey) return Promise.reject(new AuthUserError("jwt key not loaded"));
@@ -22,11 +23,11 @@ export class JwtValidator implements IJwtValidator {
         (err, decoded) => {
           if (ifValid && err) return reject(new AuthUserError("invalid jwt"));
 
-          const userId = (decoded as jwtLib.JwtPayload).userId;
-          if (!userId)
+          const content = decoded as JwtContent;
+          if (!content.userId || !content.role)
             return reject(new AuthUserError("jwt not contains user info"));
 
-          return resolve(userId);
+          return resolve(content);
         }
       );
     });

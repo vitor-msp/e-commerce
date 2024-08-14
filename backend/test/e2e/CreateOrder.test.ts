@@ -11,6 +11,7 @@ import { IJwtGenerator } from "../../src/use-cases/utils/jwt-generator/IJwtGener
 import { JwtGenerator } from "../../src/use-cases/utils/jwt-generator/JwtGenerator";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { User } from "../../src/domain/entities/user/User";
+import { Role } from "../../src/domain/value-objects/Role";
 
 describe("Create Order Tests", () => {
   let app: express.Application;
@@ -36,6 +37,7 @@ describe("Create Order Tests", () => {
     jwt = jwtGenerator.generate(
       {
         userId,
+        role: Role.Customer,
       },
       "15m"
     );
@@ -175,6 +177,7 @@ describe("Create Order Tests", () => {
     const jwt = jwtGenerator.generate(
       {
         userId: "100",
+        role: Role.Customer,
       },
       "15m"
     );

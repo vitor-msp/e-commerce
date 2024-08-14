@@ -14,8 +14,8 @@ export class AuthenticationMiddleware implements IMiddleware {
     if (!token) return HttpResponses.httpForbidden(res, "missing jwt");
 
     try {
-      const userId = await new JwtValidator().getContent(token);
-      req.query.userId = userId;
+      const content = await new JwtValidator().getContent(token);
+      req.query.userId = content.userId;
       next();
     } catch (error: any) {
       return HttpResponses.httpUnauthorized(res);

@@ -1,3 +1,5 @@
+import { JwtContent } from "../../../domain/value-objects/JwtContent";
+
 export interface IJwtValidator {
-  getContent(jwt: string, ifValid?: boolean): Promise<string>;
+  getContent(jwt: string, ifValid?: boolean): Promise<JwtContent>;
 }

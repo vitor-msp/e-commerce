@@ -62,7 +62,10 @@ describe("Logout Use Case Tests", () => {
 
   it("should delete refresh token", async () => {
     const user = getUserExample();
-    jwtValidatorMock.getContent.mockResolvedValueOnce(USER_ID);
+    jwtValidatorMock.getContent.mockResolvedValueOnce({
+      userId: USER_ID,
+      role: Role.Customer,
+    });
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(user);
 
     await sut.execute(getRefreshTokenInputExample());
@@ -84,7 +87,10 @@ describe("Logout Use Case Tests", () => {
   });
 
   it("should throw exception for jwt not equal saved jwt", async () => {
-    jwtValidatorMock.getContent.mockResolvedValueOnce(USER_ID);
+    jwtValidatorMock.getContent.mockResolvedValueOnce({
+      userId: USER_ID,
+      role: Role.Customer,
+    });
     const user = getUserExample(OTHER_REFRESH_JWT);
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(user);
 
@@ -105,7 +111,10 @@ describe("Logout Use Case Tests", () => {
   });
 
   it("should throw exception when user not found", async () => {
-    jwtValidatorMock.getContent.mockResolvedValueOnce(USER_ID);
+    jwtValidatorMock.getContent.mockResolvedValueOnce({
+      userId: USER_ID,
+      role: Role.Customer,
+    });
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(null);
 
     expect(

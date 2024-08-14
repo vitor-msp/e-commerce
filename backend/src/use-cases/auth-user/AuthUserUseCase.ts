@@ -6,7 +6,7 @@ import { AuthUserInput } from "./AuthUserInput";
 import { AuthUserOutput } from "./AuthUserOutput";
 import { ApplicationError } from "../../errors/ApplicationError";
 import { AuthUserError } from "../../errors/AuthUserError";
-import { JWT_EXPIRES_IN, REFRESH_JWT_EXPIRES_IN } from "../utils/constans";
+import { JWT_EXPIRES_IN, REFRESH_JWT_EXPIRES_IN } from "../utils/constants";
 
 export class AuthUserUseCase implements IAuthUserUseCase {
   constructor(
