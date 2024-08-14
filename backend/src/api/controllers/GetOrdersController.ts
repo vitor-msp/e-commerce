@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { IGetOrdersUseCase } from "../../use-cases/get-orders/IGetOrdersUseCase";
 import { GetOrdersInput } from "../../use-cases/get-orders/GetOrdersInput";
 import { IController } from "./IController";
+import { StatusCode } from "../utils/StatusCode";
 
 export class GetOrdersController implements IController {
   constructor(private readonly getOrdersUseCase: IGetOrdersUseCase) {}
@@ -12,7 +13,8 @@ export class GetOrdersController implements IController {
       const output = await this.getOrdersUseCase.execute(input);
       return res.status(200).json(output);
     } catch (error: any) {
-      return res.status(500).json({ errorMessage: error.message });
+      const statusCode = StatusCode.fromError(error);
+      return res.status(statusCode).json({ errorMessage: error.message });
     }
   }
 }
