@@ -6,6 +6,7 @@ import { AuthUserInput } from "./AuthUserInput";
 import { AuthUserOutput } from "./AuthUserOutput";
 import { ApplicationError } from "../../errors/ApplicationError";
 import { AuthUserError } from "../../errors/AuthUserError";
+import { JWT_EXPIRES_IN, REFRESH_JWT_EXPIRES_IN } from "../utils/constans";
 
 export class AuthUserUseCase implements IAuthUserUseCase {
   constructor(
@@ -28,8 +29,11 @@ export class AuthUserUseCase implements IAuthUserUseCase {
     if (!authenticated) throw new AuthUserError("incorrect email or password");
 
     const userId = user.getId();
-    const jwt = this.jwtGenerator.generate({ userId }, "15m");
-    const refreshJwt = this.jwtGenerator.generate({ userId }, "7d");
+    const jwt = this.jwtGenerator.generate({ userId }, JWT_EXPIRES_IN);
+    const refreshJwt = this.jwtGenerator.generate(
+      { userId },
+      REFRESH_JWT_EXPIRES_IN
+    );
 
     await this.usersRepository.updateRefreshJwt(userId, refreshJwt);
 
