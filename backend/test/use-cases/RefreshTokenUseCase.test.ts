@@ -68,15 +68,15 @@ describe("Refresh Token Use Case Tests", () => {
   it("should generate new jwt token", async () => {
     const user = getUserExample();
     const userId = USER_ID;
-    jwtValidatorMock.validate.mockResolvedValueOnce(userId);
+    jwtValidatorMock.getContent.mockResolvedValueOnce(userId);
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(user);
     jwtGeneratorMock.generate.mockReturnValueOnce(JWT);
 
     const output = await sut.execute(getRefreshTokenInputExample());
 
     expect(output.jwt).toBe(JWT);
-    expect(jwtValidatorMock.validate).toHaveBeenCalledTimes(1);
-    expect(jwtValidatorMock.validate).toHaveBeenCalledWith(REFRESH_JWT);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledTimes(1);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(REFRESH_JWT);
 
     expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(userId);
@@ -86,7 +86,7 @@ describe("Refresh Token Use Case Tests", () => {
   });
 
   it("should throw exception for jwt not equal saved jwt", async () => {
-    jwtValidatorMock.validate.mockResolvedValueOnce(USER_ID);
+    jwtValidatorMock.getContent.mockResolvedValueOnce(USER_ID);
     const user = getUserExample(OTHER_REFRESH_JWT);
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(user);
 
@@ -94,8 +94,8 @@ describe("Refresh Token Use Case Tests", () => {
       async () => await sut.execute(getRefreshTokenInputExample())
     ).rejects.toThrowError("token is not valid");
 
-    expect(jwtValidatorMock.validate).toHaveBeenCalledTimes(1);
-    expect(jwtValidatorMock.validate).toHaveBeenCalledWith(REFRESH_JWT);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledTimes(1);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(REFRESH_JWT);
 
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(USER_ID);
@@ -104,15 +104,15 @@ describe("Refresh Token Use Case Tests", () => {
   });
 
   it("should throw exception when user not found", async () => {
-    jwtValidatorMock.validate.mockResolvedValueOnce(USER_ID);
+    jwtValidatorMock.getContent.mockResolvedValueOnce(USER_ID);
     usersRepositoryPGMock.selectById.mockResolvedValueOnce(null);
 
     expect(
       async () => await sut.execute(getRefreshTokenInputExample())
     ).rejects.toThrowError("user not found");
 
-    expect(jwtValidatorMock.validate).toHaveBeenCalledTimes(1);
-    expect(jwtValidatorMock.validate).toHaveBeenCalledWith(REFRESH_JWT);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledTimes(1);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(REFRESH_JWT);
 
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(USER_ID);

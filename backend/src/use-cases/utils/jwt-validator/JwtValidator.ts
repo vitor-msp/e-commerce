@@ -6,15 +6,17 @@ import { AuthUserError } from "../../../errors/AuthUserError";
 export class JwtValidator implements IJwtValidator {
   public constructor() {}
 
-  public async validate(jwt: string): Promise<string> {
+  public async getContent(
+    jwt: string,
+    ifValid: boolean = true
+  ): Promise<string> {
     dotenv.config();
     const jwtKey = process.env.JWT_KEY;
-    if (!jwtKey)
-      return Promise.reject(new AuthUserError("jwt key not loaded"));
+    if (!jwtKey) return Promise.reject(new AuthUserError("jwt key not loaded"));
 
     return new Promise((resolve, reject) => {
       jwtLib.verify(jwt, jwtKey, (err, decoded) => {
-        if (err) return reject(new AuthUserError("invalid jwt"));
+        if (ifValid && err) return reject(new AuthUserError("invalid jwt"));
 
         const userId = (decoded as jwtLib.JwtPayload).userId;
         if (!userId)
