@@ -48,7 +48,7 @@ export const Checkout = () => {
       createdAt: new Date().toISOString(),
       items: [...orderItems],
     };
-    dispatch(postOrder(order));
+    dispatch(postOrder(order, navigate));
   };
 
   return (

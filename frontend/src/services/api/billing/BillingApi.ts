@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { IOrder, IOrderItem } from "../../../store/orders/orders.types";
 import { injectJwt } from "../../../utils/InjectJwt";
+import { errorIsUnauthorized, UnauthorizedError } from "../UnauthorizedError";
 
 type CreateOrderReq = {
   date: string;
@@ -65,7 +66,10 @@ export class BillingApi {
         error = false;
         return res.data;
       })
-      .catch((error) => error.response?.data ?? error.message);
+      .catch((error) => {
+        if (errorIsUnauthorized(error)) throw new UnauthorizedError();
+        return error.response?.data ?? error.message;
+      });
     //@ts-ignore
     if (error) throw new Error(res);
     return { orderId: res.orderId };
@@ -81,7 +85,10 @@ export class BillingApi {
         error = false;
         return res.data;
       })
-      .catch((error) => error.response?.data ?? error.message);
+      .catch((error) => {
+        if (errorIsUnauthorized(error)) throw new UnauthorizedError();
+        return error.response?.data ?? error.message;
+      });
     //@ts-ignore
     if (error) throw new Error(res);
     return res.orders.map(({ createdAt, id, items }) => {

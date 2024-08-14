@@ -12,7 +12,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const executeSignOut = (): void => {
     dispatch(signOut());
-    navigate("/products");
+    navigate("/signin");
   };
   return (
     <div className="mb-2">

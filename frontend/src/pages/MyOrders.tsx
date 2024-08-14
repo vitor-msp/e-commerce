@@ -4,12 +4,14 @@ import { Navbar } from "../components/Navbar";
 import { Order } from "../components/Order";
 import { AppDispatch, RootState } from "../store";
 import { getOrders } from "../store/orders/orders.middleware";
+import { useNavigate } from "react-router-dom";
 
 export const MyOrders = () => {
   const orders = useSelector((state: RootState) => state.orders.orders);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
   useEffect(() => {
-    dispatch(getOrders());
+    dispatch(getOrders(navigate));
   }, []);
 
   return (
