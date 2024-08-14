@@ -5,7 +5,6 @@ import { OrderDB } from "../../src/infra/db/schemas/OrderDB";
 import { OrderItemDB } from "../../src/infra/db/schemas/OrderItemDB";
 import { UserDB } from "../../src/infra/db/schemas/UserDB";
 import { App } from "../../src/main/App";
-import { CreateOrderInput } from "../../src/use-cases/create-order/CreateOrderInput";
 import { IPasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/IPasswordEncryptor";
 import { PasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/PasswordEncryptor";
 import { IJwtGenerator } from "../../src/use-cases/utils/jwt-generator/IJwtGenerator";
@@ -34,9 +33,12 @@ describe("Create Order Tests", () => {
     await generateOrder1();
     await generateOrder2();
     await generateOrder3();
-    jwt = jwtGenerator.generate({
-      userId,
-    });
+    jwt = jwtGenerator.generate(
+      {
+        userId,
+      },
+      "15m"
+    );
   });
 
   const generateUser = async (): Promise<void> => {
@@ -170,9 +172,12 @@ describe("Create Order Tests", () => {
         },
       ],
     };
-    const jwt = jwtGenerator.generate({
-      userId: "100",
-    });
+    const jwt = jwtGenerator.generate(
+      {
+        userId: "100",
+      },
+      "15m"
+    );
     const res: supertest.Response = await supertest(app)
       .post("/api/v1/order")
       .auth(jwt, { type: "bearer" })

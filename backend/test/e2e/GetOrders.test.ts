@@ -89,9 +89,12 @@ describe("Get Orders Tests", () => {
   };
 
   it("should receive ok with orders", async () => {
-    const jwt = jwtGenerator.generate({
-      userId: "100",
-    });
+    const jwt = jwtGenerator.generate(
+      {
+        userId: "100",
+      },
+      "15m"
+    );
     const res: supertest.Response = await supertest(app)
       .get("/api/v1/order")
       .auth(jwt, { type: "bearer" })
@@ -133,9 +136,12 @@ describe("Get Orders Tests", () => {
   });
 
   it("should receive ok with empty orders list", async () => {
-    const jwt = jwtGenerator.generate({
-      userId: "101",
-    });
+    const jwt = jwtGenerator.generate(
+      {
+        userId: "101",
+      },
+      "15m"
+    );
     const res: supertest.Response = await supertest(app)
       .get("/api/v1/order")
       .auth(jwt, { type: "bearer" })
