@@ -15,15 +15,20 @@ export class JwtValidator implements IJwtValidator {
     if (!jwtKey) return Promise.reject(new AuthUserError("jwt key not loaded"));
 
     return new Promise((resolve, reject) => {
-      jwtLib.verify(jwt, jwtKey, (err, decoded) => {
-        if (ifValid && err) return reject(new AuthUserError("invalid jwt"));
+      jwtLib.verify(
+        jwt,
+        jwtKey,
+        { ignoreExpiration: !ifValid },
+        (err, decoded) => {
+          if (ifValid && err) return reject(new AuthUserError("invalid jwt"));
 
-        const userId = (decoded as jwtLib.JwtPayload).userId;
-        if (!userId)
-          return reject(new AuthUserError("jwt not contains user info"));
+          const userId = (decoded as jwtLib.JwtPayload).userId;
+          if (!userId)
+            return reject(new AuthUserError("jwt not contains user info"));
 
-        return resolve(userId);
-      });
+          return resolve(userId);
+        }
+      );
     });
   }
 }
