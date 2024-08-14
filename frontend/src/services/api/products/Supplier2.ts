@@ -6,11 +6,9 @@ type ProductSupplier2 = {
   id: string;
   name: string;
   description: string;
-  details: {
-    adjective: string;
-    material: string;
-  };
-  gallery: string[];
+  adjective: string;
+  material: string;
+  gallery: string;
   price: number;
   hasDiscount: boolean;
   discountValue: number;
@@ -40,7 +38,8 @@ export class Supplier2 implements IProductsApi {
     return res.map((product) => {
       const {
         description,
-        details,
+        adjective,
+        material,
         gallery,
         id,
         name,
@@ -53,15 +52,14 @@ export class Supplier2 implements IProductsApi {
         id,
         name,
         description,
-        category: details.adjective,
-        material: details.material,
+        category: adjective,
+        material: material,
         price: +price,
         discountValue: hasDiscount ? +discountValue : 0,
-        images: [...gallery],
+        images: [gallery],
         cart: false,
         cartQuantity: 1,
       };
     });
   }
-
 }
