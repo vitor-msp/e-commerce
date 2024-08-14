@@ -22,6 +22,6 @@ export class LogoutUseCase implements ILogoutUseCase {
     const tokenIsValid = inputJwt === user.getRefreshJwt();
     if (!tokenIsValid) throw new AuthUserError("token is not valid");
 
-    await this.usersRepository.deleteRefreshJwt(userId);
+    await this.usersRepository.updateRefreshJwt(userId, "REVOKED");
   }
 }

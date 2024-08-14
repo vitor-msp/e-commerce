@@ -61,14 +61,18 @@ describe("Logout Use Case Tests", () => {
     await sut.execute(getRefreshTokenInputExample());
 
     expect(jwtValidatorMock.getContent).toHaveBeenCalledTimes(1);
-    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(REFRESH_JWT, false);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(
+      REFRESH_JWT,
+      false
+    );
 
     expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
     expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(USER_ID);
 
-    expect(usersRepositoryPGMock.deleteRefreshJwt).toHaveBeenCalledTimes(1);
-    expect(usersRepositoryPGMock.deleteRefreshJwt).toHaveBeenCalledWith(
-      USER_ID
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledWith(
+      USER_ID,
+      "REVOKED"
     );
   });
 
@@ -82,12 +86,15 @@ describe("Logout Use Case Tests", () => {
     ).rejects.toThrowError("token is not valid");
 
     expect(jwtValidatorMock.getContent).toHaveBeenCalledTimes(1);
-    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(REFRESH_JWT, false);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(
+      REFRESH_JWT,
+      false
+    );
 
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(USER_ID);
 
-    expect(usersRepositoryPGMock.deleteRefreshJwt).toHaveBeenCalledTimes(0);
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledTimes(0);
   });
 
   it("should throw exception when user not found", async () => {
@@ -99,11 +106,14 @@ describe("Logout Use Case Tests", () => {
     ).rejects.toThrowError("user not found");
 
     expect(jwtValidatorMock.getContent).toHaveBeenCalledTimes(1);
-    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(REFRESH_JWT, false);
+    expect(jwtValidatorMock.getContent).toHaveBeenCalledWith(
+      REFRESH_JWT,
+      false
+    );
 
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledTimes(1);
     // expect(usersRepositoryPGMock.selectById).toHaveBeenCalledWith(USER_ID);
 
-    expect(usersRepositoryPGMock.deleteRefreshJwt).toHaveBeenCalledTimes(0);
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledTimes(0);
   });
 });

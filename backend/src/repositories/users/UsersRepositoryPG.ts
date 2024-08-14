@@ -38,8 +38,4 @@ export class UsersRepositoryPG implements IUsersRepository {
   ): Promise<void> {
     await this.database.update({ id: userId }, { refreshJwt });
   }
-
-  public async deleteRefreshJwt(userId: string): Promise<void> {
-    await this.database.update({ id: userId }, { refreshJwt: undefined });
-  }
 }
