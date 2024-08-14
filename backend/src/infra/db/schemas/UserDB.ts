@@ -2,6 +2,7 @@ import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 import { UserFields } from "../../../domain/entities/user/UserFields";
 import { User } from "../../../domain/entities/user/User";
 import { ApplicationError } from "../../../errors/ApplicationError";
+import { Role } from "../../../domain/value-objects/Role";
 
 @Entity()
 export class UserDB {
@@ -19,6 +20,9 @@ export class UserDB {
   @Column({ length: 100 })
   password?: string;
 
+  @Column({ length: 20 })
+  role?: string;
+
   @Column({ length: 500, nullable: true })
   refreshJwt?: string;
 
@@ -29,9 +33,12 @@ export class UserDB {
   }
 
   public hydrate(user: User): UserDB {
-    const { id, email, password, refreshJwt } = user.getFields().getData();
+    const { id, email, role, password, refreshJwt } = user
+      .getFields()
+      .getData();
     this.id = id;
     this.email = email.email;
+    this.role = role.toString();
     this.password = password;
     this.refreshJwt = refreshJwt;
     return this;
@@ -40,6 +47,14 @@ export class UserDB {
   public getEntity(): User {
     if (!this.id || !this.email)
       throw new ApplicationError("id and/or email not setted");
-    return new User(UserFields.rebuild(this.id, this.email, this.password, this.refreshJwt));
+    return new User(
+      UserFields.rebuild(
+        this.id,
+        this.email,
+        Role[this.role as keyof typeof Role],
+        this.password,
+        this.refreshJwt
+      )
+    );
   }
 }

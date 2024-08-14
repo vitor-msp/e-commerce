@@ -29,7 +29,10 @@ export class AuthUserUseCase implements IAuthUserUseCase {
     if (!authenticated) throw new AuthUserError("incorrect email or password");
 
     const userId = user.getId();
-    const jwt = this.jwtGenerator.generate({ userId }, JWT_EXPIRES_IN);
+    const jwt = this.jwtGenerator.generate(
+      { userId, role: user.getRole() },
+      JWT_EXPIRES_IN
+    );
     const refreshJwt = this.jwtGenerator.generate(
       { userId },
       REFRESH_JWT_EXPIRES_IN

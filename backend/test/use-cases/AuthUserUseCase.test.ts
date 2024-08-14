@@ -5,6 +5,7 @@ import { AuthUserUseCase } from "../../src/use-cases/auth-user/AuthUserUseCase";
 import { AuthUserInput } from "../../src/use-cases/auth-user/AuthUserInput";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { Role } from "../../src/domain/value-objects/Role";
 
 jest.mock("../../src/use-cases/utils/jwt-generator/JwtGenerator");
 jest.mock("../../src/use-cases/utils/password-encryptor/PasswordEncryptor");
@@ -92,7 +93,7 @@ describe("Auth User Use Case Tests", () => {
     const userId = user.getId();
     expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
       1,
-      { userId },
+      { userId, role: Role.Customer },
       "15m"
     );
     expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
