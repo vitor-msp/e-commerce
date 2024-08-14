@@ -11,7 +11,7 @@ export class LogutController implements IController {
     try {
       const input = new LogoutInput(req.body);
       await this.logoutUseCase.execute(input);
-      return res.status(200).end();
+      return res.status(204).end();
     } catch (error: any) {
       const statusCode = StatusCode.fromError(error);
       return res.status(statusCode).json({ errorMessage: error.message });
