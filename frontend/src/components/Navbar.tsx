@@ -18,7 +18,7 @@ export const Navbar = () => {
     <div className="mb-2">
       <NavBarReactBootstrap bg="primary" expand="lg">
         <Container>
-          <NavBarReactBootstrap.Brand>E-Commerce Editado</NavBarReactBootstrap.Brand>
+          <NavBarReactBootstrap.Brand>E-Commerce</NavBarReactBootstrap.Brand>
           <NavBarReactBootstrap.Toggle aria-controls="basic-navbar-nav" />
           <NavBarReactBootstrap.Collapse id="basic-navbar-nav">
             <ul className="navbar-nav">
