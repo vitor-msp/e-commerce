@@ -4,6 +4,7 @@ import { OrderItem } from "../../src/domain/entities/order/OrderItem";
 import { OrderItemFields } from "../../src/domain/entities/order/OrderItemFields";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { Role } from "../../src/domain/value-objects/Role";
 import { OrdersRepositoryPG } from "../../src/repositories/orders/OrdersRepositoryPG";
 import { GetOrdersInput } from "../../src/use-cases/get-orders/GetOrdersInput";
 import { GetOrdersOutput } from "../../src/use-cases/get-orders/GetOrdersOutput";
@@ -32,7 +33,7 @@ const USER_ID: string = "1";
 const USER_EMAIL: string = "teste@teste.com";
 
 const getUserExample = (): User => {
-  return new User(UserFields.rebuild(USER_ID, USER_EMAIL));
+  return new User(UserFields.rebuild(USER_ID, USER_EMAIL, Role.Customer));
 };
 
 const getOrderItemExample = (): OrderItem => {

@@ -4,6 +4,7 @@ import { LogoutUseCase } from "../../src/use-cases/logout/LogoutUseCase";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
 import { LogoutInput } from "../../src/use-cases/logout/LogoutInput";
+import { Role } from "../../src/domain/value-objects/Role";
 
 jest.mock("../../src/use-cases/utils/jwt-validator/JwtValidator");
 jest.mock("../../src/repositories/users/UsersRepositoryPG");
@@ -37,7 +38,13 @@ const getRefreshTokenInputExample = (): LogoutInput => {
 
 const getUserExample = (refreshJwt: string = REFRESH_JWT): User => {
   return new User(
-    UserFields.rebuild(USER_ID, USER_EMAIL, USER_PASSWORD, refreshJwt)
+    UserFields.rebuild(
+      USER_ID,
+      USER_EMAIL,
+      Role.Customer,
+      USER_PASSWORD,
+      refreshJwt
+    )
   );
 };
 

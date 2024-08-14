@@ -4,6 +4,7 @@ import { CreateOrderUseCase } from "../../src/use-cases/create-order/CreateOrder
 import { CreateOrderInput } from "../../src/use-cases/create-order/CreateOrderInput";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { Role } from "../../src/domain/value-objects/Role";
 
 jest.mock("../../src/repositories/orders/OrdersRepositoryPG");
 jest.mock("../../src/repositories/users/UsersRepositoryPG");
@@ -49,7 +50,7 @@ const getCreateOrderInputExample = (): CreateOrderInput => {
 };
 
 const getUserExample = (): User => {
-  return new User(UserFields.rebuild(USER_ID, USER_EMAIL));
+  return new User(UserFields.rebuild(USER_ID, USER_EMAIL, Role.Customer));
 };
 
 describe("Create Order Use Case Tests", () => {

@@ -66,6 +66,7 @@ describe("Create User Use Case Tests", () => {
         fields: {
           id: expect.any(String),
           email: { email: NEW_USER_EMAIL },
+          role: "Customer",
           password: USER_PASSWORD_HASH,
         },
       })

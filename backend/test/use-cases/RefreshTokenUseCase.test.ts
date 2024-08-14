@@ -5,6 +5,7 @@ import { RefreshTokenUseCase } from "../../src/use-cases/refresh-token/RefreshTo
 import { RefreshTokenInput } from "../../src/use-cases/refresh-token/RefreshTokenInput";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { Role } from "../../src/domain/value-objects/Role";
 
 jest.mock("../../src/use-cases/utils/jwt-validator/JwtValidator");
 jest.mock("../../src/use-cases/utils/jwt-generator/JwtGenerator");
@@ -47,7 +48,13 @@ const getRefreshTokenInputExample = (): RefreshTokenInput => {
 
 const getUserExample = (refreshJwt: string = REFRESH_JWT): User => {
   return new User(
-    UserFields.rebuild(USER_ID, USER_EMAIL, USER_PASSWORD, refreshJwt)
+    UserFields.rebuild(
+      USER_ID,
+      USER_EMAIL,
+      Role.Customer,
+      USER_PASSWORD,
+      refreshJwt
+    )
   );
 };
 
