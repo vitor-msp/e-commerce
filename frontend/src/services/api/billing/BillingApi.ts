@@ -22,7 +22,7 @@ type GetOrdersRes = {
 };
 type ThinOrdersRes = {
   id: string;
-  date: string;
+  createdAt: string;
   items: OrderItemRes[];
 };
 type OrderItemRes = {
@@ -43,9 +43,9 @@ export class BillingApi {
   }
 
   async postOrder(order: IOrder, jwt: string): Promise<CreateOrderRes> {
-    const { date, items } = order;
+    const { createdAt, items } = order;
     const reqBody: CreateOrderReq = {
-      date,
+      date: createdAt,
       items: items.map(({ name, productId, quantity, supplier, unitPrice }) => {
         return {
           productId,
@@ -84,9 +84,9 @@ export class BillingApi {
       .catch((error) => error.response?.data ?? error.message);
     //@ts-ignore
     if (error) throw new Error(res);
-    return res.orders.map(({ date, id, items }) => {
+    return res.orders.map(({ createdAt, id, items }) => {
       return {
-        date,
+        createdAt,
         id,
         items: items.map<IOrderItem>(
           ({ productId, productName, quantity, supplierId, unitPrice }) => {

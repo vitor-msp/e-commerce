@@ -9,7 +9,7 @@ type IOrderProps = {
 };
 
 export const Order = ({ order }: IOrderProps) => {
-  const { date, items } = order;
+  const { createdAt, items } = order;
   const products = useSelector((state: RootState) => state.products.products);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -24,13 +24,13 @@ export const Order = ({ order }: IOrderProps) => {
     dispatch(updateCurrentProductAction(product));
   };
 
-  const formattedDate = `${date.slice(8, 10)}/${date.slice(5, 7)}/${date.slice(
+  const formattedDate = `${createdAt.slice(8, 10)}/${createdAt.slice(5, 7)}/${createdAt.slice(
     0,
     4
   )}`;
 
   return (
-    <li className="list-group-item mx-2 my-2 rounded bg-primary" key={date}>
+    <li className="list-group-item mx-2 my-2 rounded bg-primary" key={createdAt}>
       <span>Realizado em: {formattedDate}</span>
       <div className="d-flex flex-row">
         {items.map(({ name, quantity, unitPrice, supplier, productId }) => (

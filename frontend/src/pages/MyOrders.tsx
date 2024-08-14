@@ -21,7 +21,7 @@ export const MyOrders = () => {
           {orders.length === 0 ? (
             <p className="p-5">Você ainda não possui pedidos.</p>
           ) : (
-            orders.map((order) => <Order key={order.date} order={order} />)
+            orders.map((order) => <Order key={order.createdAt} order={order} />)
           )}
         </ul>
       </div>

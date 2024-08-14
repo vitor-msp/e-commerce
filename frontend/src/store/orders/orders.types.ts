@@ -1,6 +1,6 @@
 export interface IOrder {
   id?: string;
-  date: string;
+  createdAt: string;
   items: IOrderItem[];
 }
 
