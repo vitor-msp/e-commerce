@@ -1,3 +1,9 @@
+import { NextFunction, Request, Response } from "express";
+
 export interface IMiddleware {
-  handle(req: any, res: any, next: any): any;
+  handle(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void | Response> | void | Response;
 }

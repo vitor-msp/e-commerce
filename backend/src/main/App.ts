@@ -6,6 +6,8 @@ import { DBConnector } from "../infra/db/config/DBConnector";
 import { DBOptions } from "../infra/db/config/DBOptions";
 import { DataSource } from "typeorm";
 import { AuthenticationMiddleware } from "../api/middlewares/AuthenticationMiddleware";
+import { CustomerGuard } from "../api/middlewares/authorization/CustomerGuard";
+import { AdministratorGuard } from "../api/middlewares/authorization/AdministratorGuard";
 
 export class App {
   public readonly express: express.Application;
@@ -16,7 +18,11 @@ export class App {
     this.dbOptions = DBOptions.getOptions();
     this.dataSource = new DataSource(this.dbOptions);
     const factory = new Factory(this.dataSource);
-    const router = new Router(new AuthenticationMiddleware());
+    const router = new Router(
+      new AuthenticationMiddleware(),
+      new CustomerGuard(),
+      new AdministratorGuard()
+    );
 
     this.express = express();
     this.express.use(cors());
