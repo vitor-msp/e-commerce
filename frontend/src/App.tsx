@@ -13,6 +13,7 @@ import { AppDispatch, RootState } from "./store";
 import { getProducts } from "./store/products/products.middleware";
 import { testSignIn } from "./store/user/user.middleware";
 import { SignUpAdmin } from "./pages/SignUpAdmin";
+import { Admin } from "./pages/Admin";
 
 const App = () => {
   const products = useSelector((state: RootState) => state.products.products);
@@ -45,7 +46,7 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/myaccount" element={<MyAccount />} />
-          <Route path="/admin" element={<p>admin</p>} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="/admin/signup" element={<SignUpAdmin />} />
         </Routes>
       </BrowserRouter>

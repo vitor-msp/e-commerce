@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Navbar } from "../components/Navbar";
 import { userApi } from "../factory";
 import { IUserSignUp } from "../services/api/user/UserApi";
 import { LOCAL_STORAGE_JWT_KEY_NAME } from "../store/user/user.types";
@@ -55,9 +54,20 @@ export const SignUpAdmin = () => {
     return password.localeCompare(passwordConfirmation) === 0;
   };
 
+  const backToAdmin = (): void => {
+    navigate("/admin");
+  };
+
   return (
-    <>
-      <Navbar />
+    <div className="mt-2">
+      <button
+        type="button"
+        onClick={backToAdmin}
+        className="btn btn-primary mx-2"
+      >
+        {"<< voltar"}
+      </button>
+
       <div>
         <h2 className="mx-2">Cadastre um usuário administrador:</h2>
         <form
@@ -113,6 +123,6 @@ export const SignUpAdmin = () => {
           </div>
         </form>
       </div>
-    </>
+    </div>
   );
 };
