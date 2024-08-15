@@ -137,7 +137,7 @@ describe("Create Order Tests", () => {
       ],
     };
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .auth(jwt, { type: "bearer" })
       .send(reqBody);
     expect(res.statusCode).toBe(201);
@@ -182,7 +182,7 @@ describe("Create Order Tests", () => {
       "15m"
     );
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .auth(jwt, { type: "bearer" })
       .send(reqBody);
     expect(res.statusCode).toBe(400);

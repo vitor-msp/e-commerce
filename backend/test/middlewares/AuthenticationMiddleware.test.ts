@@ -15,7 +15,7 @@ describe("Verify Auth Tests", () => {
 
   it("should receive forbidden when jwt was not sent", async () => {
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .send();
     expect(res.statusCode).toBe(403);
     expect(res.body).toHaveProperty("errorMessage");
@@ -23,7 +23,7 @@ describe("Verify Auth Tests", () => {
 
   it("should receive forbidden for a blank jwt", async () => {
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .auth("", { type: "bearer" })
       .send();
     expect(res.statusCode).toBe(403);
@@ -32,7 +32,7 @@ describe("Verify Auth Tests", () => {
 
   it("should receive unauthorized for an invalid jwt", async () => {
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .auth("invalid-jwt", { type: "bearer" })
       .send();
     expect(res.statusCode).toBe(401);
@@ -40,7 +40,7 @@ describe("Verify Auth Tests", () => {
 
   it("should receive bad request if missing userId", async () => {
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .auth(jwt, { type: "bearer" })
       .send();
     expect(res.statusCode).toBe(401);

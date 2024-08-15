@@ -24,32 +24,32 @@ export class Router {
   }
 
   private setRoutes(controllers: Controllers): Router {
-    this.router.post("/api/v1/user/signup", (req, res) =>
+    this.router.post("/api/v1/users/signup", (req, res) =>
       controllers.createUser.execute(req, res)
     );
     this.router.post(
-      "/api/v1/user/admin/signup",
+      "/api/v1/users/admin/signup",
       (req, res, next) => this.administratorGuard.handle(req, res, next),
       (req, res) => controllers.createUserAdmin.execute(req, res)
     );
-    this.router.post("/api/v1/user/signin", (req, res) =>
+    this.router.post("/api/v1/users/signin", (req, res) =>
       controllers.authUser.execute(req, res)
     );
-    this.router.post("/api/v1/user/refresh-token", (req, res) =>
+    this.router.post("/api/v1/users/refresh-token", (req, res) =>
       controllers.refreshToken.execute(req, res)
     );
-    this.router.post("/api/v1/user/logout", (req, res) =>
+    this.router.post("/api/v1/users/logout", (req, res) =>
       controllers.logout.execute(req, res)
     );
 
     this.router.post(
-      "/api/v1/order",
+      "/api/v1/orders",
       this.authenticationMiddleware.handle,
       (req, res, next) => this.customerGuard.handle(req, res, next),
       (req, res) => controllers.createOrder.execute(req, res)
     );
     this.router.get(
-      "/api/v1/order",
+      "/api/v1/orders",
       this.authenticationMiddleware.handle,
       (req, res, next) => this.customerGuard.handle(req, res, next),
       (req, res) => controllers.getOrders.execute(req, res)

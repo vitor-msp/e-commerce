@@ -98,7 +98,7 @@ describe("Get Orders Tests", () => {
       "15m"
     );
     const res: supertest.Response = await supertest(app)
-      .get("/api/v1/order")
+      .get("/api/v1/orders")
       .auth(jwt, { type: "bearer" })
       .send();
     expect(res.statusCode).toBe(200);
@@ -146,7 +146,7 @@ describe("Get Orders Tests", () => {
       "15m"
     );
     const res: supertest.Response = await supertest(app)
-      .get("/api/v1/order")
+      .get("/api/v1/orders")
       .auth(jwt, { type: "bearer" })
       .send();
     const resExpected: any = { orders: [] };

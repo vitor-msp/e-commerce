@@ -15,7 +15,7 @@ describe("Verify Authorization Tests", () => {
   it("should receive forbidden if missing role", async () => {
     const jwt = jwtGenerator.generate({ userId: "1" }, "1d");
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .auth(jwt, { type: "bearer" })
       .send();
     expect(res.statusCode).toBe(401);
@@ -31,7 +31,7 @@ describe("Verify Authorization Tests", () => {
       "1d"
     );
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/order")
+      .post("/api/v1/orders")
       .auth(jwt, { type: "bearer" })
       .send();
     expect(res.statusCode).toBe(403);
@@ -47,7 +47,7 @@ describe("Verify Authorization Tests", () => {
       "1d"
     );
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/admin/signup")
+      .post("/api/v1/users/admin/signup")
       .auth(jwt, { type: "bearer" })
       .send();
     expect(res.statusCode).toBe(403);

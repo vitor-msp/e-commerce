@@ -47,7 +47,7 @@ describe("Create User Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signup")
+      .post("/api/v1/users/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(201);
     const savedUser = await usersRepository.findOneBy({ email: reqBody.email });
@@ -65,7 +65,7 @@ describe("Create User Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signup")
+      .post("/api/v1/users/signup")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");

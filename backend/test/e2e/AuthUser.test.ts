@@ -46,7 +46,7 @@ describe("Auth User Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signin")
+      .post("/api/v1/users/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("jwt");
@@ -59,7 +59,7 @@ describe("Auth User Tests", () => {
       password: "teste123",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signin")
+      .post("/api/v1/users/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty("errorMessage");
@@ -71,7 +71,7 @@ describe("Auth User Tests", () => {
       password: "incorrect-password",
     };
     const res: supertest.Response = await supertest(app)
-      .post("/api/v1/user/signin")
+      .post("/api/v1/users/signin")
       .send(reqBody);
     expect(res.statusCode).toBe(401);
     expect(res.body).toHaveProperty("errorMessage");
