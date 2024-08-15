@@ -37,4 +37,20 @@ describe("Verify Authorization Tests", () => {
     expect(res.statusCode).toBe(403);
     expect(res.body).toHaveProperty("errorMessage");
   });
+
+  it("should receive forbidden if role customer is unauthorized", async () => {
+    const jwt = jwtGenerator.generate(
+      {
+        userId: "1",
+        role: Role.Customer,
+      },
+      "1d"
+    );
+    const res: supertest.Response = await supertest(app)
+      .post("/api/v1/user/admin/signup")
+      .auth(jwt, { type: "bearer" })
+      .send();
+    expect(res.statusCode).toBe(403);
+    expect(res.body).toHaveProperty("errorMessage");
+  });
 });

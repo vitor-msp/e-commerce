@@ -27,6 +27,11 @@ export class Router {
     this.router.post("/api/v1/user/signup", (req, res) =>
       controllers.createUser.execute(req, res)
     );
+    this.router.post(
+      "/api/v1/user/admin/signup",
+      (req, res, next) => this.administratorGuard.handle(req, res, next),
+      (req, res) => controllers.createUserAdmin.execute(req, res)
+    );
     this.router.post("/api/v1/user/signin", (req, res) =>
       controllers.authUser.execute(req, res)
     );
