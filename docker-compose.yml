@@ -8,6 +8,8 @@ services:
       POSTGRES_PASSWORD: admin
     networks:
       - e-commerce
+    volumes:
+      - ./populate.sql:/populate.sql
 
   e-commerce-api:
     container_name: e-commerce-api
