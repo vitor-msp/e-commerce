@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { ICreateUserUseCase } from "../../use-cases/create-user/ICreateUserUseCase";
-import { CreateUserInput } from "../../use-cases/create-user/CreateUserInput";
 import { IController } from "./IController";
 import { StatusCode } from "../utils/StatusCode";
+import { CreateUserInput } from "../../domain/services/create-user/CreateUserInput";
 
 export class CreateUserController implements IController {
   constructor(private readonly createUserUseCase: ICreateUserUseCase) {}

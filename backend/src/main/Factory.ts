@@ -18,6 +18,7 @@ import { RefreshTokenUseCase } from "../use-cases/refresh-token/RefreshTokenUseC
 import { JwtValidator } from "../use-cases/utils/jwt-validator/JwtValidator";
 import { LogutController } from "../api/controllers/LogutController";
 import { LogoutUseCase } from "../use-cases/logout/LogoutUseCase";
+import { CreateUserDomainService } from "../domain/services/create-user/CreateUserDomainService";
 
 export type Controllers = {
   createUser: IController;
@@ -44,7 +45,9 @@ export class Factory {
     const passwordEncryptor: IPasswordEncryptor = new PasswordEncryptor();
     const usersRepositoryPG = new UsersRepositoryPG(dataSource);
     this.createUserController = new CreateUserController(
-      new CreateUserUseCase(usersRepositoryPG, passwordEncryptor)
+      new CreateUserUseCase(
+        new CreateUserDomainService(usersRepositoryPG, passwordEncryptor)
+      )
     );
     const jwtValidator = new JwtValidator();
     const jwtGenerator = new JwtGenerator();

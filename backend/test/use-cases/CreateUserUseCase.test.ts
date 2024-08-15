@@ -1,8 +1,9 @@
 import { UsersRepositoryPG } from "../../src/repositories/users/UsersRepositoryPG";
 import { CreateUserUseCase } from "../../src/use-cases/create-user/CreateUserUseCase";
 import { PasswordEncryptor } from "../../src/use-cases/utils/password-encryptor/PasswordEncryptor";
-import { CreateUserInput } from "../../src/use-cases/create-user/CreateUserInput";
-import { ApplicationError } from "../../src/errors/ApplicationError";
+import { CreateUserInput } from "../../src/domain/services/create-user/CreateUserInput";
+import { CreateUserDomainService } from "../../src/domain/services/create-user/CreateUserDomainService";
+import { DomainError } from "../../src/errors/DomainError";
 
 jest.mock("../../src/repositories/users/UsersRepositoryPG");
 jest.mock("../../src/use-cases/utils/password-encryptor/PasswordEncryptor");
@@ -16,8 +17,7 @@ const makeSut = () => {
   const passwordEncryptorMock =
     new PasswordEncryptorMock() as jest.Mocked<PasswordEncryptor>;
   const sut = new CreateUserUseCase(
-    usersRepositoryPGMock,
-    passwordEncryptorMock
+    new CreateUserDomainService(usersRepositoryPGMock, passwordEncryptorMock)
   );
   return { sut, usersRepositoryPGMock, passwordEncryptorMock };
 };
@@ -81,7 +81,7 @@ describe("Create User Use Case Tests", () => {
       password: USER_PASSWORD,
     });
     expect(async () => await sut.execute(input)).rejects.toThrowError(
-      ApplicationError
+      DomainError
     );
 
     expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(1);

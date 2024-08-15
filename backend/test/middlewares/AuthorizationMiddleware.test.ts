@@ -22,7 +22,7 @@ describe("Verify Authorization Tests", () => {
     expect(res.body).toHaveProperty("errorMessage");
   });
 
-  it("should receive forbidden if role is unauthorized", async () => {
+  it("should receive forbidden if role administrator is unauthorized", async () => {
     const jwt = jwtGenerator.generate(
       {
         userId: "1",
