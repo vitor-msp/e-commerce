@@ -29,6 +29,7 @@ export class Router {
     );
     this.router.post(
       "/api/v1/users/admin/signup",
+      this.authenticationMiddleware.handle,
       (req, res, next) => this.administratorGuard.handle(req, res, next),
       (req, res) => controllers.createUserAdmin.execute(req, res)
     );
