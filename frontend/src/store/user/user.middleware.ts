@@ -14,7 +14,7 @@ export const signIn =
       const jwt = await userApi.signIn(user);
       localStorage.setItem(LOCAL_STORAGE_JWT_KEY_NAME, jwt.jwt);
       localStorage.setItem(LOCAL_STORAGE_REFRESH_JWT_KEY_NAME, jwt.refreshJwt);
-      dispatch(signInAction());
+      dispatch(signInAction(jwt.jwt));
     } catch (error) {
       alert(error);
     }
@@ -22,8 +22,8 @@ export const signIn =
 
 export const testSignIn = (): AppThunk => async (dispatch) => {
   try {
-    const JwtString = localStorage.getItem(LOCAL_STORAGE_JWT_KEY_NAME);
-    if (JwtString) dispatch(signInAction());
+    const jwt = localStorage.getItem(LOCAL_STORAGE_JWT_KEY_NAME);
+    if (jwt) dispatch(signInAction(jwt));
   } catch (error) {
     alert(error);
   }

@@ -8,7 +8,8 @@ import { IProduct } from "../store/products/products.types";
 export const Products = () => {
   const MAX_PRICE_TO_SHOW = 100;
   const [currentName, setCurrentName] = useState<string>("");
-  const [currentMaxPrice, setCurrentMaxPrice] = useState<number>(MAX_PRICE_TO_SHOW);
+  const [currentMaxPrice, setCurrentMaxPrice] =
+    useState<number>(MAX_PRICE_TO_SHOW);
   const [currentCategories, setCurrentCategories] = useState<string[]>([]);
   const [currentMaterials, setCurrentMaterials] = useState<string[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<IProduct[]>([]);

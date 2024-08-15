@@ -5,6 +5,7 @@ import { Navbar } from "../components/Navbar";
 import { IUserSignIn } from "../services/api/user/UserApi";
 import { AppDispatch, RootState } from "../store";
 import { signIn } from "../store/user/user.middleware";
+import { Role } from "../store/user/user.types";
 
 const DEFAULT_USER: IUserSignIn = {
   email: "",
@@ -14,6 +15,7 @@ const DEFAULT_USER: IUserSignIn = {
 export const SignIn = () => {
   const [user, setUser] = useState<IUserSignIn>(DEFAULT_USER);
   const userStatus = useSelector((state: RootState) => state.user.user);
+  const userRole = useSelector((state: RootState) => state.user.user.role);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -27,6 +29,10 @@ export const SignIn = () => {
       navigate("/products");
     }
   }, [userStatus, navigate]);
+
+  useEffect(() => {
+    if (userRole === Role.Administrator) return navigate("/admin");
+  }, [userRole, navigate]);
 
   const updateUser = (event: any): void => {
     const field = event.target.name;

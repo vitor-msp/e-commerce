@@ -1,19 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUserState } from "./user.types";
+import { GetRoleFromJwt } from "../../utils/GetRoleFromJwt";
 
 const initialState: IUserState = {
   user: {
     isLogged: false,
+    role: undefined,
     wantsBuy: false,
   },
 };
 
 const userSlice = createSlice({
-  name: "products",
+  name: "users",
   initialState,
   reducers: {
-    signInAction: (state) => {
+    signInAction: (state, { payload }: PayloadAction<string>) => {
       state.user.isLogged = true;
+      state.user.role = GetRoleFromJwt(payload);
     },
     signOutAction: (state) => {
       state.user.isLogged = false;
@@ -27,6 +30,10 @@ const userSlice = createSlice({
   },
 });
 
-export const { signInAction, signOutAction, userWantsBuyAction, userBoughtAction } =
-  userSlice.actions;
+export const {
+  signInAction,
+  signOutAction,
+  userWantsBuyAction,
+  userBoughtAction,
+} = userSlice.actions;
 export const userReducer = userSlice.reducer;
