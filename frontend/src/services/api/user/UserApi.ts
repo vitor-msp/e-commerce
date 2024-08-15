@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { errorIsUnauthorized, UnauthorizedError } from "../UnauthorizedError";
+import { injectJwt } from "../../../utils/InjectJwt";
 
 export interface IUserSignUp {
   email: string;
@@ -46,6 +47,20 @@ export class UserApi {
     let error = true;
     const res: IErrorReturn = await this.api
       .post("/signup", user)
+      .then((res) => {
+        error = false;
+        return res.data;
+      })
+      .catch((error) => error.response?.data ?? error.message);
+    if (error) throw new Error(res.errorMessage);
+  }
+
+  async signUpAdmin(user: IUserSignUp, jwt: string): Promise<void> {
+    let error = true;
+    const res: IErrorReturn = await this.api
+      .post("/admin/signup", user, {
+        headers: injectJwt(jwt),
+      })
       .then((res) => {
         error = false;
         return res.data;
