@@ -3,6 +3,8 @@ import { AuthUserSSOInput } from "../../src/use-cases/auth-user-sso/AuthUserSSOI
 import { AuthUserSSOUseCase } from "../../src/use-cases/auth-user-sso/AuthUserSSOUseCase";
 import { JwtGenerator } from "../../src/use-cases/utils/jwt-generator/JwtGenerator";
 import { Role } from "../../src/domain/value-objects/Role";
+import { User } from "../../src/domain/entities/user/User";
+import { UserFields } from "../../src/domain/entities/user/UserFields";
 
 jest.mock("../../src/repositories/users/UsersRepositoryPG");
 jest.mock("../../src/use-cases/utils/jwt-generator/JwtGenerator");
@@ -22,6 +24,11 @@ const USER_EMAIL: string = "teste@teste.com";
 const GITHUB_ID: string = "1";
 const JWT: string = "jwt-token";
 const REFRESH_JWT: string = "refresh-jwt-token";
+
+const getUserExample = (): User => {
+  const fields = { email: USER_EMAIL };
+  return new User(UserFields.build(fields));
+};
 
 const getAuthUserSSOInputExample = (): AuthUserSSOInput => {
   return new AuthUserSSOInput({ githubId: GITHUB_ID, email: USER_EMAIL });
@@ -61,6 +68,39 @@ describe("Auth User SSO Use Case Tests", () => {
         },
       })
     );
+    expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(2);
+    expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
+      1,
+      { userId: expect.any(String), role: Role.Customer },
+      "15m"
+    );
+    expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
+      2,
+      { userId: expect.any(String) },
+      "7d"
+    );
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledWith(
+      expect.any(String),
+      REFRESH_JWT
+    );
+    expect(output.jwt).toBe(JWT);
+    expect(output.refreshJwt).toBe(REFRESH_JWT);
+  });
+
+  it("should authenticate a existing user", async () => {
+    const user = getUserExample();
+    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(user);
+    jwtGeneratorMock.generate.mockReturnValueOnce(JWT);
+    jwtGeneratorMock.generate.mockReturnValueOnce(REFRESH_JWT);
+
+    const output = await sut.execute(getAuthUserSSOInputExample());
+
+    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
+      USER_EMAIL
+    );
+    expect(usersRepositoryPGMock.insert).toHaveBeenCalledTimes(0);
     expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(2);
     expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
       1,
