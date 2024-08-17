@@ -5,6 +5,7 @@ import { Role } from "../../value-objects/Role";
 export class UserFields {
   private password?: string;
   private refreshJwt?: string;
+  private githubId?: number;
 
   private constructor(
     private readonly id: string,
@@ -17,6 +18,7 @@ export class UserFields {
     const role = input["role"] ?? Role.Customer;
     const fields = new UserFields(uuid.v4(), email, role);
     fields.password = input["password"];
+    fields.githubId = input["githubId"];
     return fields;
   }
 
@@ -40,6 +42,7 @@ export class UserFields {
       role: this.role,
       password: this.password,
       refreshJwt: this.refreshJwt,
+      githubId: this.githubId,
     };
   }
 }

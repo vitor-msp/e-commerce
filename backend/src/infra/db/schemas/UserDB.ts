@@ -26,6 +26,9 @@ export class UserDB {
   @Column({ length: 500, nullable: true })
   refreshJwt?: string;
 
+  @Column({ nullable: true })
+  githubId?: number;
+
   public constructor() {}
 
   public static build(user: User) {
@@ -33,7 +36,7 @@ export class UserDB {
   }
 
   public hydrate(user: User): UserDB {
-    const { id, email, role, password, refreshJwt } = user
+    const { id, email, role, password, refreshJwt, githubId } = user
       .getFields()
       .getData();
     this.id = id;
@@ -41,6 +44,7 @@ export class UserDB {
     this.role = role.toString();
     this.password = password;
     this.refreshJwt = refreshJwt;
+    this.githubId = githubId;
     return this;
   }
 
