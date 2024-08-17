@@ -18,6 +18,10 @@ export class AuthUserSSOInput {
     return this.email;
   }
 
+  public getGithubId(): number {
+    return this.githubId;
+  }
+
   public setRole(role: Role): void {
     this.role = role;
   }

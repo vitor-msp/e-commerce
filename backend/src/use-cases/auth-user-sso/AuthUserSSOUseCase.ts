@@ -6,6 +6,7 @@ import { AuthUserSSOOutput } from "./AuthUserSSOOutput";
 import { User } from "../../domain/entities/user/User";
 import { Role } from "../../domain/value-objects/Role";
 import { IAuthUserSSOUseCase } from "./IAuthUserSSOUseCase";
+import { ApplicationError } from "../../errors/ApplicationError";
 
 export class AuthUserSSOUseCase implements IAuthUserSSOUseCase {
   constructor(
@@ -15,7 +16,10 @@ export class AuthUserSSOUseCase implements IAuthUserSSOUseCase {
 
   async execute(input: AuthUserSSOInput): Promise<AuthUserSSOOutput> {
     let user = await this.usersRepository.selectByEmail(input.getEmail());
-    if (!user) {
+    if (user) {
+      const emailInUse = input.getGithubId() != user.getGithubId();
+      if (emailInUse) throw new ApplicationError("email already in use");
+    } else {
       user = await this.createUser(input);
     }
 

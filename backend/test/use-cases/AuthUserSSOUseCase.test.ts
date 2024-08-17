@@ -5,6 +5,7 @@ import { JwtGenerator } from "../../src/use-cases/utils/jwt-generator/JwtGenerat
 import { Role } from "../../src/domain/value-objects/Role";
 import { User } from "../../src/domain/entities/user/User";
 import { UserFields } from "../../src/domain/entities/user/UserFields";
+import { ApplicationError } from "../../src/errors/ApplicationError";
 
 jest.mock("../../src/repositories/users/UsersRepositoryPG");
 jest.mock("../../src/use-cases/utils/jwt-generator/JwtGenerator");
@@ -26,7 +27,7 @@ const JWT: string = "jwt-token";
 const REFRESH_JWT: string = "refresh-jwt-token";
 
 const getUserExample = (): User => {
-  const fields = { email: USER_EMAIL };
+  const fields = { email: USER_EMAIL, githubId: GITHUB_ID };
   return new User(UserFields.build(fields));
 };
 
@@ -119,5 +120,24 @@ describe("Auth User SSO Use Case Tests", () => {
     );
     expect(output.jwt).toBe(JWT);
     expect(output.refreshJwt).toBe(REFRESH_JWT);
+  });
+
+  it("should throw exception when email already in use without SSO", async () => {
+    const user = new User(
+      UserFields.build({ email: USER_EMAIL, githubId: undefined })
+    );
+    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(user);
+
+    expect(
+      async () => await sut.execute(getAuthUserSSOInputExample())
+    ).rejects.toThrowError(ApplicationError);
+
+    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
+      USER_EMAIL
+    );
+    expect(usersRepositoryPGMock.insert).toHaveBeenCalledTimes(0);
+    expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(0);
+    expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledTimes(0);
   });
 });
