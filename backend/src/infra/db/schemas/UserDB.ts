@@ -57,7 +57,8 @@ export class UserDB {
         this.email,
         Role[this.role as keyof typeof Role],
         this.password,
-        this.refreshJwt
+        this.refreshJwt,
+        this.githubId
       )
     );
   }

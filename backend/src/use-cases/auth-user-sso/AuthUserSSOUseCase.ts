@@ -15,11 +15,12 @@ export class AuthUserSSOUseCase implements IAuthUserSSOUseCase {
   ) {}
 
   async execute(input: AuthUserSSOInput): Promise<AuthUserSSOOutput> {
-    let user = await this.usersRepository.selectByEmail(input.getEmail());
-    if (user) {
-      const emailInUse = input.getGithubId() != user.getGithubId();
+    let user = await this.usersRepository.selectByGithubId(input.getGithubId());
+    if (!user) {
+      const emailInUse = await this.usersRepository.existsByEmail(
+        input.getEmail()
+      );
       if (emailInUse) throw new ApplicationError("email already in use");
-    } else {
       user = await this.createUser(input);
     }
 

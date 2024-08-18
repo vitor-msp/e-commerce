@@ -27,11 +27,13 @@ export class UserFields {
     email: string,
     role: Role,
     password?: string,
-    refreshJwt?: string
+    refreshJwt?: string,
+    githubId?: number
   ): UserFields {
     const fields = new UserFields(id, Email.build(email), role);
     if (password) fields.password = password;
     if (refreshJwt) fields.refreshJwt = refreshJwt;
+    if (githubId) fields.githubId = githubId;
     return fields;
   }
 

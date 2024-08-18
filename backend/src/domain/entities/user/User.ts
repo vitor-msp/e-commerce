@@ -16,12 +16,20 @@ export class User {
     return this.fields.getData().id;
   }
 
+  public getEmail(): string {
+    return this.fields.getData().email.email;
+  }
+
   public getRole(): Role {
     return this.fields.getData().role;
   }
 
   public getPassword(): string | undefined {
     return this.fields.getData().password;
+  }
+
+  public getGithubId(): number | undefined {
+    return this.fields.getData().githubId;
   }
 
   public getRefreshJwt(): string | undefined {

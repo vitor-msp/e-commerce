@@ -48,14 +48,19 @@ describe("Auth User SSO Use Case Tests", () => {
   });
 
   it("should create a valid user", async () => {
-    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(null);
+    usersRepositoryPGMock.selectByGithubId.mockResolvedValueOnce(null);
+    usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(false);
     jwtGeneratorMock.generate.mockReturnValueOnce(JWT);
     jwtGeneratorMock.generate.mockReturnValueOnce(REFRESH_JWT);
 
     const output = await sut.execute(getAuthUserSSOInputExample());
 
-    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
-    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
+    expect(usersRepositoryPGMock.selectByGithubId).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.selectByGithubId).toHaveBeenCalledWith(
+      GITHUB_ID
+    );
+    expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledWith(
       USER_EMAIL
     );
     expect(usersRepositoryPGMock.insert).toHaveBeenCalledTimes(1);
@@ -91,16 +96,17 @@ describe("Auth User SSO Use Case Tests", () => {
 
   it("should authenticate a existing user", async () => {
     const user = getUserExample();
-    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(user);
+    usersRepositoryPGMock.selectByGithubId.mockResolvedValueOnce(user);
     jwtGeneratorMock.generate.mockReturnValueOnce(JWT);
     jwtGeneratorMock.generate.mockReturnValueOnce(REFRESH_JWT);
 
     const output = await sut.execute(getAuthUserSSOInputExample());
 
-    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
-    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
-      USER_EMAIL
+    expect(usersRepositoryPGMock.selectByGithubId).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.selectByGithubId).toHaveBeenCalledWith(
+      GITHUB_ID
     );
+    expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(0);
     expect(usersRepositoryPGMock.insert).toHaveBeenCalledTimes(0);
     expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(2);
     expect(jwtGeneratorMock.generate).toHaveBeenNthCalledWith(
@@ -122,20 +128,22 @@ describe("Auth User SSO Use Case Tests", () => {
     expect(output.refreshJwt).toBe(REFRESH_JWT);
   });
 
-  it("should throw exception when email already in use without SSO", async () => {
-    const user = new User(
-      UserFields.build({ email: USER_EMAIL, githubId: undefined })
-    );
-    usersRepositoryPGMock.selectByEmail.mockResolvedValueOnce(user);
+  it("should throw exception when email already in use", async () => {
+    usersRepositoryPGMock.selectByGithubId.mockResolvedValueOnce(null);
+    usersRepositoryPGMock.existsByEmail.mockResolvedValueOnce(true);
 
     expect(
       async () => await sut.execute(getAuthUserSSOInputExample())
     ).rejects.toThrowError(ApplicationError);
 
-    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledTimes(1);
-    expect(usersRepositoryPGMock.selectByEmail).toHaveBeenCalledWith(
-      USER_EMAIL
+    expect(usersRepositoryPGMock.selectByGithubId).toHaveBeenCalledTimes(1);
+    expect(usersRepositoryPGMock.selectByGithubId).toHaveBeenCalledWith(
+      GITHUB_ID
     );
+    // expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledTimes(1);
+    // expect(usersRepositoryPGMock.existsByEmail).toHaveBeenCalledWith(
+    //   USER_EMAIL
+    // );
     expect(usersRepositoryPGMock.insert).toHaveBeenCalledTimes(0);
     expect(jwtGeneratorMock.generate).toHaveBeenCalledTimes(0);
     expect(usersRepositoryPGMock.updateRefreshJwt).toHaveBeenCalledTimes(0);

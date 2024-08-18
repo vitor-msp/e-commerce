@@ -32,6 +32,12 @@ export class UsersRepositoryPG implements IUsersRepository {
     return userDB.getEntity();
   }
 
+  public async selectByGithubId(githubId: number): Promise<User | null> {
+    const userDB = await this.database.findOneBy({ githubId });
+    if (!userDB) return null;
+    return userDB.getEntity();
+  }
+
   public async updateRefreshJwt(
     userId: string,
     refreshJwt: string
