@@ -32,7 +32,11 @@ const getUserExample = (): User => {
 };
 
 const getAuthUserSSOInputExample = (): AuthUserSSOInput => {
-  return new AuthUserSSOInput({ githubId: GITHUB_ID, email: USER_EMAIL });
+  return new AuthUserSSOInput({
+    ssoIdField: "github",
+    ssoIdValue: GITHUB_ID,
+    email: USER_EMAIL,
+  });
 };
 
 describe("Auth User SSO Use Case Tests", () => {

@@ -15,7 +15,7 @@ export class AuthUserSSOUseCase implements IAuthUserSSOUseCase {
   ) {}
 
   async execute(input: AuthUserSSOInput): Promise<AuthUserSSOOutput> {
-    let user = await this.usersRepository.selectByGithubId(input.getGithubId());
+    let user = await this.selectBySsoId(input);
     if (!user) {
       const emailInUse = await this.usersRepository.existsByEmail(
         input.getEmail()
@@ -40,6 +40,16 @@ export class AuthUserSSOUseCase implements IAuthUserSSOUseCase {
       jwt,
       refreshJwt,
     };
+  }
+
+  private async selectBySsoId(input: AuthUserSSOInput): Promise<User | null> {
+    switch (input.getSsoIdField()) {
+      case "github":
+        return await this.usersRepository.selectByGithubId(input.getGithubId());
+
+      default:
+        throw new ApplicationError("invalid sso option");
+    }
   }
 
   private async createUser(input: AuthUserSSOInput): Promise<User> {
