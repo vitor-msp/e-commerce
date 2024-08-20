@@ -32,6 +32,7 @@ export const testSignIn = (): AppThunk => async (dispatch) => {
 export const signInSSO = (): AppThunk => async (dispatch) => {
   try {
     const cookies = getCookies();
+    removeCookies();
     const jwt = cookies.find((cookie) => cookie.name === "jwt");
     const refreshJwt = cookies.find((cookie) => cookie.name === "refreshJwt");
     if (!jwt || !refreshJwt) return;
@@ -52,6 +53,11 @@ const getCookies = (): { name: string; value: string }[] => {
       value: value?.trim(),
     };
   });
+};
+
+const removeCookies = (): void => {
+  document.cookie = `jwt=;expires=Thu, 01 Jan 1970 00:00:00 UTC;domain=${process.env.REACT_APP_FRONTEND_AND_BACKEND_DOMAIN};path=${process.env.REACT_APP_SSO_REDIRECT_FRONTEND_PATH};`;
+  document.cookie = `refreshJwt=;expires=Thu, 01 Jan 1970 00:00:00 UTC;domain=${process.env.REACT_APP_FRONTEND_AND_BACKEND_DOMAIN};path=${process.env.REACT_APP_SSO_REDIRECT_FRONTEND_PATH};`;
 };
 
 export const signOut = (): AppThunk => async (dispatch) => {
