@@ -46,7 +46,8 @@ export class Router {
     this.router.get(GITHUB_SSO_CALLBACK, (req, res, next) => {
       passport.authenticate("github", (_err: any, profile: any) => {
         req.body = {
-          githubId: profile._json.id,
+          ssoIdField: "github",
+          ssoIdValue: profile._json.id,
           email: profile._json.email,
         };
         controllers.authUserSSO.execute(req, res);
