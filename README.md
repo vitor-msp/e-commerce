@@ -34,5 +34,9 @@ cd e-commerce
 ```
 sudo docker-compose up -d
 ```
+4. Populate database
+```
+./populate.sh
+```
 ## Observações
 1. A porta 80 no seu computador deve estar disponível
