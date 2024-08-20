@@ -17,7 +17,7 @@ export class UserDB {
   @Column({ length: 50 })
   email?: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, nullable: true })
   password?: string;
 
   @Column({ length: 20 })

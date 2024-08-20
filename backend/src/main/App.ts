@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
+import passport, { DoneCallback } from "passport";
+import { Strategy as GitHubStrategy } from "passport-github2";
 import { Factory } from "./Factory";
-import { Router } from "./Router";
+import { GITHUB_SSO_CALLBACK, Router } from "./Router";
 import { DBConnector } from "../infra/db/config/DBConnector";
 import { DBOptions } from "../infra/db/config/DBOptions";
 import { DataSource } from "typeorm";
@@ -27,6 +29,7 @@ export class App {
     this.express = express();
     this.express.use(cors());
     this.express.use(express.json());
+    this.configureSSO();
 
     const controllers = factory.getControllers();
     const routes = router.getRoutes(controllers);
@@ -40,5 +43,30 @@ export class App {
 
   public getDataSource(): DataSource {
     return this.dataSource;
+  }
+
+  private configureSSO(): void {
+    const clientID = process.env.GITHUB_CLIENT_ID;
+    const clientSecret = process.env.GITHUB_CLIENT_SECRET;
+    if (!clientID || !clientSecret) {
+      throw new Error("missing CLIENT_ID and/or CLIENT_SECRET");
+    }
+    passport.use(
+      new GitHubStrategy(
+        {
+          clientID,
+          clientSecret,
+          callbackURL: GITHUB_SSO_CALLBACK,
+        },
+        (
+          _accessToken: string,
+          _refreshToken: string,
+          profile: any,
+          done: DoneCallback
+        ) => {
+          done(null, profile);
+        }
+      )
+    );
   }
 }

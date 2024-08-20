@@ -1,6 +1,9 @@
 import { Router as ExpressRouter } from "express";
 import { IMiddleware } from "../api/middlewares/IMiddleware";
 import { Controllers } from "./Factory";
+import passport from "passport";
+
+export const GITHUB_SSO_CALLBACK = "/api/v1/users/signin/github/callback";
 
 export class Router {
   private readonly router: ExpressRouter;
@@ -36,6 +39,19 @@ export class Router {
     this.router.post("/api/v1/users/signin", (req, res) =>
       controllers.authUser.execute(req, res)
     );
+    this.router.get(
+      "/api/v1/users/signin/github",
+      passport.authenticate("github", { scope: ["user:email"] })
+    );
+    this.router.get(GITHUB_SSO_CALLBACK, (req, res, next) => {
+      passport.authenticate("github", (_err: any, profile: any) => {
+        req.body = {
+          githubId: profile._json.id,
+          email: profile._json.email,
+        };
+        controllers.authUserSSO.execute(req, res);
+      })(req, res, next);
+    });
     this.router.post("/api/v1/users/refresh-token", (req, res) =>
       controllers.refreshToken.execute(req, res)
     );

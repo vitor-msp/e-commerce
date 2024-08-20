@@ -21,11 +21,14 @@ import { LogoutUseCase } from "../use-cases/logout/LogoutUseCase";
 import { CreateUserDomainService } from "../domain/services/create-user/CreateUserDomainService";
 import { CreateUserAdminController } from "../api/controllers/CreateUserAdminController";
 import { CreateUserAdminUseCase } from "../use-cases/create-user-admin/CreateUserAdminUseCase";
+import { AuthUserSSOController } from "../api/controllers/AuthUserSSOController";
+import { AuthUserSSOUseCase } from "../use-cases/auth-user-sso/AuthUserSSOUseCase";
 
 export type Controllers = {
   createUser: IController;
   createUserAdmin: IController;
   authUser: IController;
+  authUserSSO: IController;
   refreshToken: IController;
   logout: IController;
   createOrder: IController;
@@ -36,6 +39,7 @@ export class Factory {
   private createUserController!: CreateUserController;
   private createUserAdminController!: CreateUserAdminController;
   private authUserController!: AuthUserController;
+  private authUserSSOController!: AuthUserSSOController;
   private refreshTokenController!: RefreshTokenController;
   private logoutController!: LogutController;
   private createOrderController!: CreateOrderController;
@@ -63,6 +67,9 @@ export class Factory {
     this.authUserController = new AuthUserController(
       new AuthUserUseCase(usersRepositoryPG, passwordEncryptor, jwtGenerator)
     );
+    this.authUserSSOController = new AuthUserSSOController(
+      new AuthUserSSOUseCase(usersRepositoryPG, jwtGenerator)
+    );
     this.refreshTokenController = new RefreshTokenController(
       new RefreshTokenUseCase(usersRepositoryPG, jwtValidator, jwtGenerator)
     );
@@ -83,6 +90,7 @@ export class Factory {
       createUser: this.createUserController,
       createUserAdmin: this.createUserAdminController,
       authUser: this.authUserController,
+      authUserSSO: this.authUserSSOController,
       refreshToken: this.refreshTokenController,
       logout: this.logoutController,
       createOrder: this.createOrderController,
