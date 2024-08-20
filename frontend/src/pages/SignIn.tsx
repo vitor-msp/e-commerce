@@ -6,6 +6,7 @@ import { IUserSignIn } from "../services/api/user/UserApi";
 import { AppDispatch, RootState } from "../store";
 import { signIn } from "../store/user/user.middleware";
 import { Role } from "../store/user/user.types";
+import { GitHubIcon } from "../components/GitHubIcon";
 
 const DEFAULT_USER: IUserSignIn = {
   email: "",
@@ -97,6 +98,15 @@ export const SignIn = () => {
               className="btn btn-primary mx-2"
               value={"Entrar"}
             />
+          </div>
+          <div className="mx-auto my-4">
+            <a
+              href={process.env.REACT_APP_SSO_GITHUB_URL}
+              className="btn btn-outline-primary"
+            >
+              <span className="mx-2">Logar com GitHub</span>
+              <GitHubIcon />
+            </a>
           </div>
         </form>
       </div>

@@ -29,6 +29,31 @@ export const testSignIn = (): AppThunk => async (dispatch) => {
   }
 };
 
+export const signInSSO = (): AppThunk => async (dispatch) => {
+  try {
+    const cookies = getCookies();
+    const jwt = cookies.find((cookie) => cookie.name === "jwt");
+    const refreshJwt = cookies.find((cookie) => cookie.name === "refreshJwt");
+    if (!jwt || !refreshJwt) return;
+
+    localStorage.setItem(LOCAL_STORAGE_JWT_KEY_NAME, jwt.value);
+    localStorage.setItem(LOCAL_STORAGE_REFRESH_JWT_KEY_NAME, refreshJwt.value);
+    dispatch(signInAction(jwt.value));
+  } catch (error) {
+    alert(error);
+  }
+};
+
+const getCookies = (): { name: string; value: string }[] => {
+  return document.cookie.split(";").map((cookie) => {
+    const [name, value] = cookie.split("=");
+    return {
+      name: name?.trim(),
+      value: value?.trim(),
+    };
+  });
+};
+
 export const signOut = (): AppThunk => async (dispatch) => {
   try {
     localStorage.removeItem(LOCAL_STORAGE_JWT_KEY_NAME);

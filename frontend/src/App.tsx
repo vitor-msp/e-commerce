@@ -14,6 +14,7 @@ import { getProducts } from "./store/products/products.middleware";
 import { testSignIn } from "./store/user/user.middleware";
 import { SignUpAdmin } from "./pages/SignUpAdmin";
 import { Admin } from "./pages/Admin";
+import { SignInSSO } from "./pages/SignInSSO";
 
 const App = () => {
   const products = useSelector((state: RootState) => state.products.products);
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/myorders" element={<MyOrders />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/signin/sso" element={<SignInSSO />} />
           <Route path="/myaccount" element={<MyAccount />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/signup" element={<SignUpAdmin />} />
